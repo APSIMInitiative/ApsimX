@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Groupings;
 
 /// <summary>
 /// Descriptive summary provider for the Ruminant Group filter
@@ -43,9 +43,9 @@ public class RuminantDeathGroupConditionSummary : GroupSummaryBase<RuminantDeath
             default:
                 break;
         }
-        htmlWriter.Write($"Specified individuals with a {generator.DisplaySummaryValueSnippet(style, errorNotSet: true)}");
-        htmlWriter.Write($" less than {generator.DisplaySummaryValueSnippet(ModelTyped.CutOff, warnZero: true)}");
-        htmlWriter.Write($" have a probability of death of {generator.DisplaySummaryValueSnippet(ModelTyped.ProbabilityOfDying, warnZero: true)} for the time step.");
+        htmlWriter.Write($"Specified individuals with a {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(style, errorNotSet: true)}");
+        htmlWriter.Write($" less than {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.CutOff, warnZero: true)}");
+        htmlWriter.Write($" have a probability of death of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ProbabilityOfDying, warnZero: true)} for the time step.");
         generator.AddBlockWithText(htmlWriter.ToString());
     }
 }

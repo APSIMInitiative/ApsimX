@@ -2,6 +2,7 @@ using APSIM.Numerics;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -29,15 +30,15 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrow.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow), typeof(RuminantParametersGeneral), typeof(RuminantParametersLactation) },
-        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType },
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGrow), typeof(RuminantParametersGeneral), typeof(RuminantParametersLactation)],
+        associationStyles: [ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType],
         SingleInstance = true)]
     public class RuminantActivityGrow : CLEMActivityBase, IValidatableObject, IRuminantActivityGrow
     {
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         private RuminantHerd ruminantHerd;
-        private ConceptionStatusChangedEventArgs conceptionArgs = new ();
+        private readonly ConceptionStatusChangedEventArgs conceptionArgs = new ();
 
         /// <summary>
         /// Gross energy content of forage (MJ/kg DM)
@@ -353,7 +354,7 @@ namespace Models.CLEM.Activities
                     // This was then done in RuminantActivityGrazePasture
                     // But now is handled by Ruminant.Intake and thus needs to be called here and the two parameters are no longer required for the grazePasture activity as they aree in the ruminant parameters.
 
-                    ind.Intake.AdjustIntakeBasedOnFeedQuality(ind is RuminantFemale female ? female.IsLactating: false, ind);
+                    ind.Intake.AdjustIntakeBasedOnFeedQuality(ind is RuminantFemale female && female.IsLactating, ind);
                     ind.Intake.UpdateGutFill();
 
                     // calculate energy
@@ -453,13 +454,12 @@ namespace Models.CLEM.Activities
 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
-                double kgl = 1;
                 if (MathUtilities.IsPositive(ind.MetabolicIntake + ind.Energy.MilkDaily.Received))
                 {
                     // average energy efficiency for maintenance
                     kml = ((milkIntakeDaily * 0.7) + (intakeDaily * km)) / (milkIntakeDaily + intakeDaily);
                     // average energy efficiency for growth
-                    kgl = ((milkIntakeDaily * 0.7) + (intakeDaily * kg)) / (milkIntakeDaily + intakeDaily);
+                    //double kgl = ((milkIntakeDaily * 0.7) + (intakeDaily * kg)) / (milkIntakeDaily + intakeDaily);
                 }
                 double energyMilkConsumed = milkIntakeDaily * 3.2;
                 // limit suckling intake of milk per day
@@ -620,7 +620,7 @@ namespace Models.CLEM.Activities
             // check parameters are available for all ruminants.
             foreach (var item in Structure.FindAll<RuminantType>().Where(a => a.Parameters.Grow is null))
             {
-                yield return new ValidationResult($"No [RuminantParametersGrow] parameters are provided for [{item.NameWithParent}]", new string[] { "RuminantParametersGrow" });
+                yield return new ValidationResult($"No [RuminantParametersGrow] parameters are provided for [{item.NameWithParent}]", ["RuminantParametersGrow"]);
             }
         }
 

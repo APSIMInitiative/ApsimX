@@ -1,6 +1,7 @@
 using Models.Core;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -111,10 +112,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                if (parentZone is null)
-                {
-                    parentZone = Structure.FindParent<ZoneCLEM>(recurse: true);
-                }
+                parentZone ??= Structure.FindParent<ZoneCLEM>(recurse: true);
 
                 if (parentZone is null)
                 {
@@ -443,12 +441,9 @@ namespace Models.CLEM.Activities
         {
             Dictionary<string, IEnumerable<T>> filters = [];
 
-            var ids = CompanionModelLabels<T>(CompanionModelLabelType.Identifiers);
-            if (ids is null)
-            {
+            var ids = CompanionModelLabels<T>(CompanionModelLabelType.Identifiers) ?? 
                 throw new Exception($"Identifiers have not been correctly configured for companion models of type [{typeof(T).Name}] of [{GetType().Name}]{Environment.NewLine}Invalid setup of [{GetType().Name}].LocateCompanionModels<T>(). Contact developers for assistance");
-            }
-
+            
             if (ids.Count != 0 == false)
             {
                 ids.Add("");
@@ -590,12 +585,10 @@ namespace Models.CLEM.Activities
             }
 
             var unitsProvided = valuesForCompanionModels[(companionModel.GetType().Name, companionModel.Identifier ?? "", companionModel.Measure ?? "")];
-            if (unitsProvided is null)
-            {
-                throw new ApsimXException(this, $"Units for [{companionModel.GetType().Name}]-[{companionModel.Identifier ?? "BLANK"}]-[{companionModel.Measure ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers");
-            }
-
-            return unitsProvided.Value;
+            
+            return unitsProvided is null
+                ? throw new ApsimXException(this, $"Units for [{companionModel.GetType().Name}]-[{companionModel.Identifier ?? "BLANK"}]-[{companionModel.Measure ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers")
+                : unitsProvided.Value;
         }
 
         /// <summary>
@@ -622,7 +615,7 @@ namespace Models.CLEM.Activities
             if (this is IHandlesActivityCompanionModels)
             {
                 // get all companion models except filter groups
-                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier == "" || (a.Identifier ?? "") == identifier))
                 {
                     if (companionChild is CLEMActivityBase cChild)
                     {
@@ -645,7 +638,7 @@ namespace Models.CLEM.Activities
             if (this is IHandlesActivityCompanionModels)
             {
                 // get all companion models except filter groups
-                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier == "" || (a.Identifier ?? "") == identifier))
                 {
                     if (valuesForCompanionModels.Count != 0 && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
                     {
@@ -659,10 +652,7 @@ namespace Models.CLEM.Activities
 
                             foreach (ResourceRequest request in companionChild.RequestResourcesForTimestep(unitsProvided))
                             {
-                                if (request.ActivityModel is null)
-                                {
-                                    request.ActivityModel = this;
-                                }
+                                request.ActivityModel ??= this;
 
                                 request.CompanionModelDetails = (companionChild.GetType().Name, companionChild.Identifier, companionChild.Measure);
                                 ResourceRequestList.Add(request);
@@ -688,7 +678,7 @@ namespace Models.CLEM.Activities
                 // take resources
                 // if no resources required perform Activity if code is present.
                 // if resources are returned (all available or UseResourcesAvailable action) perform Activity
-                if (TakeResources(ResourceRequestList, false) || (ResourceRequestList.Count == 0))
+                if (TakeResources(ResourceRequestList) || (ResourceRequestList.Count == 0))
                 {
                     PerformTasksForTimestep(); //based on method supplied by activity
 
@@ -696,7 +686,7 @@ namespace Models.CLEM.Activities
                     if (this is IHandlesActivityCompanionModels)
                     {
                         // get all companion models except filter groups
-                        foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                        foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier == "" || (a.Identifier ?? "") == identifier))
                         {
                             if (valuesForCompanionModels.Count != 0 && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
                             {
@@ -746,10 +736,10 @@ namespace Models.CLEM.Activities
                     }
 
                     // recalculate shortfalls in case any reduction in required removed request from shortfalls
-                    return shortfallRequests.ToList();
+                    return [.. shortfallRequests];
                 }
             }
-            return new List<ResourceRequest>();
+            return [];
         }
 
         /// <summary>A method to arrange the activity to be performed on the specified clock event.</summary>
@@ -1023,9 +1013,8 @@ namespace Models.CLEM.Activities
         /// Try to take the Resources based on Resource Request List provided.
         /// </summary>
         /// <param name="resourceRequestList">A list of resources required</param>
-        /// <param name="triggerActivityPerformed"></param>
         /// <returns>Flag indicating if able to take the resources needed.</returns>
-        public bool TakeResources(List<ResourceRequest> resourceRequestList, bool triggerActivityPerformed)
+        public bool TakeResources(List<ResourceRequest> resourceRequestList)
         {
             // no resources required or this is an Activity folder.
             if ((resourceRequestList == null) || (resourceRequestList.Count == 0))
@@ -1123,11 +1112,8 @@ namespace Models.CLEM.Activities
             request.Required = amountNeeded;
             // may need to reduce request here or shortfalls will be triggered
 
-            if (current == null)
-            {
-                // no filter group provided so assume any labour
-                current = new LabourGroup();
-            }
+            // no filter group provided so assume any labour
+            current ??= new LabourGroup();
 
             request.ResourceTypeName = "Labour";
             ResourceRequest removeRequest = new()

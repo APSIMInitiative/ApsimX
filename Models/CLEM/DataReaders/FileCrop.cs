@@ -11,617 +11,616 @@ using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using System.Globalization;
 
-namespace Models.CLEM
+namespace Models.CLEM.DataReaders;
+
+///<summary>
+/// Reads in crop growth data and makes it available to other models.
+///</summary>
+[Serializable]
+[ViewName("UserInterface.Views.GridView")]
+[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+[ValidParent(ParentType = typeof(ZoneCLEM))]
+[ValidParent(ParentType = typeof(ActivityFolder))]
+[Description("Access to a crop data file")]
+[Version(1, 0, 5, "Fixed problem with passing soil type filter")]
+[Version(1, 0, 4, "Problem with pasture nitrogen allocation resulting in very poor pasture quality now fixed")]
+[Version(1, 0, 3, "Added ability to use Excel spreadsheets with given worksheet name")]
+[Version(1, 0, 2, "Added customisable column names.\r\nDelete and recreate old FileCrop components to set default values as previously used.")]
+[Version(1, 0, 1, "")]
+[HelpUri(@"Content/Features/DataReaders/CropDataReader.htm")]
+public class FileCrop : CLEMModel, IFileCrop
 {
-    ///<summary>
-    /// Reads in crop growth data and makes it available to other models.
-    ///</summary>
-    [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(ZoneCLEM))]
-    [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("Access to a crop data file")]
-    [Version(1, 0, 5, "Fixed problem with passing soil type filter")]
-    [Version(1, 0, 4, "Problem with pasture nitrogen allocation resulting in very poor pasture quality now fixed")]
-    [Version(1, 0, 3, "Added ability to use Excel spreadsheets with given worksheet name")]
-    [Version(1, 0, 2, "Added customisable column names.\r\nDelete and recreate old FileCrop components to set default values as previously used.")]
-    [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/DataReaders/CropDataReader.htm")]
-    public class FileCrop : CLEMModel, IFileCrop
+    /// <summary>
+    /// A reference to the text file reader object
+    /// </summary>
+    [NonSerialized]
+    private ApsimTextFile reader = null;
+
+    /// <summary>
+    /// The character spacing index for the SoilNum column
+    /// </summary>
+    private int soilNumIndex = 0;
+
+    /// <summary>
+    /// The character spacing index for the CropName column
+    /// </summary>
+    private int cropNameIndex = 0;
+
+    /// <summary>
+    /// The character spacing index for the Year column
+    /// </summary>
+    private int yearIndex = 0;
+
+    /// <summary>
+    /// The character spacing index for the Month column
+    /// </summary>
+    private int monthIndex = 0;
+
+    /// <summary>
+    /// The character spacing index for the Month column
+    /// </summary>
+    private int dayIndex = 0;
+
+    /// <summary>
+    /// The character spacing index for the AmtKg column
+    /// </summary>
+    private int amountKgIndex = 0;
+
+    /// <summary>
+    /// The character spacing index for the Npct column
+    /// </summary>
+    private int nitrogenPercentIndex ;
+
+    /// <summary>
+    /// The character spacing index for the Crude protein percent column
+    /// </summary>
+    private int crudeProteinPercentIndex = 0;
+
+    /// <summary>
+    /// The character spacing index for the dry matter digestibility column
+    /// </summary>
+    private int dryMatterDigestibilityIndex = 0;
+
+    /// <summary>
+    /// The character spacing index for the energy content column
+    /// </summary>
+    private int mDIndex = 0;
+
+    /// <summary>
+    /// The character spacing index for the harvest type column
+    /// </summary>
+    private int harvestTypeIndex = 0;
+
+    /// <summary>
+    /// The entire Crop File read in as a DataTable with Primary Keys assigned.
+    /// </summary>
+    private DataTable forageFileAsTable;
+
+    /// <summary>
+    /// Gets or sets the file name. Should be relative filename where possible.
+    /// </summary>
+    [Summary]
+    [Description("Crop file name")]
+    [Core.Display(Type=DisplayType.FileName)]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Crop file name must be supplied")]
+    public string FileName { get; set; }
+
+    /// <summary>
+    /// Used to hold the WorkSheet Name if data retrieved from an Excel file
+    /// </summary>
+    [Summary]
+    [Description("Worksheet name if spreadsheet")]
+    public string ExcelWorkSheetName { get; set; }
+
+    /// <summary>
+    /// Name of column holding crop name data
+    /// </summary>
+    [Summary]
+    [Description("Column name for crop name")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Crop name column name must be supplied")]
+    public string CropNameColumnName { get; set; } = "CropName";
+
+    /// <summary>
+    /// Name of column holding soil type data
+    /// </summary>
+    [Summary]
+    [Description("Column name for land id")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Land id column name must be supplied")]
+    public string SoilTypeColumnName { get; set; } = "LandId";
+
+    /// <summary>
+    /// Name of column holding year data
+    /// </summary>
+    [Summary]
+    [Description("Column name for year")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Year column name must be supplied")]
+    public string YearColumnName { get; set; } = "Year";
+
+    /// <summary>
+    /// Name of column holding month data
+    /// </summary>
+    [Summary]
+    [Description("Column name for month")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Month column name must be supplied")]
+    public string MonthColumnName { get; set; } = "Month";
+
+    /// <summary>
+    /// Name of column holding day data
+    /// </summary>
+    [Summary]
+    [Description("Column name for day (optional)")]
+    public string DayColumnName { get; set; }
+
+    /// <summary>
+    /// Name of column holding amount data
+    /// </summary>
+    [Summary]
+    [Description("Column name for amount")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Amount column name must be supplied")]
+    public string AmountColumnName { get; set; } = "AmountKg";
+
+    /// <summary>
+    /// Name of column holding nitrogen data
+    /// </summary>
+    [Summary]
+    [Description("Column name for percent nitrogen")]
+    public string PercentNitrogenColumnName { get; set; }
+
+    /// <summary>
+    /// Name of column holding crude protein percent
+    /// </summary>
+    [Summary]
+    [Description("Column name for percent crude protein")]
+    public string PercentCrudeProteinColumnName { get; set; }
+
+    /// <summary>
+    /// Name of column holding dry matter digestibility
+    /// </summary>
+    [Summary]
+    [Description("Column name for dry matter digestibility (%)")]
+    public string DryMatterDigestibilityColumnName { get; set; }
+
+    /// <summary>
+    /// Name of column holding energy content (MD)
+    /// </summary>
+    [Summary]
+    [Description("Column name for energy content (MD)")]
+    public string MDColumnName { get; set; }
+
+    /// <summary>
+    /// Name of column holding harvest details
+    /// </summary>
+    [Summary]
+    [Description("Column name for harvest type")]
+    public string HarvestTypeColumnName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the full file name (with path).
+    /// The Commands.ChangeProperty() uses this property to change the model.
+    /// This is done after the user changes the file using the browse button in the View.
+    /// </summary>
+    [JsonIgnore]
+    public string FullFileName
     {
-        /// <summary>
-        /// A reference to the text file reader object
-        /// </summary>
-        [NonSerialized]
-        private ApsimTextFile reader = null;
-
-        /// <summary>
-        /// The character spacing index for the SoilNum column
-        /// </summary>
-        private int soilNumIndex = 0;
-
-        /// <summary>
-        /// The character spacing index for the CropName column
-        /// </summary>
-        private int cropNameIndex = 0;
-
-        /// <summary>
-        /// The character spacing index for the Year column
-        /// </summary>
-        private int yearIndex = 0;
-
-        /// <summary>
-        /// The character spacing index for the Month column
-        /// </summary>
-        private int monthIndex = 0;
-
-        /// <summary>
-        /// The character spacing index for the Month column
-        /// </summary>
-        private int dayIndex = 0;
-
-        /// <summary>
-        /// The character spacing index for the AmtKg column
-        /// </summary>
-        private int amountKgIndex = 0;
-
-        /// <summary>
-        /// The character spacing index for the Npct column
-        /// </summary>
-        private int nitrogenPercentIndex ;
-
-        /// <summary>
-        /// The character spacing index for the Crude protein percent column
-        /// </summary>
-        private int crudeProteinPercentIndex = 0;
-
-        /// <summary>
-        /// The character spacing index for the dry matter digestibility column
-        /// </summary>
-        private int dryMatterDigestibilityIndex = 0;
-
-        /// <summary>
-        /// The character spacing index for the energy content column
-        /// </summary>
-        private int mDIndex = 0;
-
-        /// <summary>
-        /// The character spacing index for the harvest type column
-        /// </summary>
-        private int harvestTypeIndex = 0;
-
-        /// <summary>
-        /// The entire Crop File read in as a DataTable with Primary Keys assigned.
-        /// </summary>
-        private DataTable forageFileAsTable;
-
-        /// <summary>
-        /// Gets or sets the file name. Should be relative filename where possible.
-        /// </summary>
-        [Summary]
-        [Description("Crop file name")]
-        [Core.Display(Type=DisplayType.FileName)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Crop file name must be supplied")]
-        public string FileName { get; set; }
-
-        /// <summary>
-        /// Used to hold the WorkSheet Name if data retrieved from an Excel file
-        /// </summary>
-        [Summary]
-        [Description("Worksheet name if spreadsheet")]
-        public string ExcelWorkSheetName { get; set; }
-
-        /// <summary>
-        /// Name of column holding crop name data
-        /// </summary>
-        [Summary]
-        [Description("Column name for crop name")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Crop name column name must be supplied")]
-        public string CropNameColumnName { get; set; } = "CropName";
-
-        /// <summary>
-        /// Name of column holding soil type data
-        /// </summary>
-        [Summary]
-        [Description("Column name for land id")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Land id column name must be supplied")]
-        public string SoilTypeColumnName { get; set; } = "LandId";
-
-        /// <summary>
-        /// Name of column holding year data
-        /// </summary>
-        [Summary]
-        [Description("Column name for year")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Year column name must be supplied")]
-        public string YearColumnName { get; set; } = "Year";
-
-        /// <summary>
-        /// Name of column holding month data
-        /// </summary>
-        [Summary]
-        [Description("Column name for month")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Month column name must be supplied")]
-        public string MonthColumnName { get; set; } = "Month";
-
-        /// <summary>
-        /// Name of column holding day data
-        /// </summary>
-        [Summary]
-        [Description("Column name for day (optional)")]
-        public string DayColumnName { get; set; }
-
-        /// <summary>
-        /// Name of column holding amount data
-        /// </summary>
-        [Summary]
-        [Description("Column name for amount")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Amount column name must be supplied")]
-        public string AmountColumnName { get; set; } = "AmountKg";
-
-        /// <summary>
-        /// Name of column holding nitrogen data
-        /// </summary>
-        [Summary]
-        [Description("Column name for percent nitrogen")]
-        public string PercentNitrogenColumnName { get; set; }
-
-        /// <summary>
-        /// Name of column holding crude protein percent
-        /// </summary>
-        [Summary]
-        [Description("Column name for percent crude protein")]
-        public string PercentCrudeProteinColumnName { get; set; }
-
-        /// <summary>
-        /// Name of column holding dry matter digestibility
-        /// </summary>
-        [Summary]
-        [Description("Column name for dry matter digestibility (%)")]
-        public string DryMatterDigestibilityColumnName { get; set; }
-
-        /// <summary>
-        /// Name of column holding energy content (MD)
-        /// </summary>
-        [Summary]
-        [Description("Column name for energy content (MD)")]
-        public string MDColumnName { get; set; }
-
-        /// <summary>
-        /// Name of column holding harvest details
-        /// </summary>
-        [Summary]
-        [Description("Column name for harvest type")]
-        public string HarvestTypeColumnName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the full file name (with path).
-        /// The Commands.ChangeProperty() uses this property to change the model.
-        /// This is done after the user changes the file using the browse button in the View.
-        /// </summary>
-        [JsonIgnore]
-        public string FullFileName
+        get
         {
-            get
+            if ((FileName == null) || (FileName == ""))
+                return "";
+            else
             {
-                if ((FileName == null) || (FileName == ""))
-                    return "";
+                Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
+                if (simulation != null)
+                {
+                    return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
+                }
                 else
                 {
-                    Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
-                    if (simulation != null)
-                    {
-                        return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
-                    }
-                    else
-                    {
-                        return FileName;
-                    }
+                    return FileName;
                 }
             }
         }
+    }
 
-        /// <summary>
-        /// Does file exist
-        /// </summary>
-        public bool FileExists
+    /// <summary>
+    /// Does file exist
+    /// </summary>
+    public bool FileExists
+    {
+        get { return File.Exists(FullFileName); }
+    }
+
+    /// <summary>
+    /// Overrides the base class method to allow for initialization.
+    /// </summary>
+    [EventSubscribe("CLEMInitialiseResource")]
+    private void OnCLEMInitialiseResource(object sender, EventArgs e)
+    {
+        if (!FileExists)
         {
-            get { return File.Exists(FullFileName); }
+            string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), Name);
+            throw new ApsimXException(this, errorMsg);
         }
+        //soilNumIndex = 0;
+        //cropNameIndex = 0;
+        //yearIndex = 0;
+        //monthIndex = 0;
+        //amountKgIndex = 0;
+        //nitrogenPercentIndex = 0;
+        //harvestTypeIndex = 0;
+        //crudeProteinPercentIndex = 0;
+        //dryMatterDigestibilityIndex = 0;
+        //mDIndex = 0;
+        forageFileAsTable = GetAllData();
+    }
 
-        /// <summary>
-        /// Overrides the base class method to allow for initialization.
-        /// </summary>
-        [EventSubscribe("CLEMInitialiseResource")]
-        private void OnCLEMInitialiseResource(object sender, EventArgs e)
+    /// <summary>
+    /// Overrides the base class method to allow for clean up
+    /// </summary>
+    [EventSubscribe("Completed")]
+    private void OnSimulationCompleted(object sender, EventArgs e)
+    {
+        reader?.Close();
+        reader = null;
+    }
+
+    /// <summary>
+    /// Provides an error message to display if something is wrong.
+    /// Used by the UserInterface to give a warning of what is wrong
+    ///
+    /// When the user selects a file using the browse button in the UserInterface
+    /// and the file can not be displayed for some reason in the UserInterface.
+    /// </summary>
+    [JsonIgnore]
+    public string ErrorMessage = string.Empty;
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <returns></returns>
+    public DataTable GetTable()
+    {
+        try
         {
-            if (!FileExists)
-            {
-                string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), Name);
-                throw new ApsimXException(this, errorMsg);
-            }
-            //soilNumIndex = 0;
-            //cropNameIndex = 0;
-            //yearIndex = 0;
-            //monthIndex = 0;
-            //amountKgIndex = 0;
-            //nitrogenPercentIndex = 0;
-            //harvestTypeIndex = 0;
-            //crudeProteinPercentIndex = 0;
-            //dryMatterDigestibilityIndex = 0;
-            //mDIndex = 0;
-            forageFileAsTable = GetAllData();
+            return GetAllData();
         }
-
-        /// <summary>
-        /// Overrides the base class method to allow for clean up
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        catch (Exception err)
         {
-            reader?.Close();
-            reader = null;
+            ErrorMessage = err.Message;
+            return null;
         }
+    }
 
-        /// <summary>
-        /// Provides an error message to display if something is wrong.
-        /// Used by the UserInterface to give a warning of what is wrong
-        ///
-        /// When the user selects a file using the browse button in the UserInterface
-        /// and the file can not be displayed for some reason in the UserInterface.
-        /// </summary>
-        [JsonIgnore]
-        public string ErrorMessage = string.Empty;
+    /// <summary>
+    /// Get the DataTable view of this data
+    /// </summary>
+    /// <returns>The DataTable</returns>
+    public DataTable GetAllData()
+    {
+        reader = null;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
-        public DataTable GetTable()
+        if (OpenDataFile())
         {
-            try
-            {
-                return GetAllData();
-            }
-            catch (Exception err)
-            {
-                ErrorMessage = err.Message;
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the DataTable view of this data
-        /// </summary>
-        /// <returns>The DataTable</returns>
-        public DataTable GetAllData()
-        {
-            reader = null;
-
-            if (OpenDataFile())
-            {
-                List<string> cropProps =
-                [
-                    SoilTypeColumnName,
-                    CropNameColumnName,
-                    YearColumnName,
-                    MonthColumnName,
-                    AmountColumnName
-                ];
-                //Npct column is optional
-                //Only try to read it in if it exists in the file.
-                if (dayIndex != -1)
-                {
-                    cropProps.Add(DayColumnName);
-                }
-
-                if (nitrogenPercentIndex != -1)
-                {
-                    cropProps.Add(PercentNitrogenColumnName);
-                }
-
-                if (crudeProteinPercentIndex != -1)
-                {
-                    cropProps.Add(PercentCrudeProteinColumnName);
-                }
-
-                if (dryMatterDigestibilityIndex != -1)
-                {
-                    cropProps.Add(DryMatterDigestibilityColumnName);
-                }
-
-                if (mDIndex != -1)
-                {
-                    cropProps.Add(MDColumnName);
-                }
-
-                if (harvestTypeIndex != -1)
-                {
-                    cropProps.Add(HarvestTypeColumnName);
-                }
-
-                DataTable table = reader.ToTable(cropProps);
-
-                DataColumn[] primarykeys = new DataColumn[5];
-                primarykeys[0] = table.Columns[SoilTypeColumnName];
-                primarykeys[1] = table.Columns[CropNameColumnName];
-                primarykeys[2] = table.Columns[YearColumnName];
-                primarykeys[3] = table.Columns[MonthColumnName];
-                if (dayIndex != -1)
-                {
-                    primarykeys[4] = table.Columns[DayColumnName];
-                }
-
-                table.PrimaryKey = primarykeys;
-
-                CloseDataFile();
-                return table;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Searches the DataTable created from the Forage File using the specified parameters.
-        /// <returns></returns>
-        /// </summary>
-        /// <param name="landId"></param>
-        /// <param name="cropName"></param>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
-        /// <returns>A struct called CropDataType containing the crop data for this month.
-        /// This struct can be null.
-        /// </returns>
-        public List<CropDataType> GetCropDataForEntireRun(string landId, string cropName,
-                                        DateTime startDate, DateTime endDate)
-        {
-            int startYear = startDate.Year;
-            int startMonth = startDate.Month;
-            int endYear = endDate.Year;
-            int endMonth = endDate.Month;
-
-            //http://www.csharp-examples.net/dataview-rowfilter/
-
-            string soilTypeParenth = (forageFileAsTable.Columns[SoilTypeColumnName].DataType == typeof(System.String)) ? "'" : "";
-            string cropNameParenth = (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(System.String)) ? "'" : "";
-
-            // check that entry is in correct type
-            if (forageFileAsTable.Columns[SoilTypeColumnName].DataType == typeof(float))
-            {
-                if (!float.TryParse(landId, out float val))
-                {
-                    throw new ApsimXException(this, $"[o={Parent.Name}.{Name}] encountered a problem reading data\r\nCause: The value [{landId}] specified for column [{SoilTypeColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Land Id [{landId}] assigned to the Land type used is present in column [{SoilTypeColumnName}] of the production data provided.");
-                }
-            }
-
-            if (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(float))
-            {
-                if (!float.TryParse(cropName, out float val))
-                {
-                    throw new ApsimXException(this, $"[o={Parent.Name}.{Name}] encountered a problem reading data\r\nCause: The value [{cropName}] specified for column [{CropNameColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Crop name [{cropName}] required is present in column [{CropNameColumnName}] of the production data provided.");
-                }
-            }
-
-            using StringWriter filterWriter = new();
-            filterWriter.Write($"({SoilTypeColumnName} = {soilTypeParenth}{landId}{soilTypeParenth}) AND ({CropNameColumnName} = {cropNameParenth}{cropName}{cropNameParenth}) AND (");
-            if ((DayColumnName??"").Length > 0)
-            {
-                filterWriter.Write($"({YearColumnName} = {startDate.Year} AND {MonthColumnName} >= {startDate.Month} AND {DayColumnName} >= {startDate.Day}) OR ");
-                filterWriter.Write($"({YearColumnName} > {startDate.Year} AND {YearColumnName} < {endDate.Year}) OR ");
-                filterWriter.Write($"({YearColumnName} = {endDate.Year} AND {MonthColumnName} <= {endDate.Month} AND {DayColumnName} <= {endDate.Day})");
-            }
-            else
-            {
-                filterWriter.Write($"({YearColumnName} = {startDate.Year} AND {MonthColumnName} >= {startDate.Month}) OR ");
-                filterWriter.Write($"({YearColumnName} > {startDate.Year} AND {YearColumnName} < {endDate.Year}) OR ");
-                filterWriter.Write($"({YearColumnName} = {endDate.Year} AND {MonthColumnName} <= {endDate.Month})");
-            }
-            filterWriter.Write(")");
-
-            DataRow[] foundRows = forageFileAsTable.Select(filterWriter.ToString());
-
-            List<CropDataType> filtered = [];
-
-            foreach (DataRow dr in foundRows)
-            {
-                filtered.Add(DataRow2CropData(dr));
-            }
-
-            filtered.Sort((r, s) => DateTime.Compare(r.HarvestDate, s.HarvestDate));
-            return filtered;
-        }
-
-        private CropDataType DataRow2CropData(DataRow dr)
-        {
-            CropDataType cropdata = new()
-            {
-                SoilNum = dr[SoilTypeColumnName].ToString(),
-                CropName = dr[CropNameColumnName].ToString(),
-                Year = int.Parse(dr[YearColumnName].ToString()),
-                Month = int.Parse(dr[MonthColumnName].ToString()),
-                AmtKg = double.Parse(dr[AmountColumnName].ToString(), CultureInfo.InvariantCulture)
-            };
-
+            List<string> cropProps =
+            [
+                SoilTypeColumnName,
+                CropNameColumnName,
+                YearColumnName,
+                MonthColumnName,
+                AmountColumnName
+            ];
+            //Npct column is optional
+            //Only try to read it in if it exists in the file.
             if (dayIndex != -1)
             {
-                cropdata.Day = int.Parse(dr[DayColumnName].ToString(), CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                cropdata.Day = 1;
+                cropProps.Add(DayColumnName);
             }
 
-            //Npct column is optional 
-            //Only try to read it in if it exists in the file.
             if (nitrogenPercentIndex != -1)
             {
-                cropdata.Npct = double.Parse(dr[PercentNitrogenColumnName].ToString(), CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                cropdata.Npct = double.NaN;
+                cropProps.Add(PercentNitrogenColumnName);
             }
 
-            //CPpct column is optional 
-            //Only try to read it in if it exists in the file.
             if (crudeProteinPercentIndex != -1)
             {
-                cropdata.CPpct = double.Parse(dr[PercentCrudeProteinColumnName].ToString(), CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                cropdata.CPpct = double.NaN;
+                cropProps.Add(PercentCrudeProteinColumnName);
             }
 
-            //DMD column is optional 
-            //Only try to read it in if it exists in the file.
             if (dryMatterDigestibilityIndex != -1)
             {
-                cropdata.DMDpct = double.Parse(dr[DryMatterDigestibilityColumnName].ToString(), CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                cropdata.DMDpct = double.NaN;
+                cropProps.Add(DryMatterDigestibilityColumnName);
             }
 
-            //MD column is optional 
-            //Only try to read it in if it exists in the file.
             if (mDIndex != -1)
             {
-                cropdata.MD = double.Parse(dr[MDColumnName].ToString(), CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                cropdata.MD = double.NaN;
+                cropProps.Add(MDColumnName);
             }
 
-            //HarvestType column is optional 
-            //Only try to read it in if it exists in the file.
             if (harvestTypeIndex != -1)
             {
-                if ("first:last".Contains(dr[HarvestTypeColumnName].ToString(), StringComparison.CurrentCultureIgnoreCase))
-                {
-                    cropdata.HarvestType = dr[HarvestTypeColumnName].ToString().ToLower();
-                }
-                else
-                {
-                    cropdata.HarvestType = "";
-                }
+                cropProps.Add(HarvestTypeColumnName);
+            }
+
+            DataTable table = reader.ToTable(cropProps);
+
+            DataColumn[] primarykeys = new DataColumn[5];
+            primarykeys[0] = table.Columns[SoilTypeColumnName];
+            primarykeys[1] = table.Columns[CropNameColumnName];
+            primarykeys[2] = table.Columns[YearColumnName];
+            primarykeys[3] = table.Columns[MonthColumnName];
+            if (dayIndex != -1)
+            {
+                primarykeys[4] = table.Columns[DayColumnName];
+            }
+
+            table.PrimaryKey = primarykeys;
+
+            CloseDataFile();
+            return table;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Searches the DataTable created from the Forage File using the specified parameters.
+    /// <returns></returns>
+    /// </summary>
+    /// <param name="landId"></param>
+    /// <param name="cropName"></param>
+    /// <param name="startDate"></param>
+    /// <param name="endDate"></param>
+    /// <returns>A struct called CropDataType containing the crop data for this month.
+    /// This struct can be null.
+    /// </returns>
+    public List<CropDataType> GetCropDataForEntireRun(string landId, string cropName,
+                                    DateTime startDate, DateTime endDate)
+    {
+        int startYear = startDate.Year;
+        int startMonth = startDate.Month;
+        int endYear = endDate.Year;
+        int endMonth = endDate.Month;
+
+        //http://www.csharp-examples.net/dataview-rowfilter/
+
+        string soilTypeParenth = (forageFileAsTable.Columns[SoilTypeColumnName].DataType == typeof(System.String)) ? "'" : "";
+        string cropNameParenth = (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(System.String)) ? "'" : "";
+
+        // check that entry is in correct type
+        if (forageFileAsTable.Columns[SoilTypeColumnName].DataType == typeof(float))
+        {
+            if (!float.TryParse(landId, out float val))
+            {
+                throw new ApsimXException(this, $"[o={Parent.Name}.{Name}] encountered a problem reading data\r\nCause: The value [{landId}] specified for column [{SoilTypeColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Land Id [{landId}] assigned to the Land type used is present in column [{SoilTypeColumnName}] of the production data provided.");
+            }
+        }
+
+        if (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(float))
+        {
+            if (!float.TryParse(cropName, out float val))
+            {
+                throw new ApsimXException(this, $"[o={Parent.Name}.{Name}] encountered a problem reading data\r\nCause: The value [{cropName}] specified for column [{CropNameColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Crop name [{cropName}] required is present in column [{CropNameColumnName}] of the production data provided.");
+            }
+        }
+
+        using StringWriter filterWriter = new();
+        filterWriter.Write($"({SoilTypeColumnName} = {soilTypeParenth}{landId}{soilTypeParenth}) AND ({CropNameColumnName} = {cropNameParenth}{cropName}{cropNameParenth}) AND (");
+        if ((DayColumnName??"").Length > 0)
+        {
+            filterWriter.Write($"({YearColumnName} = {startDate.Year} AND {MonthColumnName} >= {startDate.Month} AND {DayColumnName} >= {startDate.Day}) OR ");
+            filterWriter.Write($"({YearColumnName} > {startDate.Year} AND {YearColumnName} < {endDate.Year}) OR ");
+            filterWriter.Write($"({YearColumnName} = {endDate.Year} AND {MonthColumnName} <= {endDate.Month} AND {DayColumnName} <= {endDate.Day})");
+        }
+        else
+        {
+            filterWriter.Write($"({YearColumnName} = {startDate.Year} AND {MonthColumnName} >= {startDate.Month}) OR ");
+            filterWriter.Write($"({YearColumnName} > {startDate.Year} AND {YearColumnName} < {endDate.Year}) OR ");
+            filterWriter.Write($"({YearColumnName} = {endDate.Year} AND {MonthColumnName} <= {endDate.Month})");
+        }
+        filterWriter.Write(")");
+
+        DataRow[] foundRows = forageFileAsTable.Select(filterWriter.ToString());
+
+        List<CropDataType> filtered = [];
+
+        foreach (DataRow dr in foundRows)
+        {
+            filtered.Add(DataRow2CropData(dr));
+        }
+
+        filtered.Sort((r, s) => DateTime.Compare(r.HarvestDate, s.HarvestDate));
+        return filtered;
+    }
+
+    private CropDataType DataRow2CropData(DataRow dr)
+    {
+        CropDataType cropdata = new()
+        {
+            SoilNum = dr[SoilTypeColumnName].ToString(),
+            CropName = dr[CropNameColumnName].ToString(),
+            Year = int.Parse(dr[YearColumnName].ToString()),
+            Month = int.Parse(dr[MonthColumnName].ToString()),
+            AmtKg = double.Parse(dr[AmountColumnName].ToString(), CultureInfo.InvariantCulture)
+        };
+
+        if (dayIndex != -1)
+        {
+            cropdata.Day = int.Parse(dr[DayColumnName].ToString(), CultureInfo.InvariantCulture);
+        }
+        else
+        {
+            cropdata.Day = 1;
+        }
+
+        //Npct column is optional 
+        //Only try to read it in if it exists in the file.
+        if (nitrogenPercentIndex != -1)
+        {
+            cropdata.Npct = double.Parse(dr[PercentNitrogenColumnName].ToString(), CultureInfo.InvariantCulture);
+        }
+        else
+        {
+            cropdata.Npct = double.NaN;
+        }
+
+        //CPpct column is optional 
+        //Only try to read it in if it exists in the file.
+        if (crudeProteinPercentIndex != -1)
+        {
+            cropdata.CPpct = double.Parse(dr[PercentCrudeProteinColumnName].ToString(), CultureInfo.InvariantCulture);
+        }
+        else
+        {
+            cropdata.CPpct = double.NaN;
+        }
+
+        //DMD column is optional 
+        //Only try to read it in if it exists in the file.
+        if (dryMatterDigestibilityIndex != -1)
+        {
+            cropdata.DMDpct = double.Parse(dr[DryMatterDigestibilityColumnName].ToString(), CultureInfo.InvariantCulture);
+        }
+        else
+        {
+            cropdata.DMDpct = double.NaN;
+        }
+
+        //MD column is optional 
+        //Only try to read it in if it exists in the file.
+        if (mDIndex != -1)
+        {
+            cropdata.MD = double.Parse(dr[MDColumnName].ToString(), CultureInfo.InvariantCulture);
+        }
+        else
+        {
+            cropdata.MD = double.NaN;
+        }
+
+        //HarvestType column is optional 
+        //Only try to read it in if it exists in the file.
+        if (harvestTypeIndex != -1)
+        {
+            if ("first:last".Contains(dr[HarvestTypeColumnName].ToString(), StringComparison.CurrentCultureIgnoreCase))
+            {
+                cropdata.HarvestType = dr[HarvestTypeColumnName].ToString().ToLower();
             }
             else
             {
                 cropdata.HarvestType = "";
             }
-
-            cropdata.HarvestDate = new DateTime(cropdata.Year, cropdata.Month, 1);
-            return cropdata;
+        }
+        else
+        {
+            cropdata.HarvestType = "";
         }
 
-        /// <summary>
-        /// Open the forage data file.
-        /// </summary>
-        /// <returns>True if the file was successfully opened</returns>
-        public bool OpenDataFile()
+        cropdata.HarvestDate = new DateTime(cropdata.Year, cropdata.Month, 1);
+        return cropdata;
+    }
+
+    /// <summary>
+    /// Open the forage data file.
+    /// </summary>
+    /// <returns>True if the file was successfully opened</returns>
+    public bool OpenDataFile()
+    {
+        if (File.Exists(FullFileName))
         {
-            if (File.Exists(FullFileName))
+            if (reader == null)
             {
-                if (reader == null)
+                reader = new ApsimTextFile();
+                reader.Open(FullFileName, ExcelWorkSheetName);
+
+                if (reader.Headings == null)
                 {
-                    reader = new ApsimTextFile();
-                    reader.Open(FullFileName, ExcelWorkSheetName);
-
-                    if (reader.Headings == null)
+                    string fileType = "Text file";
+                    string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
+                    if (reader.IsCSVFile)
                     {
-                        string fileType = "Text file";
-                        string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
-                        if (reader.IsCSVFile)
-                        {
-                            fileType = "Comma delimited text file (csv)";
-                        }
-
-                        if (reader.IsExcelFile)
-                        {
-                            fileType = "Excel file";
-                            extra = "";
-                        }
-                        throw new Exception($"Invalid {fileType} format of datafile [x={FullFileName.Replace("\\", "\\&shy;")}]{extra}");
+                        fileType = "Comma delimited text file (csv)";
                     }
 
-                    soilNumIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, SoilTypeColumnName);
-                    cropNameIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, CropNameColumnName);
-                    yearIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, YearColumnName);
-                    monthIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, MonthColumnName);
-                    dayIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, DayColumnName);
-                    amountKgIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, AmountColumnName);
-                    nitrogenPercentIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, PercentNitrogenColumnName);
-                    harvestTypeIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, HarvestTypeColumnName);
-                    crudeProteinPercentIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, PercentCrudeProteinColumnName);
-                    dryMatterDigestibilityIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, DryMatterDigestibilityColumnName);
-                    mDIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, MDColumnName);
-
-                    if (soilNumIndex == -1)
+                    if (reader.IsExcelFile)
                     {
-                        if (reader == null || reader.Constant(SoilTypeColumnName) == null)
-                        {
-                            throw new Exception($"Cannot find Land Id column [o={SoilTypeColumnName ?? "Empty"}] in crop file [x={FullFileName.Replace("\\", "\\&shy;")}] for [x={Name}]");
-                        }
+                        fileType = "Excel file";
+                        extra = "";
                     }
-
-                    if (cropNameIndex == -1)
-                    {
-                        if (reader == null || reader.Constant(CropNameColumnName) == null)
-                        {
-                            throw new Exception($"Cannot find CropName column [o={CropNameColumnName ?? "Empty"}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
-                        }
-                    }
-
-                    if (yearIndex == -1)
-                    {
-                        if (reader == null || reader.Constant(YearColumnName) == null)
-                        {
-                            throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
-                        }
-                    }
-
-                    if (monthIndex == -1)
-                    {
-                        if (reader == null || reader.Constant(MonthColumnName) == null)
-                        {
-                            throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
-                        }
-                    }
-
-                    if (amountKgIndex == -1)
-                    {
-                        if (reader == null || reader.Constant(AmountColumnName) == null)
-                        {
-                            throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
-                        }
-                    }
+                    throw new Exception($"Invalid {fileType} format of datafile [x={FullFileName.Replace("\\", "\\&shy;")}]{extra}");
                 }
-                else
+
+                soilNumIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, SoilTypeColumnName);
+                cropNameIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, CropNameColumnName);
+                yearIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, YearColumnName);
+                monthIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, MonthColumnName);
+                dayIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, DayColumnName);
+                amountKgIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, AmountColumnName);
+                nitrogenPercentIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, PercentNitrogenColumnName);
+                harvestTypeIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, HarvestTypeColumnName);
+                crudeProteinPercentIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, PercentCrudeProteinColumnName);
+                dryMatterDigestibilityIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, DryMatterDigestibilityColumnName);
+                mDIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, MDColumnName);
+
+                if (soilNumIndex == -1)
                 {
-                    if (reader.IsExcelFile != true)
+                    if (reader == null || reader.Constant(SoilTypeColumnName) == null)
                     {
-                        reader.SeekToDate(reader.FirstDate);
+                        throw new Exception($"Cannot find Land Id column [o={SoilTypeColumnName ?? "Empty"}] in crop file [x={FullFileName.Replace("\\", "\\&shy;")}] for [x={Name}]");
                     }
                 }
 
-                return true;
+                if (cropNameIndex == -1)
+                {
+                    if (reader == null || reader.Constant(CropNameColumnName) == null)
+                    {
+                        throw new Exception($"Cannot find CropName column [o={CropNameColumnName ?? "Empty"}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                    }
+                }
+
+                if (yearIndex == -1)
+                {
+                    if (reader == null || reader.Constant(YearColumnName) == null)
+                    {
+                        throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                    }
+                }
+
+                if (monthIndex == -1)
+                {
+                    if (reader == null || reader.Constant(MonthColumnName) == null)
+                    {
+                        throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                    }
+                }
+
+                if (amountKgIndex == -1)
+                {
+                    if (reader == null || reader.Constant(AmountColumnName) == null)
+                    {
+                        throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                    }
+                }
             }
             else
             {
-                return false;
+                if (reader.IsExcelFile != true)
+                {
+                    reader.SeekToDate(reader.FirstDate);
+                }
             }
-        }
 
-        /// <summary>Close the datafile.</summary>
-        public void CloseDataFile()
-        {
-            reader?.Close();
-            reader = null;
+            return true;
         }
+        else
+        {
+            return false;
+        }
+    }
+
+    /// <summary>Close the datafile.</summary>
+    public void CloseDataFile()
+    {
+        reader?.Close();
+        reader = null;
     }
 }

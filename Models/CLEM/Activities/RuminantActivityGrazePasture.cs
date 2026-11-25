@@ -1,5 +1,6 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -24,7 +25,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        private CLEMEvents events = null;
+        private readonly CLEMEvents events = null;
         private IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdChildren;
         private double[] totalNeededDaily;
         private double[] totalRequestedTimeStep;
@@ -110,15 +111,17 @@ namespace Models.CLEM.Activities
             {
                 if (grazeHerdChildren.Where(a => a.RuminantTypeModel != herdType).Any() == false)
                 {
-                    var newGrazePastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, TransactionCategory, nextUID);
-                    newGrazePastureHerd.OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction;
+                    var newGrazePastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, TransactionCategory, nextUID)
+                    {
+                        OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
+                    };
                     Structure.AddChild(newGrazePastureHerd);
                     Links links = new();
                     links.Resolve(newGrazePastureHerd as IModel, true, recurse: false);
 
                     var events = new Events(newGrazePastureHerd);
                     events.ConnectEvents();
-                    events.PublishToModelAndChildren("Commencing", new object[] { newGrazePastureHerd, new EventArgs() });
+                    events.PublishToModelAndChildren("Commencing", [newGrazePastureHerd, new EventArgs()]);
 
                     nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
                 }
@@ -161,7 +164,7 @@ namespace Models.CLEM.Activities
             {
                 grazeHerd.DigestiblePasturePoolGroups = intakeGroups;
                 grazeHerd.ResourceRequestList.Clear();
-                totalNeededDaily[cnt] = grazeHerd.CalculateDailyFeedRequirement(greenAge);
+                totalNeededDaily[cnt] = grazeHerd.CalculateDailyFeedRequirement();
                 cnt++;
             }
 
@@ -209,12 +212,12 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (GrazeFoodStoreTypeName.Contains("."))
+            if (GrazeFoodStoreTypeName.Contains('.'))
             {
                 ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IGrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
                 {
-                    yield return new ValidationResult($"The location defined for grazing [r={GrazeFoodStoreTypeName}] in [a={Name}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", new string[] { "Location is not valid" });
+                    yield return new ValidationResult($"The location defined for grazing [r={GrazeFoodStoreTypeName}] in [a={Name}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", ["Location is not valid"]);
                 }
             }
         }

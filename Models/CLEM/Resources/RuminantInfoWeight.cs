@@ -309,9 +309,8 @@ namespace Models.CLEM.Resources
         /// Calculate the current fleece weight as a proportion of standard fleece weight
         /// </summary>
         /// <param name="parameters">Access to the parameter set of the ruminant</param>
-        /// <param name="ageInDays">The age of the individual in days</param>
-        /// <returns>Current greasy fleece weight as proportion of</returns>
-        public double FleeceWeightAsProportionOfSFW(RuminantParameters parameters, int ageInDays)
+        /// <returns>Current greasy fleece weight as proportion of Standard Fleece Weight</returns>
+        public double FleeceWeightAsProportionOfSFW(RuminantParameters parameters)
         {
             if (parameters.General.IncludeWool == false)
                 return 0;   

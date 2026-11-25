@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Descriptive summary provider for Ruminant Activity Feed
@@ -59,10 +59,10 @@ public class RuminantActivityFeedSummary : RuminantActivitySummaryBase<RuminantA
                 break;
         }
 
-        generator.AddBlockWithText($"Feed {feedstyleStart} {generator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Feed not set", HTMLSummaryStyle.Resource)} to ruminants");
+        generator.AddBlockWithText($"Feed {feedstyleStart} {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Feed not set", HTMLSummaryStyle.Resource)} to ruminants");
         if (ModelTyped.ProportionTramplingWastage > 0)
         {
-            generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(ModelTyped.ProportionTramplingWastage)} x AmountNeeded will be lost through trampling");
+            generator.AddBlockWithText($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ProportionTramplingWastage)} x AmountNeeded will be lost through trampling");
         }
         if (ModelTyped.StopFeedingWhenSatisfied)
         {

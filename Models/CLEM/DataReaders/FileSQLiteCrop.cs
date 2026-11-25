@@ -11,281 +11,280 @@ using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using System.Globalization;
 
-namespace Models.CLEM
+namespace Models.CLEM.DataReaders;
+
+///<summary>
+/// Reads in crop growth data from an APSIM SQLite database and makes it available to other models.
+/// Required columns are (you can provide a link to each column name):
+/// Year
+/// Month
+/// Soil id
+/// Crop name
+/// Amount harvested
+/// Percent nitrogen (optional)
+///</summary>
+///<remarks>
+///</remarks>
+[Serializable]
+[ViewName("UserInterface.Views.GridView")]
+[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+[ValidParent(ParentType = typeof(ZoneCLEM))]
+[ValidParent(ParentType = typeof(ActivityFolder))]
+[Description("Access to a crop data file as a table in an SQLite database")]
+[Version(1, 0, 1, "")]
+[Version(1, 0, 2, "Added ability to define table and columns to use")]
+[HelpUri(@"Content/Features/DataReaders/CropDataReaderSQLite.htm")]
+public class FileSQLiteCrop : CLEMModel, IFileCrop
 {
-    ///<summary>
-    /// Reads in crop growth data from an APSIM SQLite database and makes it available to other models.
-    /// Required columns are (you can provide a link to each column name):
-    /// Year
-    /// Month
-    /// Soil id
-    /// Crop name
-    /// Amount harvested
-    /// Percent nitrogen (optional)
-    ///</summary>
-    ///<remarks>
-    ///</remarks>
-    [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(ZoneCLEM))]
-    [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("Access to a crop data file as a table in an SQLite database")]
-    [Version(1, 0, 1, "")]
-    [Version(1, 0, 2, "Added ability to define table and columns to use")]
-    [HelpUri(@"Content/Features/DataReaders/CropDataReaderSQLite.htm")]
-    public class FileSQLiteCrop : CLEMModel, IFileCrop
+    private bool nitrogenColumnExists = false;
+    private bool harvestTypeColumnExists = false;
+
+    /// <summary>
+    /// Gets or sets the file name. Should be relative filename where possible.
+    /// </summary>
+    [Summary]
+    [Description("Crop database file name")]
+    [Core.Display(Type = DisplayType.FileName)]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Crop database file name must be supplied")]
+    public string FileName { get; set; }
+
+    /// <summary>
+    /// Defines the name of the table in the database holding the crop data.
+    /// </summary>
+    [Summary]
+    [Description("Database table name")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Database table name must be supplied")]
+    public string TableName { get; set; }
+
+    /// <summary>
+    /// Name of column holding crop name data
+    /// </summary>
+    [Summary]
+    [Description("Column name for crop name")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Crop name column name must be supplied")]
+    public string CropNameColumnName { get; set; } = "CropName";
+
+    /// <summary>
+    /// Name of column holding soil type data
+    /// </summary>
+    [Summary]
+    [Description("Column name for land id")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Land id column name must be supplied")]
+    public string SoilTypeColumnName { get; set; } = "LandId";
+
+    /// <summary>
+    /// Name of column holding year data
+    /// </summary>
+    [Summary]
+    [Description("Column name for date")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Date column name must be supplied")]
+    public string DateColumnName { get; set; } = "Date";
+
+    /// <summary>
+    /// Name of column holding amount data
+    /// </summary>
+    [Summary]
+    [Description("Column name for amount")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Amount column name must be supplied")]
+    public string AmountColumnName { get; set; } = "AMountKg";
+
+    /// <summary>
+    /// Name of column holding nitrogen data
+    /// </summary>
+    [Summary]
+    [Description("Column name for percent nitrogen")]
+    public string PercentNitrogenColumnName { get; set; }
+
+    /// <summary>
+    /// Name of column holding harvest details
+    /// </summary>
+    [Summary]
+    [Description("Column name for harvest type")]
+    public string HarvestTypeColumnName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the full file name (with path).
+    /// The Commands.ChangeProperty() uses this property to change the model.
+    /// This is done after the user changes the file using the browse button in the View.
+    /// </summary>
+    [JsonIgnore]
+    public string FullFileName
     {
-        private bool nitrogenColumnExists = false;
-        private bool harvestTypeColumnExists = false;
-
-        /// <summary>
-        /// Gets or sets the file name. Should be relative filename where possible.
-        /// </summary>
-        [Summary]
-        [Description("Crop database file name")]
-        [Core.Display(Type = DisplayType.FileName)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Crop database file name must be supplied")]
-        public string FileName { get; set; }
-
-        /// <summary>
-        /// Defines the name of the table in the database holding the crop data.
-        /// </summary>
-        [Summary]
-        [Description("Database table name")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Database table name must be supplied")]
-        public string TableName { get; set; }
-
-        /// <summary>
-        /// Name of column holding crop name data
-        /// </summary>
-        [Summary]
-        [Description("Column name for crop name")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Crop name column name must be supplied")]
-        public string CropNameColumnName { get; set; } = "CropName";
-
-        /// <summary>
-        /// Name of column holding soil type data
-        /// </summary>
-        [Summary]
-        [Description("Column name for land id")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Land id column name must be supplied")]
-        public string SoilTypeColumnName { get; set; } = "LandId";
-
-        /// <summary>
-        /// Name of column holding year data
-        /// </summary>
-        [Summary]
-        [Description("Column name for date")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Date column name must be supplied")]
-        public string DateColumnName { get; set; } = "Date";
-
-        /// <summary>
-        /// Name of column holding amount data
-        /// </summary>
-        [Summary]
-        [Description("Column name for amount")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Amount column name must be supplied")]
-        public string AmountColumnName { get; set; } = "AMountKg";
-
-        /// <summary>
-        /// Name of column holding nitrogen data
-        /// </summary>
-        [Summary]
-        [Description("Column name for percent nitrogen")]
-        public string PercentNitrogenColumnName { get; set; }
-
-        /// <summary>
-        /// Name of column holding harvest details
-        /// </summary>
-        [Summary]
-        [Description("Column name for harvest type")]
-        public string HarvestTypeColumnName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the full file name (with path).
-        /// The Commands.ChangeProperty() uses this property to change the model.
-        /// This is done after the user changes the file using the browse button in the View.
-        /// </summary>
-        [JsonIgnore]
-        public string FullFileName
+        get
         {
-            get
+            if ((this.FileName == null) || (this.FileName  == ""))
+                return "";
+            else
             {
-                if ((this.FileName == null) || (this.FileName  == ""))
-                    return "";
+                Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
+                if (simulation != null)
+                    return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                 else
-                {
-                    Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
-                    if (simulation != null)
-                        return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
-                    else
-                        return this.FileName;
-                }
+                    return this.FileName;
             }
         }
+    }
 
-        /// <summary>
-        /// Does file exist
-        /// </summary>
-        public bool FileExists
-        {
-            get { return File.Exists(this.FullFileName); }
-        }
+    /// <summary>
+    /// Does file exist
+    /// </summary>
+    public bool FileExists
+    {
+        get { return File.Exists(this.FullFileName); }
+    }
 
-        /// <summary>
-        /// Overrides the base class method to allow for initialization.
-        /// </summary>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+    /// <summary>
+    /// Overrides the base class method to allow for initialization.
+    /// </summary>
+    [EventSubscribe("Commencing")]
+    private void OnSimulationCommencing(object sender, EventArgs e)
+    {
+        SQLite sQLiteReader = new();
+        try
         {
-            SQLite sQLiteReader = new();
-            try
+            sQLiteReader.OpenDatabase(FullFileName, true);
+
+            // check table exists
+            if(!sQLiteReader.GetTableNames().Contains(TableName))
             {
-                sQLiteReader.OpenDatabase(FullFileName, true);
+                string errorMsg = "The specified table named ["+TableName+ "] was not found\r\n. Please note these table names are case sensitive.";
+                throw new ApsimXException(this, errorMsg);
+            }
 
-                // check table exists
-                if(!sQLiteReader.GetTableNames().Contains(TableName))
+            Dictionary<string, string> columnLinks = new()
+            {
+                { "date", DateColumnName },
+                { "soil", SoilTypeColumnName },
+                { "crop", CropNameColumnName },
+                { "amount", AmountColumnName },
+                { "N", PercentNitrogenColumnName },
+                { "HarvestType", PercentNitrogenColumnName }
+            };
+            foreach (var item in columnLinks)
+            {
+                // check each column name exists
+                if (!(item.Key == "N" & item.Value == "" & item.Value == "HarvestType"))
                 {
-                    string errorMsg = "The specified table named ["+TableName+ "] was not found\r\n. Please note these table names are case sensitive.";
-                    throw new ApsimXException(this, errorMsg);
-                }
-
-                Dictionary<string, string> columnLinks = new Dictionary<string, string>()
-                {
-                    { "date", DateColumnName },
-                    { "soil", SoilTypeColumnName },
-                    { "crop", CropNameColumnName },
-                    { "amount", AmountColumnName },
-                    { "N", PercentNitrogenColumnName },
-                    { "HarvestType", PercentNitrogenColumnName }
-                };
-                foreach (var item in columnLinks)
-                {
-                    // check each column name exists
-                    if (!(item.Key == "N" & item.Value == "" & item.Value == "HarvestType"))
+                    if (!sQLiteReader.GetColumnNames(TableName).Contains(item.Value))
                     {
-                        if (!sQLiteReader.GetColumnNames(TableName).Contains(item.Value))
-                        {
-                            string errorMsg = "The specified column [o=" + item.Key + "] does not exist in the table named [" + TableName + "] for [x="+this.Name+"]\r\nEnsure the column name is present in the table. Please not these column names are case sensitive.";
-                            throw new ApsimXException(this, errorMsg);
-                        }
+                        string errorMsg = "The specified column [o=" + item.Key + "] does not exist in the table named [" + TableName + "] for [x="+this.Name+"]\r\nEnsure the column name is present in the table. Please not these column names are case sensitive.";
+                        throw new ApsimXException(this, errorMsg);
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                string errorMsg = "There was a problem with the SQLite database [o=" + FileName + "] for [x=" + this.Name + "]\r\n" + ex.Message;
-                throw new ApsimXException(this, errorMsg);
-            }
-            if (sQLiteReader.IsOpen)
-            {
-                sQLiteReader.CloseDatabase();
-            }
         }
-
-        /// <summary>
-        /// Provides an error message to display if something is wrong.
-        /// Used by the UserInterface to give a warning of what is wrong
-        /// When the user selects a file using the browse button in the UserInterface
-        /// and the file can not be displayed for some reason in the UserInterface.
-        /// </summary>
-        [JsonIgnore]
-        public string ErrorMessage = string.Empty;
-
-        /// <summary>
-        /// Searches the DataTable created from the Forage File using the specified parameters.
-        /// <returns></returns>
-        /// </summary>
-        /// <param name="soilId">Name of soil or run name in database</param>
-        /// <param name="cropName">Name of crop in database</param>
-        /// <param name="startDate">Start date of the simulation</param>
-        /// <param name="endDate">End date of the simulation</param>
-        /// <returns>A struct called CropDataType containing the crop data for this month.
-        /// This struct can be null.
-        /// </returns>
-        public List<CropDataType> GetCropDataForEntireRun(string soilId, string cropName,
-                                        DateTime startDate, DateTime endDate)
+        catch (Exception ex)
         {
-            // check SQL file
-            SQLite sQLiteReader = new SQLite();
-            try
-            {
-                sQLiteReader.OpenDatabase(FullFileName, true);
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = $"There was a problem opening the SQLite database [o={FullFileName} for [x={ this.Name}]\r\n{ ex.Message}";
-            }
-
-            // check if Npct and harvestColumn column exists in database
-            nitrogenColumnExists = sQLiteReader.GetColumnNames(TableName).Contains(PercentNitrogenColumnName);
-            harvestTypeColumnExists = sQLiteReader.GetColumnNames(TableName).Contains(HarvestTypeColumnName);
-
-            // define SQL filter to load data
-            string sqlQuery = $"SELECT {DateColumnName},{CropNameColumnName},{SoilTypeColumnName},{AmountColumnName}" + (nitrogenColumnExists ? "," + PercentNitrogenColumnName : "") + (harvestTypeColumnExists ? "," + HarvestTypeColumnName : "") + " FROM {TableName"
-                + $" WHERE {SoilTypeColumnName} = '{soilId}'"
-                + $" AND {CropNameColumnName} = '{cropName}'";
-
-            sqlQuery += $" AND (( {DateColumnName} => {startDate} AND { DateColumnName} <= {endDate})"
-                + ")";
-            
-            DataTable results;
-            try
-            {
-                results = sQLiteReader.ExecuteQuery(sqlQuery);
-            }
-            catch(Exception ex)
-            {
-                string errorMsg = $"There was a problem accessing the SQLite database [o={ FullFileName}] for [x={Name}]\r\n{ ex.Message}";
-                throw new ApsimXException(this, errorMsg);
-            }
-
-            if (sQLiteReader.IsOpen)
-                sQLiteReader.CloseDatabase();
-
-            List<CropDataType> cropDetails = new();
-            if (results.Rows.Count > 0)
-            {
-                results.DefaultView.Sort = DateColumnName;
-
-                // convert to list<CropDataType>
-                foreach (DataRowView row in results.DefaultView)
-                {
-                    cropDetails.Add(DataRow2CropData(row.Row));
-                }
-            }
-
-            return cropDetails;
+            string errorMsg = "There was a problem with the SQLite database [o=" + FileName + "] for [x=" + this.Name + "]\r\n" + ex.Message;
+            throw new ApsimXException(this, errorMsg);
         }
-
-        private CropDataType DataRow2CropData(DataRow dr)
+        if (sQLiteReader.IsOpen)
         {
-            CropDataType cropData = new CropDataType
-            {
-                SoilNum = dr[SoilTypeColumnName].ToString(),
-                CropName = dr[CropNameColumnName].ToString(),
-                HarvestDate = DateTime.Parse(dr[DateColumnName].ToString(), CultureInfo.InvariantCulture),
-                AmtKg = double.Parse(dr[AmountColumnName].ToString())
-            };
-            if (nitrogenColumnExists)
-            {
-                cropData.Npct = double.Parse(dr[PercentNitrogenColumnName].ToString(), CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                cropData.Npct = double.NaN;
-            }
-
-            if (harvestTypeColumnExists)
-            {
-                cropData.HarvestType = dr[HarvestTypeColumnName].ToString();
-            }
-
-            cropData.HarvestDate = new DateTime(cropData.Year, cropData.Month, 1);
-
-            return cropData;
+            sQLiteReader.CloseDatabase();
         }
-
     }
+
+    /// <summary>
+    /// Provides an error message to display if something is wrong.
+    /// Used by the UserInterface to give a warning of what is wrong
+    /// When the user selects a file using the browse button in the UserInterface
+    /// and the file can not be displayed for some reason in the UserInterface.
+    /// </summary>
+    [JsonIgnore]
+    public string ErrorMessage = string.Empty;
+
+    /// <summary>
+    /// Searches the DataTable created from the Forage File using the specified parameters.
+    /// <returns></returns>
+    /// </summary>
+    /// <param name="soilId">Name of soil or run name in database</param>
+    /// <param name="cropName">Name of crop in database</param>
+    /// <param name="startDate">Start date of the simulation</param>
+    /// <param name="endDate">End date of the simulation</param>
+    /// <returns>A struct called CropDataType containing the crop data for this month.
+    /// This struct can be null.
+    /// </returns>
+    public List<CropDataType> GetCropDataForEntireRun(string soilId, string cropName,
+                                    DateTime startDate, DateTime endDate)
+    {
+        // check SQL file
+        SQLite sQLiteReader = new();
+        try
+        {
+            sQLiteReader.OpenDatabase(FullFileName, true);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"There was a problem opening the SQLite database [o={FullFileName} for [x={ this.Name}]\r\n{ ex.Message}";
+        }
+
+        // check if Npct and harvestColumn column exists in database
+        nitrogenColumnExists = sQLiteReader.GetColumnNames(TableName).Contains(PercentNitrogenColumnName);
+        harvestTypeColumnExists = sQLiteReader.GetColumnNames(TableName).Contains(HarvestTypeColumnName);
+
+        // define SQL filter to load data
+        string sqlQuery = $"SELECT {DateColumnName},{CropNameColumnName},{SoilTypeColumnName},{AmountColumnName}" + (nitrogenColumnExists ? "," + PercentNitrogenColumnName : "") + (harvestTypeColumnExists ? "," + HarvestTypeColumnName : "") + " FROM {TableName"
+            + $" WHERE {SoilTypeColumnName} = '{soilId}'"
+            + $" AND {CropNameColumnName} = '{cropName}'";
+
+        sqlQuery += $" AND (( {DateColumnName} => {startDate} AND { DateColumnName} <= {endDate})"
+            + ")";
+        
+        DataTable results;
+        try
+        {
+            results = sQLiteReader.ExecuteQuery(sqlQuery);
+        }
+        catch(Exception ex)
+        {
+            string errorMsg = $"There was a problem accessing the SQLite database [o={ FullFileName}] for [x={Name}]\r\n{ ex.Message}";
+            throw new ApsimXException(this, errorMsg);
+        }
+
+        if (sQLiteReader.IsOpen)
+            sQLiteReader.CloseDatabase();
+
+        List<CropDataType> cropDetails = [];
+        if (results.Rows.Count > 0)
+        {
+            results.DefaultView.Sort = DateColumnName;
+
+            // convert to list<CropDataType>
+            foreach (DataRowView row in results.DefaultView)
+            {
+                cropDetails.Add(DataRow2CropData(row.Row));
+            }
+        }
+
+        return cropDetails;
+    }
+
+    private CropDataType DataRow2CropData(DataRow dr)
+    {
+        CropDataType cropData = new()
+        {
+            SoilNum = dr[SoilTypeColumnName].ToString(),
+            CropName = dr[CropNameColumnName].ToString(),
+            HarvestDate = DateTime.Parse(dr[DateColumnName].ToString(), CultureInfo.InvariantCulture),
+            AmtKg = double.Parse(dr[AmountColumnName].ToString())
+        };
+        if (nitrogenColumnExists)
+        {
+            cropData.Npct = double.Parse(dr[PercentNitrogenColumnName].ToString(), CultureInfo.InvariantCulture);
+        }
+        else
+        {
+            cropData.Npct = double.NaN;
+        }
+
+        if (harvestTypeColumnExists)
+        {
+            cropData.HarvestType = dr[HarvestTypeColumnName].ToString();
+        }
+
+        cropData.HarvestDate = new DateTime(cropData.Year, cropData.Month, 1);
+
+        return cropData;
+    }
+
 }

@@ -7,8 +7,9 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using APSIM.Core;
+using Models.CLEM.DataReaders;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     ///<summary>
     /// Randomises the years of grown provided in pasture reader.
@@ -26,7 +27,7 @@ namespace Models.CLEM
     public class RainfallShuffler: CLEMModel, IValidatableObject
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// Month for the start of rainfall/growth season
@@ -64,12 +65,12 @@ namespace Models.CLEM
             // shuffle years for proxy stochastic rainfall simulation
 
             // create year month list
-            List<(int year, int month, int rndyear, int mthoffset)> storeYears = new List<(int, int, int, int)>();
-            DateTime currentDate = new DateTime(clock.StartDate.Year, clock.StartDate.Month, 1);
+            List<(int year, int month, int rndyear, int mthoffset)> storeYears = [];
+            DateTime currentDate = new(clock.StartDate.Year, clock.StartDate.Month, 1);
             int startYear = (currentDate.Month >= (int)StartSeasonMonth)? clock.StartDate.Year - 1: clock.StartDate.Year;
             int currentYear = 0;
-            List<int> yearOffset = new List<int>() { 0 };
-            List<int> monthOffset = new List<int>();
+            List<int> yearOffset = [0];
+            List<int> monthOffset = [];
             while (currentDate <= clock.EndDate)
             {
                 if (currentDate.Month == (int)StartSeasonMonth)
@@ -82,10 +83,10 @@ namespace Models.CLEM
             }
 
             // shuffle years
-            yearOffset = yearOffset.OrderBy(a => RandomNumberGenerator.Generator.NextDouble()).ToList();
+            yearOffset = [.. yearOffset.OrderBy(a => RandomNumberGenerator.Generator.NextDouble())];
             // create shuffled month/date
-            ShuffledYears = storeYears.Select(a => new ShuffleYear() { Year = a.year, Month = a.month, RandomYear = startYear + yearOffset[a.rndyear] + a.mthoffset } ).ToList();
-            ShuffledYearsArray = ShuffledYears.Select(a => new DateTime(a.RandomYear, a.Month, 1)).ToArray<DateTime>();
+            ShuffledYears = [.. storeYears.Select(a => new ShuffleYear() { Year = a.year, Month = a.month, RandomYear = startYear + yearOffset[a.rndyear] + a.mthoffset })];
+            ShuffledYearsArray = [.. ShuffledYears.Select(a => new DateTime(a.RandomYear, a.Month, 1))];
         }
 
         #region validation
@@ -94,7 +95,7 @@ namespace Models.CLEM
         {
             if (Structure.Find<RandomNumberGenerator>() is null)
             {
-                yield return new ValidationResult($"The [RainfallShuffler] component [{NameWithParent}] requires access to a [RandomNumberGenerator] component in the simulation tree", new string[] { "Missing random number generator" });
+                yield return new ValidationResult($"The [RainfallShuffler] component [{NameWithParent}] requires access to a [RandomNumberGenerator] component in the simulation tree", ["Missing random number generator"]);
             }
         }
         #endregion

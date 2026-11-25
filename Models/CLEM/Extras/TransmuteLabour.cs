@@ -11,7 +11,7 @@ using System.Linq;
 using System.IO;
 using APSIM.Numerics;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     ///<summary>
     /// Resource transmutation labour cost item
@@ -26,7 +26,7 @@ namespace Models.CLEM
     public class TransmuteLabour : CLEMModel, ITransmute, IValidatableObject
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
 
         private double shortfallPacketSize = 1;
         private bool shortfallWholePackets = false;
@@ -73,7 +73,7 @@ namespace Models.CLEM
             ResourceGroup = resources.FindResourceGroup<Labour>();
             shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;
             shortfallWholePackets = (Parent as Transmutation).UseWholePackets;
-            groupings = Structure.FindChildren<RuminantGroup>().ToList<object>();
+            groupings = [.. Structure.FindChildren<RuminantGroup>()];
         }
 
         ///<inheritdoc/>
@@ -85,7 +85,7 @@ namespace Models.CLEM
             {
                 request.FilterDetails = groupings;
                 CLEMActivityBase.TakeLabour(request, !queryOnly, request.ActivityModel, resources,
-                                            (request.ActivityModel is CLEMActivityBase) ?(request.ActivityModel as CLEMActivityBase).AllowsPartialResourcesAvailable:false,
+                                            (request.ActivityModel is CLEMActivityBase) && (request.ActivityModel as CLEMActivityBase).AllowsPartialResourcesAvailable,
                                             Structure);
             }
             return (request.Provided >= request.Required);
@@ -111,17 +111,14 @@ namespace Models.CLEM
             if (ResourceGroup is null)
             {
                 parentResource = Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
-                yield return new ValidationResult($"No [r=Labour] resource was found for a labour-based transmutation [{this.Name}] of [{parentResource.Name}]", new string[] { "Labour resource" });
+                yield return new ValidationResult($"No [r=Labour] resource was found for a labour-based transmutation [{this.Name}] of [{parentResource.Name}]", ["Labour resource"]);
             }
 
             if (TransmuteStyle == TransmuteStyle.UsePricing)
             {
-                if (parentResource is null)
-                {
-                    parentResource = Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
-                }
+                parentResource ??= Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
 
-                yield return new ValidationResult($"The UsePricing Transmute style is not supported in the [{this.Name}] of [{parentResource.Name}]", new string[] { "Transmte pricing" });
+                yield return new ValidationResult($"The UsePricing Transmute style is not supported in the [{this.Name}] of [{parentResource.Name}]", ["Transmte pricing"]);
             }
         }
         #endregion

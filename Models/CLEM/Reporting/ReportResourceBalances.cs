@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -30,9 +31,9 @@ namespace Models.CLEM.Reporting
     public class ReportResourceBalances : Report, ICLEMUI
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         [Link]
-        private Summary summary = null;
+        private readonly Summary summary = null;
 
         private IEnumerable<IActivityTimer> timers;
 
@@ -110,12 +111,12 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("FinalInitialise")] // "Commencing"
         private void OnCommencing(object sender, EventArgs e)
         {
-            if (ResourceGroupsToReport is null || !ResourceGroupsToReport.Any())
+            if (ResourceGroupsToReport is null || ResourceGroupsToReport.Length == 0)
                 return;
 
             timers = Structure.FindChildren<IActivityTimer>();
 
-            List<string> variableNames = new();
+            List<string> variableNames = [];
             if (ResourceGroupsToReport.Where(a => a.Contains("[Clock].Today")).Any() is false)
             {
                 variableNames.Add("[Clock].Today as Date");
@@ -129,7 +130,7 @@ namespace Models.CLEM.Reporting
                     bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.ResourceGroupsToReport[i].Trim()) != -1;
                     if (!isDuplicate && this.ResourceGroupsToReport[i] != string.Empty)
                     {
-                        if (this.ResourceGroupsToReport[i].StartsWith("["))
+                        if (this.ResourceGroupsToReport[i].StartsWith('['))
                         {
                             variableNames.Add(this.ResourceGroupsToReport[i]);
                         }
@@ -246,11 +247,11 @@ namespace Models.CLEM.Reporting
                     }
                 }
             }
-            VariableNames = variableNames.ToArray();
+            VariableNames = [.. variableNames];
             // Subscribe to events.
             if (EventNames == null || !EventNames.Where(a => a.Trim() != "").Any())
             {
-                EventNames = new string[] { "[CLEMEvents].CLEMFinalizeTimeStep" };
+                EventNames = ["[CLEMEvents].CLEMFinalizeTimeStep"];
             }
 
             SubscribeToEvents();

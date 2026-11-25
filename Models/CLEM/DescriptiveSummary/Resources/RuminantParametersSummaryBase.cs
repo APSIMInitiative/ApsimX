@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Generic provider base. Default CreateSummary calls GetSummary(TModel).
@@ -105,9 +105,9 @@ public abstract class RuminantParametersSummaryBase<TModel> : DescriptiveSummary
             return;
         }
 
-        foreach (var param in GetSummaryParameters().OrderBy(a => a.category))
+        foreach (var (componentName, propertyName, category, description, value) in GetSummaryParameters().OrderBy(a => a.category))
         {
-            generator.AddSummaryParameterSnippet(param.category, param.value);
+            generator.AddSummaryParameterSnippet(category, value);
         }
     }
 
@@ -154,8 +154,7 @@ public abstract class RuminantParametersSummaryBase<TModel> : DescriptiveSummary
 
         foreach (var prop in properties)
         {
-            DescriptionAttribute desAtt = prop.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
-            if (desAtt is null)
+            if (prop.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() is not DescriptionAttribute desAtt)
                 continue;
 
             string desc = desAtt.ToString();
@@ -187,7 +186,7 @@ public abstract class RuminantParametersSummaryBase<TModel> : DescriptiveSummary
             {
                 valueStr = s;
             }
-            else if (valueObj is System.Collections.IEnumerable enumerable && !(valueObj is System.Collections.IDictionary))
+            else if (valueObj is System.Collections.IEnumerable enumerable && valueObj is not System.Collections.IDictionary)
             {
                 var parts = new List<string>();
                 foreach (var item in enumerable)
@@ -199,7 +198,7 @@ public abstract class RuminantParametersSummaryBase<TModel> : DescriptiveSummary
                 valueStr = valueObj.ToString();
             }
 
-            summary.Add((ModelTyped.GetType().Name.Replace("RuminantParameters", ""), prop.Name, catAtt.Subcategory, desc, generator.DisplaySummaryValueSnippet(valueStr, warnZero: true, errorNotSet: true)));
+            summary.Add((ModelTyped.GetType().Name.Replace("RuminantParameters", ""), prop.Name, catAtt.Subcategory, desc, DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(valueStr, warnZero: true, errorNotSet: true)));
         }
         return summary;
     }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for AnimalPricing
@@ -50,7 +50,7 @@ public class AnimalPricingSummary : DescriptiveSummaryProviderBase<AnimalPricing
         if (group.Id == "available" && group.SelectedModels.Any())
         {
             generator.OpenBlock(id: "tablewrap", addTopBottomMargin: true);
-            generator.CreateTable(new string[] { "Name", "Filter", "Transaction", "Amount", "Apply" });
+            generator.CreateTable(["Name", "Filter", "Transaction", "Amount", "Apply"]);
         }
     }
 

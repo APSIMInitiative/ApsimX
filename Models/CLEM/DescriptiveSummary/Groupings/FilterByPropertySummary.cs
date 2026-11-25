@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Groupings;
 
 /// <summary>
 /// Descriptive summary provider for AnimalPriceGroup
@@ -27,7 +27,7 @@ public class FilterByPropertySummary : FilterSummaryBase<FilterByProperty>
         if (model.AllPropertyInfoFound.Any() == false)
         {
             string message = (model.PropertyOfIndividual == null || model.PropertyOfIndividual == "") ? "Not Set" : $"Unknown: {model.PropertyOfIndividual}";
-            filterWriter.Write($"Filter:{generator.DisplayErrorSnippet(message)}");
+            filterWriter.Write($"Filter:{DescriptiveSummaryGenerator.DisplayErrorSnippet(message)}");
             return filterWriter.ToString();
         }
 
@@ -42,11 +42,11 @@ public class FilterByPropertySummary : FilterSummaryBase<FilterByProperty>
                     filterWriter.Write(" not");
                 }
 
-                filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter)}");
+                filterWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter)}");
             }
             else
             {
-                filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter)}");
+                filterWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter)}");
                 if (model.IsOperatorValid)
                 {
                     filterWriter.Write((model.Operator == ExpressionType.IsFalse || model.Value?.ToString().ToLower() == "false") ? " not" : " is");
@@ -55,18 +55,18 @@ public class FilterByPropertySummary : FilterSummaryBase<FilterByProperty>
                 {
                     filterWriter.Write($"invalid operator {model.OperatorToSymbol()}");
                 }
-                filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.Value?.ToString(), "No value", HTMLSummaryStyle.Filter)}");
+                filterWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value?.ToString(), "No value", HTMLSummaryStyle.Filter)}");
             }
         }
         else
         {
-            filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter)}");
+            filterWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter)}");
 
             if (model.AllPropertyInfoFound != null)
             {
                 if (model.IsOperatorValid)
                 {
-                    filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter)}");
+                    filterWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter)}");
                 }
                 else
                 {
@@ -75,10 +75,10 @@ public class FilterByPropertySummary : FilterSummaryBase<FilterByProperty>
             }
             else
             {
-                filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter)}");
+                filterWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter)}");
             }
 
-            filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.Value?.ToString(), "No value", HTMLSummaryStyle.Filter)}");
+            filterWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value?.ToString(), "No value", HTMLSummaryStyle.Filter)}");
         }
         return filterWriter.ToString();
     }

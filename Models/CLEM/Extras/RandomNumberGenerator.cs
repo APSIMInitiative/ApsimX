@@ -4,7 +4,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     /// <summary>Random numbers generator</summary>
     /// <summary>This component provides the random number sequence to be used for all stochastic processes in CLEM</summary>
@@ -20,7 +20,7 @@ namespace Models.CLEM
     public class RandomNumberGenerator: Model
     {
         [ThreadStatic]
-        private static Random generator = null;
+        private static Random generator;
 
         /// <summary>
         /// Seed for random number generator (0 uses GuId rather than clock)

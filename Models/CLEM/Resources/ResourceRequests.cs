@@ -1,4 +1,5 @@
 ﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Extras;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

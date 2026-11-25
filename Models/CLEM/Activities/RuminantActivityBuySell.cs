@@ -2,6 +2,7 @@ using Models.Core;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using Models.CLEM.Interfaces;
+using Models.CLEM.Extras;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -39,7 +40,7 @@ namespace Models.CLEM.Activities
         private int numberToSkip;
         private int numberTrucksToSkipIndividuals;
         private int fundsNeededPurchaseSkipIndividuals;
-        private double herdValue = 0;
+        private readonly double herdValue = 0;
         private IEnumerable<Ruminant> uniqueIndividuals;
         private IEnumerable<RuminantGroup> filterGroups;
         private bool truckingWithImplications = false;
@@ -58,7 +59,7 @@ namespace Models.CLEM.Activities
         /// <returns>An IEnumerable of strings</returns>
         public static IEnumerable<string> ActivityStyleList()
         {
-            return new string[] { "Arrange sales", "Arrange purchases" };
+            return ["Arrange sales", "Arrange purchases"];
         }
 
         /// <summary>
@@ -85,30 +86,25 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head",
-                            "Value of individuals",
-                        }
-                        );
-                case "RuminantTrucking":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>());
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per head",
+                                            "Value of individuals",
+                                        ]
+                                        ),
+                "RuminantTrucking" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -203,7 +199,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            List<ResourceRequest> requestResources = new();
+            List<ResourceRequest> requestResources = [];
             int numberTrucked = 0;
             double herdValue = 0;
 
@@ -247,20 +243,13 @@ namespace Models.CLEM.Activities
             foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = numberToDo;
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per head":
-                        valuesForCompanionModels[valueToSupply.Key] = numberTrucked;
-                        break;
-                    case "Value of individuals":
-                        valuesForCompanionModels[valueToSupply.Key] = herdValue;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per head" => numberTrucked,
+                    "Value of individuals" => herdValue,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
 
             if (numberTrucked < numberToDo)
@@ -446,7 +435,7 @@ namespace Models.CLEM.Activities
         private void ProcessAnimals()
         {
             int head = 0;
-            List<Ruminant> taskIndividuals = new();
+            List<Ruminant> taskIndividuals = [];
 
             if (ActivityStyle == "Arrange sales")
             {
@@ -506,7 +495,7 @@ namespace Models.CLEM.Activities
             var truckingComponents = Structure.FindChildren<RuminantTrucking>().Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).ToList();
             if (truckingComponents.Count != 0 && (truckingComponents.Count != Structure.FindChildren<RuminantTrucking>().Count()))
             {
-                yield return new ValidationResult($"All [r=RuminantTrucking] components for [{ActivityStyle}] must be set to [UseAvailableWithImplications] if any are defined for this partial resources available action", new string[] { "RuminantTrucking" });
+                yield return new ValidationResult($"All [r=RuminantTrucking] components for [{ActivityStyle}] must be set to [UseAvailableWithImplications] if any are defined for this partial resources available action", ["RuminantTrucking"]);
             }
         }
         #endregion

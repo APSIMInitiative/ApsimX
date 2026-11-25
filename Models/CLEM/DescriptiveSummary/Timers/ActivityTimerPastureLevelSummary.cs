@@ -2,7 +2,7 @@
 using Models.CLEM.Timers;
 using System.IO;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Timers;
 
 /// <summary>
 /// Descriptive summary for ActivityTimerPastureLevel component
@@ -13,15 +13,15 @@ public class ActivityTimerPastureLevelSummary : TimerSummaryBase<ActivityTimerPa
     public override void BuildSummary()
     {
         using StringWriter htmlWriter = new();
-        htmlWriter.Write($"Perform when {generator.DisplaySummaryValueSnippet(ModelTyped.GrazeFoodStoreTypeName, "Pasture not set", HTMLSummaryStyle.Resource)}");
-        htmlWriter.Write($" is between {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumPastureLevel)} and ");
+        htmlWriter.Write($"Perform when {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.GrazeFoodStoreTypeName, "Pasture not set", HTMLSummaryStyle.Resource)}");
+        htmlWriter.Write($" is between {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MinimumPastureLevel)} and ");
         if (ModelTyped.MaximumPastureLevel <= ModelTyped.MinimumPastureLevel)
         {
-            htmlWriter.Write(generator.DisplayErrorSnippet("must be > MinimumPastureLevel"));
+            htmlWriter.Write(DescriptiveSummaryGenerator.DisplayErrorSnippet("must be > MinimumPastureLevel"));
         }
         else
         {
-            htmlWriter.Write(generator.DisplaySummaryValueSnippet(ModelTyped.MaximumPastureLevel, warnZero: true));
+            htmlWriter.Write(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MaximumPastureLevel, warnZero: true));
         }
         htmlWriter.Write(" kg per hectare");
         generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem");

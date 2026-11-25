@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -30,9 +31,9 @@ namespace Models.CLEM.Reporting
     public class ReportResourceLedger : Report, ICLEMUI
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         [Link]
-        private ISummary summary = null;
+        private readonly ISummary summary = null;
 
         /// <summary>
         /// Gets or sets report groups for outputting
@@ -234,10 +235,10 @@ namespace Models.CLEM.Reporting
             // check if running from a CLEM.Market
             bool market = (Structure.FindParent<Zone>(recurse: true).GetType() == typeof(Market));
 
-            List<string> variableNames = new()
-            {
+            List<string> variableNames =
+            [
                 "[Clock].Today as Date"
-            };
+            ];
             if (IncludeFinancialYear)
             {
                 Finance financeStore = resources.FindResourceGroup<Finance>();
@@ -245,7 +246,7 @@ namespace Models.CLEM.Reporting
                     variableNames.Add($"[Resources].{financeStore.Name}.FinancialYear as FY");
             }
 
-            List<string> eventNames = new();
+            List<string> eventNames = [];
 
             if (ResourceGroupsToReport != null && ResourceGroupsToReport.Trim() != "")
             {
@@ -260,7 +261,7 @@ namespace Models.CLEM.Reporting
                     bool pricingIncluded = false;
                     if (model.GetType() == typeof(RuminantHerd))
                     {
-                        pricingIncluded = Structure.FindChildren<AnimalPricing>(relativeTo: model, recurse: true).Where(a => a.Enabled).Count() > 0;
+                        pricingIncluded = Structure.FindChildren<AnimalPricing>(relativeTo: model, recurse: true).Any(a => a.Enabled);
 
                         if (IncludeRuminantID)
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.ID as uID");
@@ -311,7 +312,7 @@ namespace Models.CLEM.Reporting
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastCohortChanged.AgeInDays as Age");
                         }
 
-                        pricingIncluded = Structure.FindChildren<ResourcePricing>(relativeTo: model, recurse: true).Where(a => a.Enabled).Count() > 0;
+                        pricingIncluded = Structure.FindChildren<ResourcePricing>(relativeTo: model, recurse: true).Any(a => a.Enabled);
 
                         if (ReportStyle == ReportTransactionStyle.GainAndLossColumns)
                         {
@@ -377,7 +378,7 @@ namespace Models.CLEM.Reporting
                             for (int i = 1; i <= TransactionCategoryLevels; i++)
                             {
                                 string colname = $"Category{i}";
-                                string[] parts = TransactionCategoryLevelColumnNames.Split(',').Distinct().ToArray();
+                                string[] parts = [.. TransactionCategoryLevelColumnNames.Split(',').Distinct()];
                                 if (parts.Length >= i && parts[i - 1].Trim() != "")
                                 {
                                     colname = parts[i - 1].Replace(" ", "");
@@ -396,8 +397,8 @@ namespace Models.CLEM.Reporting
                 variableNames.AddRange(CustomVariableNames);
             }
 
-            VariableNames = variableNames.ToArray();
-            EventNames = eventNames.ToArray();
+            VariableNames = [.. variableNames];
+            EventNames = [.. eventNames];
             SubscribeToEvents();
         }
 
@@ -407,12 +408,12 @@ namespace Models.CLEM.Reporting
         /// <returns>A list of names of components</returns>
         public IEnumerable<string> GetResourceGroupsAvailable()
         {
-            List<string> results = new List<string>();
+            List<string> results = [];
             Zone zone = Structure.FindParent<Zone>(recurse: true);
-            if (!(zone is null))
+            if (zone is not null)
             {
                 ResourcesHolder resources = Structure.FindChild<ResourcesHolder>(relativeTo: zone);
-                if (!(resources is null))
+                if (resources is not null)
                 {
                     foreach (var model in Structure.FindChildren<ResourceBaseWithTransactions>(relativeTo: resources))
                     {

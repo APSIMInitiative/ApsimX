@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -29,7 +30,6 @@ namespace Models.CLEM.Timers
     {
         [Link(IsOptional = true)]
         private readonly ResourcesHolder resources = null;
-
         [Link] readonly CLEMEvents events = null;
 
         double amountAtFirstCheck;

@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -58,15 +59,15 @@ namespace Models.CLEM.Timers
         [Core.Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
         public ExpressionType Operator { get; set; }
         
-        private object[] GetOperators() => new object[]
-        {
+        private static object[] GetOperators() =>
+        [
             ExpressionType.Equal,
             ExpressionType.NotEqual,
             ExpressionType.LessThan,
             ExpressionType.LessThanOrEqual,
             ExpressionType.GreaterThan,
             ExpressionType.GreaterThanOrEqual
-        };
+        ];
 
         /// <summary>
         /// Amount

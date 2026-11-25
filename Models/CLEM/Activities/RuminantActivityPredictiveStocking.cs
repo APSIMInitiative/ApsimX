@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using Models.CLEM.Resources;
 using Models.CLEM.Interfaces;
+using Models.CLEM.Extras;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,7 +30,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Updated assessment calculations and ability to report results")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStocking.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGeneral)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         [Link(IsOptional = true)]
@@ -40,7 +41,7 @@ namespace Models.CLEM.Activities
         private double amountToSkip = 0;
         private double amountToDo = 0;
         private IEnumerable<Ruminant> uniqueIndividuals;
-        private IEnumerable<RuminantGroup> filterGroups = new List<RuminantGroup>();
+        private IEnumerable<RuminantGroup> filterGroups = [];
         private List<(string paddockName, double number, double AE, double AeShortfall)> paddockShortfalls;
         private IEnumerable<GrazeFoodStoreType> paddocks;
 
@@ -97,27 +98,22 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head",
-                            "per AE"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per head",
+                                            "per AE"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -136,7 +132,7 @@ namespace Models.CLEM.Activities
                 paddocks =Structure.FindChildren<GrazeFoodStoreType>(relativeTo: grazeFoodStore);
             }
 
-            paddockShortfalls = new List<(string paddockName, double number, double AE, double AeShortfall)>();
+            paddockShortfalls = [];
         }
 
         /// <inheritdoc/>
@@ -235,20 +231,13 @@ namespace Models.CLEM.Activities
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per head":
-                        valuesForCompanionModels[valueToSupply.Key] = numberToDo;
-                        break;
-                    case "per AE":
-                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per head" => numberToDo,
+                    "per AE" => amountToDo,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }

@@ -1,4 +1,5 @@
-﻿using APSIM.Core;
+﻿using Models.CLEM.Extras;
+using APSIM.Core;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.Core;
@@ -23,7 +24,7 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimalType.htm")]
     public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IHandlesActivityCompanionModels
     {
-        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
+        private List<AnimalPriceGroup> priceGroups = [];
         private int nextCohortIndex = 1;
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace Models.CLEM.Resources
 
             PriceList = Structure.FindChildren<AnimalPricing>().FirstOrDefault();
             // Components are not permanently modifed during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
-            priceGroups = Structure.FindChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().ToList();
+            priceGroups = [.. Structure.FindChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>()];
 
             Initialise();
         }
@@ -124,7 +125,7 @@ namespace Models.CLEM.Resources
 
             if (includeTakeFilters && filteredCohorts.Any())
             {
-                ApplyTakeFilters(filteredCohorts.Where(a => (applyPreviouslyConsidered ? (a.Considered == false) : true)), filter, Structure);
+                ApplyTakeFilters(filteredCohorts.Where(a => (!applyPreviouslyConsidered || (a.Considered == false))), filter, Structure);
             }
 
             foreach (var cohort in filteredCohorts)
@@ -231,7 +232,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Initialise()
         {
-            Cohorts = new List<OtherAnimalsTypeCohort>();
+            Cohorts = [];
             foreach (var child in this.Children)
             {
                 if (child is OtherAnimalsTypeCohort cohort)
@@ -269,16 +270,14 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "Relationship":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() { "Age to weight" },
-                        measures: new List<string>()
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "Relationship" => new LabelsForCompanionModels(
+                                        identifiers: ["Age to weight"],
+                                        measures: []
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>
@@ -354,8 +353,8 @@ namespace Models.CLEM.Resources
                 {
                     cohortexists.Number += cohortDetails.Number;
                 }
-                (Parent as OtherAnimals).LastCohortChanged = (cohortexists != null)?cohortexists:cohortToAdd;
-                ReportTransaction(TransactionType.Gain, cohortToAdd.Number, activity, relatesToResource, category, this, ((cohortexists != null) ? cohortexists : cohortToAdd));
+                (Parent as OtherAnimals).LastCohortChanged = cohortexists ?? cohortToAdd;
+                ReportTransaction(TransactionType.Gain, cohortToAdd.Number, activity, relatesToResource, category, this);
             }
         }
 
@@ -369,18 +368,14 @@ namespace Models.CLEM.Resources
         {
             if (removeIndividuals is OtherAnimalsTypeCohort cohortDetails && cohortDetails.Number > 0)
             {
-                OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.AgeDetails.InDays == cohortDetails.AgeDetails.InDays && a.Sex == cohortDetails.Sex).FirstOrDefault();
-
-                if (cohortexists == null)
-                {
-                    // tried to remove individuals that do not exist
+                // tried to remove individuals that do not exist
+                OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.AgeDetails.InDays == cohortDetails.AgeDetails.InDays && a.Sex == cohortDetails.Sex).FirstOrDefault() ?? 
                     throw new Exception($"Tried to remove individuals from [r={this.Name}] that do not exist [Sex: {cohortDetails.Sex}, Age: {cohortDetails.AgeDetails.InDays} days]");
-                }
 
                 cohortexists.Number = Math.Max(0, cohortexists.Number - cohortDetails.AdjustedNumber);
 
                 (Parent as OtherAnimals).LastCohortChanged = cohortexists;
-                ReportTransaction(TransactionType.Loss, cohortDetails.AdjustedNumber, activity, "", reason, this, cohortexists);
+                ReportTransaction(TransactionType.Loss, cohortDetails.AdjustedNumber, activity, "", reason, this);
             }
         }
 

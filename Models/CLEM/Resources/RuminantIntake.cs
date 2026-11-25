@@ -251,7 +251,7 @@ namespace Models.CLEM.Resources
             //    item.Value.Reset();
             //}
             dpls = double.NaN;
-            kDPLS = double.NaN;
+            KDPLS = double.NaN;
         }
 
         /// <summary>
@@ -432,7 +432,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Efficiency of use of digestible protein leaving the stomach
         /// </summary>
-        public double kDPLS { get; set; }
+        public double KDPLS { get; set; }
 
         /// <summary>
         /// Digestible Protein Leaving the Stomach times the kDPLS efficiency term.
@@ -441,7 +441,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return dpls * kDPLS;
+                return dpls * KDPLS;
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -51,19 +52,14 @@ namespace Models.CLEM.Resources
         /// <remarks>A negative value for Condition index will use the Body Condition Score approach</remarks>
         public double ConceptionRate(RuminantFemale female)
         {
-            switch(ConditionBasedConceptionStyle)
+            return ConditionBasedConceptionStyle switch
             {
-                case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
-                    return (female.Weight.EmptyBodyMass >= female.Weight.EmptyBodyMassHighest * ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
-                case ConditionBasedCalculationStyle.RelativeCondition:
-                    return (female.Weight.RelativeCondition >= ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
-                case ConditionBasedCalculationStyle.BodyConditionScore:
-                    return (female.BodyConditionScore >= ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
-                case ConditionBasedCalculationStyle.None:
-                    return 1;
-                default:
-                    throw new NotImplementedException($"No conception estimate available for style {ConditionBasedConceptionStyle}");
-            }
+                ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive => (female.Weight.EmptyBodyMass >= female.Weight.EmptyBodyMassHighest * ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0,
+                ConditionBasedCalculationStyle.RelativeCondition => (female.Weight.RelativeCondition >= ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0,
+                ConditionBasedCalculationStyle.BodyConditionScore => (female.BodyConditionScore >= ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0,
+                ConditionBasedCalculationStyle.None => 1,
+                _ => throw new NotImplementedException($"No conception estimate available for style {ConditionBasedConceptionStyle}"),
+            };
         }
     }
 }

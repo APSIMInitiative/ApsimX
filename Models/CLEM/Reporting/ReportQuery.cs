@@ -1,4 +1,5 @@
-﻿using APSIM.Core;
+﻿using Models.CLEM.Extras;
+using APSIM.Core;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
@@ -27,7 +28,7 @@ namespace Models.CLEM.Reporting
         public IStructure Structure { private get; set; }
 
         [Link]
-        private IDataStore dataStore = null;
+        private readonly IDataStore dataStore = null;
 
         /// <summary>
         /// The line by line SQL query, separated for display purposes
@@ -41,7 +42,7 @@ namespace Models.CLEM.Reporting
         public string SelectedTab { get; set; }
 
         /// <inheritdoc/>
-        public void Run() => SaveView(dataStore);
+        public void Run() => SaveView();
 
         /// <summary>
         /// Runs the query
@@ -58,7 +59,7 @@ namespace Models.CLEM.Reporting
             return new DataTable();
         }
 
-        private void SaveView(IDataStore store)
+        private void SaveView()
         {
             if (Name.Any(c => c == ' '))
             {
@@ -71,7 +72,7 @@ namespace Models.CLEM.Reporting
                 var storage = Structure.Find<IDataStore>() ?? dataStore;
 
                 string viewSQL = storage.GetViewSQL(Name);
-                if (!viewSQL.EndsWith(SQL.TrimEnd(new char[] { '\r', '\n' })))
+                if (!viewSQL.EndsWith(SQL.TrimEnd(['\r', '\n'])))
                 {
                     // We assume any sql errors are thrown when data is retreived
                     storage.AddView($"{Name}", SQL);

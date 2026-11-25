@@ -1,5 +1,6 @@
 ﻿using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -23,9 +24,9 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     [ModelAssociations(singleInstance: true)]
-    public class ActivitiesHolder: CLEMModel
+    public class ActivitiesHolder: CLEMModel, IValidatableObject
     {
-        private ActivityFolder timeStep = new() { Name = "TimeStep", Status = ActivityStatus.NoTask };
+        private readonly ActivityFolder timeStep = new() { Name = "TimeStep", Status = ActivityStatus.NoTask };
         private int nextUniqueID = 1;
         private bool foundReportActivitiesPerformed = false;
 
@@ -196,7 +197,7 @@ namespace Models.CLEM.Activities
             // ensure all folders are not APSIM folders
             if (Structure.FindChildren<Folder>(recurse: true).Any())
             {
-                yield return new ValidationResult("Only CLEMFolders should be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", new string[] { "ActivityHolder" });
+                yield return new ValidationResult("Only CLEMFolders should be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", ["ActivityHolder"]);
             }
         }
 

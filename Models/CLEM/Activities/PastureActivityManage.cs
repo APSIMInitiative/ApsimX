@@ -8,6 +8,8 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
+using Models.CLEM.Extras;
+using Models.CLEM.DataReaders;
 
 namespace Models.CLEM.Activities
 {
@@ -127,19 +129,17 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "Relationship":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Utilisation % to change in Land condition index",
-                            "Utilisation % to change in Grass basal area"
-                        },
-                        measures: new List<string>()
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "Relationship" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Utilisation % to change in Land condition index",
+                                            "Utilisation % to change in Grass basal area"
+                                        ],
+                                        measures: []
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to initialise this activity just once at start of simulation</summary>
@@ -201,8 +201,8 @@ namespace Models.CLEM.Activities
                 LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
             }
 
-            ResourceRequestList = new()
-            {
+            ResourceRequestList =
+            [
                 new()
                 {
                     Resource = land,
@@ -214,10 +214,10 @@ namespace Models.CLEM.Activities
                     Category = UseAreaAvailable? "Assign unallocated": TransactionCategory,
                     FilterDetails = null
                 }
-            };
+            ];
 
             CheckResources(ResourceRequestList, Guid.NewGuid());
-            TakeResources(ResourceRequestList, false);
+            TakeResources(ResourceRequestList);
 
             //Now the Land has been allocated we have an Area
             if (ResourceRequestList.FirstOrDefault().Provided > 0)
@@ -327,7 +327,7 @@ namespace Models.CLEM.Activities
             }
 
             // report activity performed.
-            ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+            ActivityPerformedEventArgs activitye = new()
             {
                 Name = Name,
                 Status = events.IsEcologicalIndicatorsCalculationDue() ? ActivityStatus.Calculation : ActivityStatus.Success,
@@ -374,7 +374,7 @@ namespace Models.CLEM.Activities
             if (herd != null)
             {
                 if (paddockName.Contains('.'))
-                    paddockName = paddockName.Substring(paddockName.IndexOf('.') + 1);
+                    paddockName = paddockName[(paddockName.IndexOf('.') + 1)..];
 
                 return herd.Herd.Where(a => a.Location == paddockName).Sum(a => a.Weight.AdultEquivalent) / areaSqKm;
             }
@@ -470,33 +470,33 @@ namespace Models.CLEM.Activities
         {
             if (relationshipLC == null)
             {
-                string[] memberNames = new string[] { "Relationship for LandConditionIndex" };
+                string[] memberNames = ["Relationship for LandConditionIndex"];
                 yield return new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Land condition index]", memberNames);
             }
             else
             {
                 if (LandConditionIndex == null)
                 {
-                    string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
+                    string[] memberNames = ["RelationshipRunningValue for LandConditionIndex"];
                     yield return new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Land Condition Index [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Land condition index]", memberNames);
                 }
             }
             if (relationshipGBA == null)
             {
-                string[] memberNames = new string[] { "Relationship for Grass Basal Area" };
+                string[] memberNames = ["Relationship for Grass Basal Area"];
                 yield return new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Grass basal area]", memberNames);
             }
             else
             {
                 if (GrassBasalArea == null)
                 {
-                    string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
+                    string[] memberNames = ["RelationshipRunningValue for GrassBasalArea"];
                     yield return new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Grass Basal Area [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Grass basal area]", memberNames);
                 }
             }
             if (filePasture == null)
             {
-                string[] memberNames = new string[] { "FilePastureReader" };
+                string[] memberNames = ["FilePastureReader"];
                 yield return new ValidationResult("Unable to locate pasture database file. Add a FilePasture or FileSQLitePasture reader model component to the simulation tree.", memberNames);
             }
         }

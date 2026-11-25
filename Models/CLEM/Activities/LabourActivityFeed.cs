@@ -71,24 +71,24 @@ namespace Models.CLEM.Activities
             return type switch
             {
                 "LabourFeedGroup" => new LabelsForCompanionModels(
-                                        identifiers: new List<string>(),
-                                        measures: new List<string>()
-                                        {
+                        identifiers: [],
+                        measures:
+                        [
                             "SpecifiedDailyAmountPerIndividual",
                             "SpecifiedDailyAmountPerAE"
-                                        }
-                                        ),
+                        ]
+                        ),
                 "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
-                                        identifiers: new List<string>() {
+                        identifiers: [
                             "Number fed",
                             "Feed provided"
-                                        },
-                                        measures: new List<string>() {
+                        ],
+                        measures: [
                             "fixed",
                             "per head",
                             "per kg feed"
-                                        }
-                                        ),
+                        ]
+                ),
                 _ => new LabelsForCompanionModels(),
             };
         }
@@ -141,7 +141,7 @@ namespace Models.CLEM.Activities
                 // get unique individuals across all filters
                 if (filters.Count() > 1)
                 {
-                    IEnumerable<T> unique = new List<T>();
+                    IEnumerable<T> unique = [];
                     foreach (var selectFilter in filters)
                     {
                         unique = unique.Union(selectFilter.Filter(population)).DistinctBy(a => a.Name);
@@ -159,15 +159,15 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            List<ResourceRequest> resourceRequests = new List<ResourceRequest>();
+            List<ResourceRequest> resourceRequests = [];
             numberToDo = 0;
             amountToDo = 0;
             uniqueIndividuals = GetUniqueIndividuals(filterGroups.Cast<LabourGroup>(), population);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
             IndividualsToBeFed = uniqueIndividuals;
 
-            List<LabourType> individuals = uniqueIndividuals.ToList();
-            indFed = new List<(LabourType, double)>();
+            List<LabourType> individuals = [.. uniqueIndividuals];
+            indFed = [];
 
             foreach (LabourFeedGroup child in filterGroups)
             {
@@ -198,48 +198,27 @@ namespace Models.CLEM.Activities
             {
                 int number = numberToDo;
 
-                switch (valueToSupply.Key.type)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.type switch
                 {
-                    case "LabourFeedGroup":
-                        valuesForCompanionModels[valueToSupply.Key] = 0;
-                        break;
-                    case "LabourRequirement":
-                    case "ActivityFee":
-                        switch (valueToSupply.Key.identifier)
+                    "LabourFeedGroup" => 0,
+                    "LabourRequirement" or "ActivityFee" => valueToSupply.Key.identifier switch
+                    {
+                        "Number fed" => valueToSupply.Key.unit switch
                         {
-                            case "Number fed":
-                                switch (valueToSupply.Key.unit)
-                                {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                                        break;
-                                    case "per head":
-                                        valuesForCompanionModels[valueToSupply.Key] = number;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
-                                break;
-                            case "Feed provided":
-                                switch (valueToSupply.Key.unit)
-                                {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                                        break;
-                                    case "per kg fed":
-                                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                }
+                            "fixed" => 1,
+                            "per head" => number,
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        },
+                        "Feed provided" => valueToSupply.Key.unit switch
+                        {
+                            "fixed" => 1,
+                            "per kg fed" => (double?)amountToDo,
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        },
+                        _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                    },
+                    _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                };
             }
 
             if (amountToDo > 0)
@@ -256,10 +235,7 @@ namespace Models.CLEM.Activities
                     ActivityModel = this,
                     Category = TransactionCategory
                 };
-                return new List<ResourceRequest>()
-                {
-                    resourceRequest
-                };
+                return [ resourceRequest ];
             }
             return null;
         }
