@@ -17,7 +17,7 @@ function run_00001 {
   echo ------------------------------ >> metadata.txt
   echo Date/time: `date +"%Y-%m-%d %T"` >> metadata.txt
   tar -xvf upload.tar.zst
-  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd --entrypoint dotnet $apsimng_image ApsimX/bin/Release/net10.0/Models.dll "$Path" --verbose
+  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd/ApsimX --entrypoint dotnet $apsimng_image bin/Release/net10.0/Models.dll "$Path" --verbose
 }
 
 # Notify the A.V.A server that the job is complete.
@@ -28,7 +28,7 @@ function notify_job_complete {
   local job_time
   job_time=$(printf '%.1f' "$elapsed")
   local log_file=/wd/local.stdout.txt
-  sudo docker run --rm -v $PWD:/wd -w=/wd --entrypoint dotnet $apsimng_image ApsimX/bin/Release/net10.0/APSIM.Workflow.dll \
+  sudo docker run --rm -v $PWD:/wd -w=/wd/ApsimX --entrypoint dotnet $apsimng_image bin/Release/net10.0/APSIM.Workflow.dll \
   job-complete \
   --pr-number "$PR_NUMBER" \
   --full-commit-hash "$FULL_COMMIT_HASH" \
@@ -41,7 +41,7 @@ function run_00001_finally {
   # Function always called, regardless of any errors.
   sudo --preserve-env docker run --rm \
     -v $PWD:/wd \
-    -w=/wd \
+    -w=/wd/Apsimx \
     -e POSTATS_UPLOAD_URL \
     apsiminitiative/postats2-collector:latest \
     upload "$PR_NUMBER" "$FULL_COMMIT_HASH" "$AUTHOR" "$TIME" "$PR_NUMBER-$COMMIT_SHA" "$Path"
@@ -65,7 +65,7 @@ exit_code=$?
 
 # Return a failure exit code if the database is missing.
 if [[ "$1" == run_00001 ]]; then
-  database_path=".${Path#/wd}"
+  database_path=".${Path#/wd/Apsimx}"
   database_path="${database_path%.apsimx}.db"
   if [[ "$Path" != /wd/*.apsimx || ! -f "$database_path" ]]; then
     echo "Database not found at $database_path; custom datastore paths are not supported." &>> local.stdout.txt
