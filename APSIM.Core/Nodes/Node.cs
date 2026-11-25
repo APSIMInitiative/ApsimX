@@ -126,7 +126,8 @@ public class Node : IStructure
     {
         if (scope != null)  // can be null if called while Nodes are being created.
             foreach (var node in scope.Walk(this))
-                yield return node;
+                if (node.Model is not IOutOfScope)
+                    yield return node;
     }
 
     /// <summary>
