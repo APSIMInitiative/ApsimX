@@ -64,7 +64,7 @@ function notify_job_complete {
   # A failed notification must not change the job's exit code.
   local job_time
   job_time=$(printf '%.1f' "$elapsed")
-  local log_file=/wd/local.stdout.txt
+  local log_file=/wd/$stdout_file
   sudo docker run --rm -v $PWD/ApsimX:/wd -w=/wd --entrypoint dotnet $apsimng_image bin/Release/net10.0/APSIM.Workflow.dll \
   job-complete \
   --pr-number "$PR_NUMBER" \
@@ -77,7 +77,7 @@ function notify_job_complete {
 function run_finally {
   # Function always called, regardless of any errors.
   sudo --preserve-env docker run --rm \
-    -v $PWD/ApsimX:/wd \
+    -v $PWD:/wd \
     -w=/wd \
     -e POSTATS_UPLOAD_URL \
     apsiminitiative/postats2-collector:latest \
@@ -93,7 +93,7 @@ function run_finally {
 exit_code=0
 
 if [[ "$1" == initialise ]]; then
-  initialise &>> initialise.stdout.txt
+  initialise &>> "$stdout_file"
   exit_code=$?
 fi
 
