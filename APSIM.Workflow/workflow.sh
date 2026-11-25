@@ -23,26 +23,34 @@ function run_setup {
 
   soybean=./ApsimX/Tests/Validation/Soybean
   7zz x $soybean/ObservedFACTS.7z -o$soybean -p"$SOYBEAN_PASSWORD"
+  unset SOYBEAN_PASSWORD
 
   cornsoy=./ApsimX/Tests/Validation/System/FACTS_CornSoy
   7zz x $cornsoy/FACTS_CornSoy.7z -o$cornsoy -p"$CORNSOY_PASSWORD"
+  unset CORNSOY_PASSWORD
 
   swim=./ApsimX/Tests/Validation/SWIM
   7zz x $swim/WaterTableSWIM_ISU_tests_May2022.7z -o$swim -p"$SWIM_PASSWORD"
+  unset SWIM_PASSWORD
 
   maize=./ApsimX/Tests/Validation/Maize
   7zz x $maize/5x5x5/obs.7z -o$maize/5x5x5 -p"$MAIZE_PASSWORD"
   7zz x $maize/EarManipulation/obs.7z -o$maize/EarManipulation -p"$MAIZE_PASSWORD"
   7zz x $maize/RM/obs.7z -o$maize/RM -p"$MAIZE_PASSWORD"
+  unset MAIZE_PASSWORD
 
   rice=./ApsimX/Prototypes/Rice/Rice2026
   7zz x $rice/ObservedRice.7z -o$rice -p"$RICE_PASSWORD"
+  unset RICE_PASSWORD
 
   thinzar_ryegrass=./ApsimX/Prototypes/ThinzarExperiment
   7zz x $thinzar_ryegrass/ThinzarObserved.7z -o$thinzar_ryegrass -p"$THINZAR_RYEGRASS_PASSWORD"
+  unset THINZAR_RYEGRASS_PASSWORD
 
   uom_winter_spring=./ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring
   7zz x $uom_winter_spring/Observed.zip -o$uom_winter_spring -p"$UOM_WINTER_SPRING_PASSWORD"
+  unset UOM_WINTER_SPRING_PASSWORD
+
 }
 
 function run_validation {
