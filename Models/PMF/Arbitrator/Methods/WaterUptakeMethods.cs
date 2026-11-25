@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
@@ -94,6 +95,8 @@ namespace Models.PMF.Arbitrator
             if (waterSupply > 0)
                 fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
 
+            // a running total of water allocated 
+            double waterUsed = 0;
             // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
             // to return to caller.
             List<ZoneWaterAndN> ZWNs = new List<ZoneWaterAndN>();
@@ -102,10 +105,30 @@ namespace Models.PMF.Arbitrator
                 // Just send uptake from my zone
                 ZoneWaterAndN uptake = new ZoneWaterAndN(zones[i]);
                 uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
+
+                for (int j = 0; j < supplies[i].Length; j++)
+                {
+                    var maxAvail = supplies[i][j]; // = kl * (sw - ll) * xf
+                    var req = waterDemand - waterUsed; // the amount we are requesting after existing allocation
+                    var maxAmt = Math.Max(0.0, Math.Min(maxAvail, req)); // the maximum amount we can request from this layer
+
+                    if (maxAmt > uptake.Water[j] ) {
+                        var pref = Math.Max(0, (maxAmt - uptake.Water[j]) *  (ExtractionPreference is null ? 0 : ExtractionPreference.Value())); // the difference between uniform extr, and maximum preferred
+                        uptake.Water[j] = Math.Max(0, uptake.Water[j] + pref); // add that difference to uptake
+                    } else {
+                        uptake.Water[j] = Math.Min(supplies[i][j], Math.Max(0, maxAmt));
+                    }
+                    waterUsed += uptake.Water[j];
+                }
                 uptake.NO3N = new double[uptake.Water.Length];
                 uptake.NH4N = new double[uptake.Water.Length];
                 ZWNs.Add(uptake);
             }
+
+            double wEpsilon = 1.0E-5;
+            if (waterSupply > 0 && Math.Min(waterSupply, waterDemand) - waterUsed > wEpsilon)
+                throw new Exception($"Unused water remaining ({waterDemand - waterUsed}) after layer allocation");
+
             return ZWNs;
         }
 
@@ -141,5 +164,13 @@ namespace Models.PMF.Arbitrator
             }
 
         }
+        /// <summary>
+        /// Preference for layered water extraction - top down (1) to uniform (0)
+        /// </summary>
+        /// <remarks>
+        /// The 
+        /// </remarks>
+        [Link(Type = LinkType.Child, IsOptional = true, ByName = true)]
+        public IFunction ExtractionPreference = null;
     }
 }
