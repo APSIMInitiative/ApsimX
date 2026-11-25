@@ -44,11 +44,11 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
         public string AccountName { get; set; }
 
-        /// <summary>An event handler to initialise the activity.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <remarks>
-        /// This is performed during the CLEMInitialiseActivity event
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
         /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)

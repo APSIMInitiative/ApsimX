@@ -223,13 +223,11 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>
-        /// An event handler used to initialise this activity
-        /// </summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <remarks>
-        /// This method is called during the CLEMInitialiseActivity event after all resources have been initialised
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
         /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)

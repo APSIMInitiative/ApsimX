@@ -73,13 +73,11 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public LandType LinkedLandItem { get; set; }
 
-        /// <summary>
-        /// An event handler to undertake the initialisation of the activity and links to the land resource.
-        /// </summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <remarks>
-        /// This method is called during the CLEMInitialiseActivity event
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
         /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
