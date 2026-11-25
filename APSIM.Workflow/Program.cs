@@ -38,8 +38,9 @@ public class Program
         });
         logger = loggerFactory.CreateLogger<Program>();
 
-        Parser.Default.ParseArguments<LocationsOptions, AzureJobsOptions, JobCompleteOptions>(args)
+        Parser.Default.ParseArguments<LocationsOptions, SimCountOptions, AzureJobsOptions, JobCompleteOptions>(args)
             .WithParsed<LocationsOptions>(RunLocations)
+            .WithParsed<SimCountOptions>(RunSimCount)
             .WithParsed<AzureJobsOptions>(RunAzureJobs)
             .WithParsed<JobCompleteOptions>(RunJobComplete)
             .WithNotParsed(HandleParseError);
@@ -58,6 +59,21 @@ public class Program
 
             foreach (string dir in ValidationLocationUtility.GetValidationFilePaths())
                 Console.WriteLine(dir);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error: " + ex.Message);
+            exitCode = 1;
+        }
+    }
+
+    /// <summary>Prints the number of simulations/validation locations available.</summary>
+    /// <param name="options">The simulation count options.</param>
+    private static void RunSimCount(SimCountOptions options)
+    {
+        try
+        {
+            Console.WriteLine(ValidationLocationUtility.GetValidationFilePaths().Length);
         }
         catch (Exception ex)
         {

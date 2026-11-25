@@ -54,7 +54,7 @@ public class Azure
     /// <param name="nodeNumber">The number of nodes to allocate in the pool. If not provided, it will be calculated based on the number of tasks and CPUs per node.</param>
     /// <param name="isAutoscaling">Should the pool be autoscaled?</param>
     /// <param name="vmsize">The name of a Azure VM e.g. Standard_D4d_v5. More information can be found here: https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/overview?tabs=breakdownseries%2Cgeneralsizelist%2Ccomputesizelist%2Cmemorysizelist%2Cstoragesizelist%2Cgpusizelist%2Cfpgasizelist%2Chpcsizelist </param>
-    public static void CreatePool(string primaryAccessKey, string poolName, string nodeNumber = "60", bool isAutoscaling = true, string vmsize = "Standard_D4d_v5")
+    public static void CreatePool(string primaryAccessKey, string poolName, string nodeNumber = "30", bool isAutoscaling = true, string vmsize = "Standard_D4d_v5")
     {
         try
         {

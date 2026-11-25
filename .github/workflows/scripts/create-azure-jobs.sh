@@ -31,9 +31,13 @@ echo "author variable: ${author}"
 echo "PR Number: ${DOCKER_METADATA_OUTPUT_VERSION:3}"
 pr_number=${DOCKER_METADATA_OUTPUT_VERSION:3}
 
-
-echo "Starting to sendjobs to Azure..."
-jobcount=$(dotnet ./bin/Release/net10.0/APSIM.Workflow.dll azure-jobs --env-string "$AZURE_ENV_CONTENTS" --pr-number "$pr_number" --commit-sha "$commitsha" --full-commit-hash "$INCOMING_COMMIT_SHA" --githubauthorid "$author")
+# makes the variable available in subsequent steps.
+jobcount=$(dotnet ./bin/Release/net10.0/APSIM.Workflow.dll sim-count)
+echo "jobcount: ${jobcount}"
+if test -z "${jobcount}"; then
+    echo "The job count was found to be empty. Exiting."
+    exit 1
+fi
 
 # Open the PO Stats
 url="https://postats2.apsim.info/api/open?pullrequestnumber=${pr_number}&commitid=${commitsha}&count=${jobcount}&author=${author}&pool=${azure_pool}"
@@ -41,8 +45,5 @@ echo "POStats2 open URL: ${url}"
 response=$(curl -f "${url}" || exit 1)
 echo "POStats2 open response: ${response}"
 
-echo "jobcount: ${jobcount}"
-if test -z "${jobcount}"; then
-    echo "The job count was found to be empty. Exiting."
-    exit 1
-fi
+echo "Starting to sendjobs to Azure..."
+dotnet ./bin/Release/net10.0/APSIM.Workflow.dll azure-jobs --env-string "$AZURE_ENV_CONTENTS" --pr-number "$pr_number" --commit-sha "$commitsha" --full-commit-hash "$INCOMING_COMMIT_SHA" --githubauthorid "$author"
