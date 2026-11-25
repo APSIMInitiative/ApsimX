@@ -54,6 +54,8 @@ function run_setup {
 }
 
 function run_validation {
+  echo "------------------------------"
+  echo "Running $Path"
   sudo --preserve-env docker run --rm -v $PWD/ApsimX:/wd -w=/wd --entrypoint dotnet $apsimng_image bin/Release/net10.0/Models.dll "$Path" --verbose
 }
 
