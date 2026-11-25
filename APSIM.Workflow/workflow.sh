@@ -22,10 +22,10 @@ function run_00001 {
 
   mv sevenzip/7zz ./7zz
 
-  soybean=./Validation/Soybean
+  soybean=./Tests/Validation/Soybean
   7zz x $soybean/ObservedFACTS.7z -o$soybean -p"$SOYBEAN_PASSWORD"
 
-  cornsoy=./Validation/System/FACTS_CornSoy
+  cornsoy=./Tests/Validation/System/FACTS_CornSoy
   7zz x $cornsoy/FACTS_CornSoy.7z -o$cornsoy -p"$CORNSOY_PASSWORD"
 
   swim=./Tests/Validation/SWIM
