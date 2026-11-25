@@ -20,6 +20,8 @@ function run_00001 {
 
   echo "Extracting password protected datasets..."
 
+  mv sevenzip/7zz ./7zz
+
   soybean=Validation/Soybean
   7zz -p"$SOYBEAN_PASSWORD" x $soybean/ObservedFACTS.7z -o$soybean
 
