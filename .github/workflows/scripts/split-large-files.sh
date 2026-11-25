@@ -5,7 +5,7 @@ pwd
 #compress files needed for PR to 7z zrchive
 cd /home/runner/work/ApsimX/
 
-examples=ApsimX/ApsimX/Examples/
+examples=ApsimX/Examples/
 prototypes=ApsimX/Prototypes/
 tests=ApsimX/Tests/
 app=ApsimX/bin/Release/net10.0/

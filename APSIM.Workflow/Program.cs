@@ -56,8 +56,8 @@ public class Program
             if (options.Verbose)
                 logger.LogInformation("Validation locations:");
 
-            //foreach (string dir in RemoveExcludedPaths(ValidationLocationUtility.GetValidationFilePaths()))
-            //    Console.WriteLine(dir);
+            foreach (string dir in ValidationLocationUtility.GetValidationFilePaths())
+                Console.WriteLine(dir);
         }
         catch (Exception ex)
         {
