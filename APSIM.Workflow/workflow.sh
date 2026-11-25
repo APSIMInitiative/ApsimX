@@ -22,27 +22,27 @@ function run_00001 {
 
   mv sevenzip/7zz ./7zz
 
-  soybean=./Tests/Validation/Soybean
+  soybean=./ApsimX/Tests/Validation/Soybean
   7zz x $soybean/ObservedFACTS.7z -o$soybean -p"$SOYBEAN_PASSWORD"
 
-  cornsoy=./Tests/Validation/System/FACTS_CornSoy
+  cornsoy=./ApsimX/Tests/Validation/System/FACTS_CornSoy
   7zz x $cornsoy/FACTS_CornSoy.7z -o$cornsoy -p"$CORNSOY_PASSWORD"
 
-  swim=./Tests/Validation/SWIM
+  swim=./ApsimX/Tests/Validation/SWIM
   7zz x $swim/WaterTableSWIM_ISU_tests_May2022.7z -o$swim -p"$SWIM_PASSWORD"
 
-  maize=./Tests/Validation/Maize
+  maize=./ApsimX/Tests/Validation/Maize
   7zz x $maize/5x5x5/obs.7z -o$maize/5x5x5 -p"$MAIZE_PASSWORD"
   7zz x $maize/EarManipulation/obs.7z -o$maize/EarManipulation -p"$MAIZE_PASSWORD"
   7zz x $maize/RM/obs.7z -o$maize/RM -p"$MAIZE_PASSWORD"
 
-  rice=./Prototypes/Rice/Rice2026
+  rice=./ApsimX/Prototypes/Rice/Rice2026
   7zz x $rice/ObservedRice.7z -o$rice -p"$RICE_PASSWORD"
 
-  thinzar_ryegrass=./Prototypes/ThinzarExperiment
+  thinzar_ryegrass=./ApsimX/Prototypes/ThinzarExperiment
   7zz x $thinzar_ryegrass/ThinzarObserved.7z -o$thinzar_ryegrass -p"$THINZAR_RYEGRASS_PASSWORD"
 
-  uom_winter_spring=./Tests/Validation/Wheat/UoM_WinterVsSpring
+  uom_winter_spring=./ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring
   7zz x $uom_winter_spring/Observed.zip -o$uom_winter_spring -p"$UOM_WINTER_SPRING_PASSWORD"
 
   sudo --preserve-env docker run --rm -v $PWD/ApsimX:/wd -w=/wd --entrypoint dotnet $apsimng_image bin/Release/net10.0/Models.dll "$Path" --verbose
