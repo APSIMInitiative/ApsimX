@@ -2,7 +2,12 @@
 
 #using this script for now to upload to azure instead of docker image
 
+echo "Pre-start azure pool for later"
+dotnet ./bin/Release/net10.0/APSIM.Workflow.dll azure-start-pool --env-string "$AZURE_ENV_CONTENTS" --pr-number "$pr_number" --commit-sha "$INCOMING_COMMIT_SHA"
+
 #compress files needed for PR to 7z zrchive
+echo "Package files for sending to azure"
+
 cd /home/runner/work/ApsimX/
 
 examples=ApsimX/Examples/

@@ -41,6 +41,7 @@ public class Program
         Parser.Default.ParseArguments<LocationsOptions, SimCountOptions, AzureJobsOptions, JobCompleteOptions>(args)
             .WithParsed<LocationsOptions>(RunLocations)
             .WithParsed<SimCountOptions>(RunSimCount)
+            .WithParsed<AzureStartPoolOptions>(RunAzureStartPool)
             .WithParsed<AzureJobsOptions>(RunAzureJobs)
             .WithParsed<JobCompleteOptions>(RunJobComplete)
             .WithNotParsed(HandleParseError);
@@ -105,6 +106,26 @@ public class Program
         }
     }
 
+    private static void RunAzureStartPool(AzureStartPoolOptions options)
+    {
+        // Create the environment variable dictionary for use further on
+        // from the environment variable string.
+        Dictionary<string, string> envDict = [];
+        foreach (string line in options.EnvString.Split(
+            [ "\r\n", "\n" ],
+            StringSplitOptions.RemoveEmptyEntries))
+        {
+            // Split only on the first '=' since values (e.g. base64 keys) may themselves contain '='.
+            string[] values = line.Split('=', 2);
+            envDict.Add(values[0], values[1]);
+        }
+
+        string shortCommitSha = options.CommitSHA.Substring(0, 6);
+        string poolName = $"{options.PullRequestNumber}-{shortCommitSha}";
+
+        Azure.CreatePool(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName, isAutoscaling: false);
+    }
+
     /// <summary>Creates the Azure pool and submits the validation jobs.</summary>
     /// <param name="options">The Azure jobs options.</param>
     private static void RunAzureJobs(AzureJobsOptions options)
@@ -114,13 +135,12 @@ public class Program
         int jobCount = 0;
         try
         {
-
             string[] validationPaths = ValidationLocationUtility.GetValidationFilePaths();
             if (validationPaths.Length < 1)
                 throw new Exception("A list of validation paths must be provided to continue.");
 
             // Create a pool name using the PR number and commit SHA.
-            string shortCommitSha = options.CommitSHA.Length > 6 ? options.CommitSHA[..6] : options.CommitSHA;
+            string shortCommitSha = options.FullCommitHash.Substring(0, 6);
             string poolName = $"{options.PullRequestNumber}-{shortCommitSha}";
             string nowDateString = DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
             string jobName = $"{nowDateString}-acceptance-tests-pr-{options.PullRequestNumber}";
@@ -142,7 +162,6 @@ public class Program
             envDict.Add("COMMIT_SHA", shortCommitSha);
             envDict.Add("FULL_COMMIT_HASH", options.FullCommitHash);
 
-            Azure.CreatePool(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName, isAutoscaling: false);
             logger.LogInformation($"An Azure batch pool called {poolName} successfully created!");
             Azure.CreateJobs(
                 envDict["AZURE_PRIMARY_ACCESS_KEY"],
