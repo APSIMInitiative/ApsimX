@@ -41,7 +41,7 @@ function run_00001_finally {
   # Function always called, regardless of any errors.
   sudo --preserve-env docker run --rm \
     -v $PWD:/wd \
-    -w=/wd/Apsimx \
+    -w=/wd/ApsimX \
     -e POSTATS_UPLOAD_URL \
     apsiminitiative/postats2-collector:latest \
     upload "$PR_NUMBER" "$FULL_COMMIT_HASH" "$AUTHOR" "$TIME" "$PR_NUMBER-$COMMIT_SHA" "$Path"
@@ -65,7 +65,7 @@ exit_code=$?
 
 # Return a failure exit code if the database is missing.
 if [[ "$1" == run_00001 ]]; then
-  database_path=".${Path#/wd/Apsimx}"
+  database_path=".${Path#/wd}"
   database_path="${database_path%.apsimx}.db"
   if [[ "$Path" != /wd/*.apsimx || ! -f "$database_path" ]]; then
     echo "Database not found at $database_path; custom datastore paths are not supported." &>> local.stdout.txt
