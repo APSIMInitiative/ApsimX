@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.Core.Attributes;
 using Models.Core;
 using System;
@@ -119,7 +120,7 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
         {
-            return new List<ResourceRequest> { currentFeedRequest };
+            return [currentFeedRequest];
         }
 
     }

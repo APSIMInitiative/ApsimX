@@ -6,19 +6,14 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// Store of Ruminant energy for the time-step
     /// </summary>
+    /// <remarks>
+    /// Constructor
+    /// </remarks>
+    /// <param name="ruminant">Reference to the ruminant</param>
     [Serializable]
-    public class RuminantInfoEnergy
+    public class RuminantInfoEnergy(Ruminant ruminant)
     {
-        private readonly Ruminant ruminant;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="ruminant">Reference to the ruminant</param>
-        public RuminantInfoEnergy(Ruminant ruminant)
-        {
-            this.ruminant = ruminant;
-        }
+        private readonly Ruminant ruminant = ruminant;
 
         /// <summary>
         /// The potential and actual MJ milk intake of the individual.

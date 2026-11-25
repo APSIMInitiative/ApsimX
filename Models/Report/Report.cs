@@ -8,6 +8,7 @@ using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.AgPasture;
 using Models.CLEM;
+using Models.CLEM.Extras;
 using Models.Core;
 using Models.Factorial;
 using Models.Storage;

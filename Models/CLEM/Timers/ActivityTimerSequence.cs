@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Extras;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
@@ -55,7 +56,7 @@ namespace Models.CLEM.Timers
             seq = seq.Replace("t", "1");
             seq = seq.Replace("f", "0");
 
-            var seqArray = seq.Split(new char[] { ' ', ';', ',', ':', '-' }, StringSplitOptions.RemoveEmptyEntries);
+            var seqArray = seq.Split([' ', ';', ',', ':', '-'], StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < seqArray.Length; i++)
             {
                 if (seqArray[i].Contains('x'))
@@ -99,7 +100,7 @@ namespace Models.CLEM.Timers
             // check validity of sequence
             if (FormatSequence(sequence).Replace("0", "").Replace("1", "").Trim() != "")
             {
-                yield return new ValidationResult($"Invalid sequence of characters supplied {sequence}, expecitng 1/0, T/F, or Y/N list of characters delimted by '' - , or : to represent sequence", new string[] { "ActivityTimerSequence" });
+                yield return new ValidationResult($"Invalid sequence of characters supplied {sequence}, expecitng 1/0, T/F, or Y/N list of characters delimted by '' - , or : to represent sequence", ["ActivityTimerSequence"]);
             }
         }
         #endregion
@@ -128,7 +129,7 @@ namespace Models.CLEM.Timers
                     if (seqIndex >= seq.Sequence.Length)
                     {
                         // recalculate index
-                        seqIndex = seqIndex - Convert.ToInt32(Math.Floor(seqIndex / (double)seq.Sequence.Length) * seq.Sequence.Length);
+                        seqIndex -= Convert.ToInt32(Math.Floor(seqIndex / (double)seq.Sequence.Length) * seq.Sequence.Length);
                     }
                     if (sequence.Substring(seqIndex, 1) == "0")
                     {

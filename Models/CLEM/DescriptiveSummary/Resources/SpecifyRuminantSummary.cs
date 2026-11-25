@@ -6,7 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for SpecifyRuminant
@@ -52,11 +52,11 @@ public class SpecifyRuminantSummary : DescriptiveSummaryProviderBase<SpecifyRumi
             extra = " with the following details.";
         }
 
-        generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet<double>(model.Proportion, warnZero: true)} of the individuals will be {generator.DisplaySummaryResourceTypeSnippet(model.RuminantTypeName)} {extra}:");
+        generator.AddBlockWithText($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet<double>(model.Proportion, warnZero: true)} of the individuals will be {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(model.RuminantTypeName)} {extra}:");
 
         if (!cohortFound)
         {
-            generator.AddBlockWithText($"No {generator.DisplaySummaryResourceTypeSnippet("RuminantCohort")} describing the individuals was provided!", styleString:"infoBanner error");
+            generator.AddBlockWithText($"No {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet("RuminantCohort")} describing the individuals was provided!", styleString:"infoBanner error");
         }
     }
 }

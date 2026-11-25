@@ -2,6 +2,7 @@
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -116,30 +117,25 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantFeedGroup":
-                case "RuminantFeedGroupMonthly":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() { "Feed provided" }
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Number fed",
-                            "Feed provided"
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head",
-                            "per kg feed"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantFeedGroup" or "RuminantFeedGroupMonthly" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: ["Feed provided"]
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Number fed",
+                                            "Feed provided"
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per head",
+                                            "per kg feed"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -204,17 +200,12 @@ namespace Models.CLEM.Activities
                         switch (valueToSupply.Key.identifier)
                         {
                             case "Number fed":
-                                switch (valueToSupply.Key.unit)
+                                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                                 {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                                        break;
-                                    case "per head":
-                                        valuesForCompanionModels[valueToSupply.Key] = number;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
+                                    "fixed" => 1,
+                                    "per head" => number,
+                                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                                };
                                 break;
                             case "Feed provided":
                                 switch (valueToSupply.Key.unit)
@@ -290,7 +281,7 @@ namespace Models.CLEM.Activities
                     // calculate feed not needed for removed individuals
                     double previouslyRequired = iChild.CurrentResourceRequest.Required;
 
-                    iChild.CurrentIndividualsToFeed = iChild.CurrentIndividualsToFeed.SkipLast(numberToRemove).ToList();
+                    iChild.CurrentIndividualsToFeed = [.. iChild.CurrentIndividualsToFeed.SkipLast(numberToRemove)];
                     iChild.UpdateCurrentFeedDemand(this);
 
                     // remove from amountToSkip 
@@ -431,7 +422,7 @@ namespace Models.CLEM.Activities
 
                     totalNeeded += amountNeeded;
 
-                    FoodResourceStore foodStore = new FoodResourceStore(details, amount: amountNeeded, request: iChild.CurrentResourceRequest, daysInTimeStep: events.Interval);
+                    FoodResourceStore foodStore = new(details, amount: amountNeeded, request: iChild.CurrentResourceRequest, daysInTimeStep: events.Interval);
 
                     // try to feed. excess will be returned.
                     overfed += ind.Intake.AddFeed(foodStore, bypassPotIntakeLimits: ForceFeed);
@@ -460,7 +451,7 @@ namespace Models.CLEM.Activities
                 double propOfFeed = Structure.FindChildren<RuminantFeedGroup>().Sum(a => a.Value);
                 if(MathUtilities.IsGreaterThan(propOfFeed, 1.0))
                 {
-                    yield return new ValidationResult($"The sum of Proportions of total feed available exceeds 1 across all [RuminantFeedGroups] in [a={Name}].{Environment.NewLine}Choose a different feeding style or ensure the sum of proportions specified do not exceed 1 when using ProportionOfFeedAvailable feeding style", new string[] { "Total proportion exceeds 1" });
+                    yield return new ValidationResult($"The sum of Proportions of total feed available exceeds 1 across all [RuminantFeedGroups] in [a={Name}].{Environment.NewLine}Choose a different feeding style or ensure the sum of proportions specified do not exceed 1 when using ProportionOfFeedAvailable feeding style", ["Total proportion exceeds 1"]);
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -27,7 +28,7 @@ namespace Models.CLEM.Groupings
     public class FilterByProperty : Filter, IValidatableObject
     {
         [NonSerialized]
-        private IEnumerable<PropertyInfo> propertyInfo = new List<PropertyInfo>();
+        private IEnumerable<PropertyInfo> propertyInfo = [];
         private bool validOperator = true;
         
         private IEnumerable<string> GetParameters() => Parent?.GetParameterNames();
@@ -259,13 +260,13 @@ namespace Models.CLEM.Groupings
 
                 if((Value is null || Value.ToString() == "") & !(Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse))
                 {
-                    string[] memberNames = new string[] { "Missing filter compare value" };
+                    string[] memberNames = ["Missing filter compare value"];
                     yield return new ValidationResult($"A value to compare with the Property [{PropertyOfIndividual}] is required for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames);
                 }
 
                 if (propertyInfo is null || !propertyInfo.Any())
                 {
-                    string[] memberNames = new string[] { "Invalid property name" };
+                    string[] memberNames = ["Invalid property name"];
                     yield return new ValidationResult($"The property name [{PropertyOfIndividual}] was not found for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames);
                 }
                 else
@@ -274,7 +275,7 @@ namespace Models.CLEM.Groupings
                     // check valid operator
                     if (!CheckValidOperator(propertyInfo.Last(), out _))
                     {
-                        string[] memberNames = new string[] { "Invalid operator" };
+                        string[] memberNames = ["Invalid operator"];
                         yield return new ValidationResult($"The operator provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [{propertyInfo.Last().Name}]", memberNames);
                     }
 
@@ -284,7 +285,7 @@ namespace Models.CLEM.Groupings
                     {
                         if (!Enum.TryParse(propertyInfo.Last().PropertyType, Value.ToString(), out _))
                         {
-                            string[] memberNames = new string[] { "Invalid compare value" };
+                            string[] memberNames = ["Invalid compare value"];
                             yield return new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [{propertyInfo.Last().Name}]{System.Environment.NewLine}Valid entries are [{String.Join(",", Enum.GetNames(propertyInfo.Last().PropertyType))}]", memberNames);
                         }
                     }
@@ -297,7 +298,7 @@ namespace Models.CLEM.Groupings
                         {
                             if (!bool.TryParse(Value.ToString(), out _))
                             {
-                                string[] memberNames = new string[] { "Invalid compare value" };
+                                string[] memberNames = ["Invalid compare value"];
                                 yield return new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [Boolean]{System.Environment.NewLine}Valid entries are [True, true, False, false, 1, 0]", memberNames);
                             }
                         }
@@ -308,7 +309,7 @@ namespace Models.CLEM.Groupings
                     {
                         if (!bool.TryParse(Value.ToString(), out _))
                         {
-                            string[] memberNames = new string[] { "Invalid compare value" };
+                            string[] memberNames = ["Invalid compare value"];
                             yield return new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [Boolean]{System.Environment.NewLine}Valid entries are [True, true, False, false, 1, 0]", memberNames);
                         }
                     }

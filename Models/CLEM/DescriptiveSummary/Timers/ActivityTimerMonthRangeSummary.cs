@@ -1,7 +1,7 @@
 ﻿using Models.CLEM.Timers;
 using System.IO;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Timers;
 
 /// <summary>
 /// Descriptive summary for ActivityTimerMonthRange component
@@ -11,6 +11,6 @@ public class ActivityTimerMonthRangeSummary : TimerSummaryBase<ActivityTimerMont
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"Perform between {generator.DisplaySummaryValueSnippet(ModelTyped.StartMonth, errorNotSet: true, spanClass:"entryValue otherValue")} and {generator.DisplaySummaryValueSnippet(ModelTyped.StartMonth, errorNotSet: true, spanClass: "entryValue otherValue")}", "entryValue filterItem");
+        generator.AddBlockWithText($"Perform between {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.StartMonth, errorNotSet: true, spanClass:"entryValue otherValue")} and {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.StartMonth, errorNotSet: true, spanClass: "entryValue otherValue")}", "entryValue filterItem");
     }
 }

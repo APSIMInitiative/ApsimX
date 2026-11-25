@@ -7,6 +7,7 @@ using System.Diagnostics;
 using Models;
 using Models.PMF.Phen;
 using APSIM.Core;
+using System.Linq;
 
 namespace APSIM.Documentation
 {
@@ -17,7 +18,7 @@ namespace APSIM.Documentation
             try
             {
                 if (args.Length == 0)
-                    return GenerateAllDocuments();
+                    return GenerateAllModels();
                 else if (args.Length == 3)
                     return GenerateDocument(args[0], args[1], bool.Parse(args[2]));
                 else
@@ -31,6 +32,33 @@ namespace APSIM.Documentation
                 Console.Error.WriteLine(err);
                 return 1;
             }
+        }
+
+        private static int GenerateAllModels()
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            string folderPath = PathUtilities.GetAbsolutePath("%root%/Models/Resources/", null);
+            string apsimPath = PathUtilities.GetAbsolutePath("%root%", null);
+
+            string outputPath = apsimPath + "/_autodocs/";
+            
+
+            List<string> jsonFiles = Directory.GetFiles(folderPath, "*.json").ToList();
+            foreach (string file in jsonFiles)
+            {
+                Simulations sims = FileFormat.ReadFromFile<Simulations>(file).Model as Simulations;
+                string html = WebDocs.Generate(sims);
+                string outputFilename = file.Replace(apsimPath, outputPath).Replace(".json", ".html");
+
+                string directory = Path.GetDirectoryName(outputFilename);
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+
+                File.WriteAllText(outputFilename, html);
+            }
+            Console.WriteLine($"Successfully generated files at {outputPath}. Elapsed time: {stopwatch.Elapsed.TotalSeconds} seconds.");
+            return 0;
         }
 
         private static int GenerateAllDocuments()

@@ -1,4 +1,5 @@
 ﻿using Models.CLEM.Activities;
+using Models.CLEM.Extras;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.Core;
@@ -22,7 +23,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     public class SetAttributeFromHerd : CLEMModel, ISetAttribute
     {
-        private IndividualAttribute lastInstance { get; set; } = null;
+        private IndividualAttribute lastInstance = null;
         private IEnumerable<RuminantGroup> filterGroups;
         private CLEMRuminantActivityBase ruminantActivity;
 

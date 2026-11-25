@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -73,7 +74,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            UncollectedStores = new List<ManureStoreUncollected>();
+            UncollectedStores = [];
             Initialise();
         }
 
@@ -94,7 +95,7 @@ namespace Models.CLEM.Resources
         /// <param name="amount">Amount (dry weight) of manure to add</param>
         public void AddUncollectedManure(string storeName, double amount)
         {
-            ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.ToLower() == storeName.ToLower()).FirstOrDefault();
+            ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.Equals(storeName, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
             if (store == null)
             {
                 store = new ManureStoreUncollected() { Name = storeName };
@@ -140,7 +141,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity performing collection</param>
         public void Collect(string storeName, double resourceLimiter, CLEMModel activity)
         {
-            ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.ToLower() == storeName.ToLower()).FirstOrDefault();
+            ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.Equals(storeName, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
             if (store != null)
             {
                 double limiter = Math.Max(Math.Min(resourceLimiter, 1.0), 0);
@@ -163,8 +164,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current amount of this resource
         /// </summary>
-        public new double AmountTotal { get { return amount; } }
-        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        public new double AmountTotal { get { return AmountRounded; } }
+        private double AmountRounded { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
         private double roundedAmount;
 
         /// <summary>
@@ -172,7 +173,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Initialise()
         {
-            this.amount = 0;
+            this.AmountRounded = 0;
         }
 
         #region transactions
@@ -192,7 +193,7 @@ namespace Models.CLEM.Resources
             double amountAdded = (double)resourceAmount;
             if (amountAdded > 0)
             {
-                amount += amountAdded;
+                AmountRounded += amountAdded;
 
                 ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
             }
@@ -204,7 +205,7 @@ namespace Models.CLEM.Resources
         /// <param name="newAmount"></param>
         public new void Set(double newAmount)
         {
-            amount = newAmount;
+            AmountRounded = newAmount;
         }
 
         #endregion
@@ -223,7 +224,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Pools of manure in this store
         /// </summary>
-        public List<ManurePool> Pools = new List<ManurePool>();
+        public List<ManurePool> Pools = [];
     }
 
     /// <summary>

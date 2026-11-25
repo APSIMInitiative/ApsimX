@@ -3,7 +3,7 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System.IO;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for LandType (sub-resource)
@@ -23,25 +23,25 @@ public class LandTypeSummary : DescriptiveSummaryProviderBase<LandType>
         else
         {
             if (model.ProportionOfTotalArea == 0)
-                Generator.AddBlockWithText($"The proportion of total area assigned to this land type is {generator.DisplaySummaryValueSnippet(model.ProportionOfTotalArea, warnZero: true)} so no area is assigned.", "infoBanner error");
+                Generator.AddBlockWithText($"The proportion of total area assigned to this land type is {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.ProportionOfTotalArea, warnZero: true)} so no area is assigned.", "infoBanner error");
             else
             {
                 string units = "";
                 if (string.IsNullOrWhiteSpace(model.Units) == false)
                 {
-                    units = $" {generator.DisplaySummaryValueSnippet(model.Units)}";
+                    units = $" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Units)}";
                 }
                 string propBuildings = "";
                 if (model.PortionBuildings > 0)
-                    propBuildings = $", {generator.DisplaySummaryValueSnippet(model.PortionBuildings*model.UsableArea)} of which is occupied by buildings";
+                    propBuildings = $", {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.PortionBuildings*model.UsableArea)} of which is occupied by buildings";
                 string usable = "";
                 if (model.UsableArea != model.LandArea)
-                    usable = $" of which {generator.DisplaySummaryValueSnippet(model.UsableArea)} is usable";
+                    usable = $" of which {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.UsableArea)} is usable";
 
 
-                Generator.AddBlockWithText($"This land type has an {generator.DisplaySummaryValueSnippet(model.LandArea, warnZero: true)}{units}{usable}{propBuildings}");
+                Generator.AddBlockWithText($"This land type has an {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.LandArea, warnZero: true)}{units}{usable}{propBuildings}");
             }
         }
-        Generator.AddBlockWithText($"This land type is identified as {generator.DisplaySummaryValueSnippet(model.SoilType)}");
+        Generator.AddBlockWithText($"This land type is identified as {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.SoilType)}");
     }
 }

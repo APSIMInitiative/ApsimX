@@ -3,7 +3,7 @@ using Models.CLEM.Timers;
 using System;
 using System.IO;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Timers;
 
 /// <summary>
 /// Descriptive summary for ActivityTimerCropHarvest component
@@ -44,9 +44,9 @@ public class ActivityTimerCropHarvestSummary : TimerSummaryBase<ActivityTimerCro
     {
         if (startorstop.Equals("start", StringComparison.OrdinalIgnoreCase))
         {
-            return $"{generator.DisplaySummaryValueSnippet(Math.Abs(ModelTyped.OffsetMonthHarvestStart))} {generator.DisplayPlural(Math.Abs(ModelTyped.OffsetMonthHarvestStart), "month")}";
+            return $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(Math.Abs(ModelTyped.OffsetMonthHarvestStart))} {DescriptiveSummaryGenerator.DisplayPlural(Math.Abs(ModelTyped.OffsetMonthHarvestStart), "month")}";
         }
-        return $"{generator.DisplaySummaryValueSnippet(Math.Abs(ModelTyped.OffsetMonthHarvestStop))} {generator.DisplayPlural(Math.Abs(ModelTyped.OffsetMonthHarvestStop), "month")}";
+        return $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(Math.Abs(ModelTyped.OffsetMonthHarvestStop))} {DescriptiveSummaryGenerator.DisplayPlural(Math.Abs(ModelTyped.OffsetMonthHarvestStop), "month")}";
     }
 
 }

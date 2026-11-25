@@ -2,7 +2,7 @@ using DocumentFormat.OpenXml.Presentation;
 using Models.CLEM.Resources;
 using System.IO;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for SetAttributeWithParent
@@ -23,28 +23,28 @@ public class SetAttributeWithValueSummary : DescriptiveSummaryProviderBase<SetAt
         var model = ModelTyped;
         if (model is null) return;
 
-        string attrName = generator.DisplaySummaryValueSnippet(model.AttributeName);
+        string attrName = DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.AttributeName);
 
         if (FormatForParentControl)
         {
-            bool isGroupAttribute = (CurrentAncestorList?.Count >= 2 && CurrentAncestorList[CurrentAncestorList.Count - 2] == typeof(RuminantInitialCohorts).Name);
+            bool isGroupAttribute = (CurrentAncestorList?.Count >= 2 && CurrentAncestorList[^2] == typeof(RuminantInitialCohorts).Name);
             if (model.StandardDeviation == 0)
-                generator.AddBlockWithText($"Attribute {attrName} is provided {(isGroupAttribute ? "to all cohorts " : "")}with a value of {generator.DisplaySummaryValueSnippet(model.Value)}", "resourcebanneralone clearfix");
+                generator.AddBlockWithText($"Attribute {attrName} is provided {(isGroupAttribute ? "to all cohorts " : "")}with a value of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value)}", "resourcebanneralone clearfix");
             else
-                generator.AddBlockWithText($"Attribute {attrName} is provided {(isGroupAttribute ? "to all cohorts " : "")}with mean = {generator.DisplaySummaryValueSnippet(model.Value)} and s.d. = {generator.DisplaySummaryValueSnippet(model.StandardDeviation)}", "resourcebanneralone clearfix");
+                generator.AddBlockWithText($"Attribute {attrName} is provided {(isGroupAttribute ? "to all cohorts " : "")}with mean = {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value)} and s.d. = {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.StandardDeviation)}", "resourcebanneralone clearfix");
         }
         else
         {
-            generator.AddBlockWithText($"Provide an attribute with the label {attrName} that will be inherited with the {generator.DisplaySummaryValueSnippet(model.InheritanceStyle.ToString())} style{(model.Mandatory ? " and is required by all individuals in the population" : "")}");
+            generator.AddBlockWithText($"Provide an attribute with the label {attrName} that will be inherited with the {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.InheritanceStyle.ToString())} style{(model.Mandatory ? " and is required by all individuals in the population" : "")}");
 
             string inherited = "";
             if (model.InheritanceStyle != AttributeInheritanceStyle.None)
-                inherited = ($" and is allowed to vary between {generator.DisplaySummaryValueSnippet(model.MinimumValue)} and {generator.DisplaySummaryValueSnippet(model.MaximumValue)} when inherited");
+                inherited = ($" and is allowed to vary between {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.MinimumValue)} and {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.MaximumValue)} when inherited");
 
             if (model.StandardDeviation == 0)
-                generator.AddBlockWithText($"This attribute has a value of {generator.DisplaySummaryValueSnippet(model.Value)}{inherited}");
+                generator.AddBlockWithText($"This attribute has a value of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value)}{inherited}");
             else
-                generator.AddBlockWithText($"This attribute's value is randomly taken from a normal distribution with mean {generator.DisplaySummaryValueSnippet(model.Value)} and standard deviation {generator.DisplaySummaryValueSnippet(model.StandardDeviation)}{inherited}");
+                generator.AddBlockWithText($"This attribute's value is randomly taken from a normal distribution with mean {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value)} and standard deviation {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.StandardDeviation)}{inherited}");
         }
     }
 }

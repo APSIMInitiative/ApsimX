@@ -356,7 +356,7 @@ internal static class JsonUtilities
     }
 
     /// <summary>
-    /// Replaces the type a child node if it exists.
+    /// Replaces the type of a child node if it exists.
     /// </summary>
     /// <param name="node">Parent node.</param>
     /// <param name="currentType">Type of child model to replace, including full namespace</param>
@@ -365,6 +365,43 @@ internal static class JsonUtilities
     {
         foreach (JObject child in ChildrenRecursively(node, currentType))
             child["$type"] = child["$type"].ToString().Replace(currentType, newType);
+    }
+
+    /// <summary>
+    /// Replaces the type of a child property if it exists.
+    /// </summary>
+    /// <param name="root">Parent node.</param>
+    /// <param name="currentType">Type of property model to replace, including full namespace</param>
+    /// <param name="newType">New type of property model, including full namespace</param>
+    public static void ReplacePropertyValueModelType(
+    JObject root,
+    string currentType,
+    string newType)
+    {
+        foreach (JProperty prop in FindPropertiesWhoseValueIsType(root, currentType))
+        {
+            JObject valueObj = (JObject)prop.Value;
+            string typeText = valueObj["$type"]!.ToString();
+            valueObj["$type"] = typeText.Replace(currentType, newType);
+        }
+    }
+
+    /// <summary>
+    /// Find all properties of a given type in the structure below a node
+    /// </summary>
+    /// <param name="root">Parent node</param>
+    /// <param name="modelType">The model type to find, including full namespace</param>
+    /// <returns></returns>
+    public static IEnumerable<JProperty> FindPropertiesWhoseValueIsType(
+        JObject root,
+        string modelType)
+    {
+        return root
+            .DescendantsAndSelf()
+            .OfType<JProperty>()
+            .Where(p =>
+                p.Value is JObject valueObj &&
+                valueObj["$type"]?.ToString().StartsWith(modelType, StringComparison.Ordinal) == true);
     }
 
     /// <summary>

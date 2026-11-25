@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for the Graze Food Store Type Fertility Limiter
@@ -23,21 +23,21 @@ public class GrazeFoodStoreFertilityLimiterSummary : DescriptiveSummaryProviderB
         bool timerpresent = model.Structure.FindChildren<ActivityTimerMonthRange>().Any();
         var parentPasture = model.Parent as GrazeFoodStoreType;
 
-        generator.AddBlockWithText($"The nitrogen content of new pasture will be reduced by {generator.DisplaySummaryValueSnippet(model.NitrogenReduction, warnZero:true, errorString:"Not Set")} if:");
+        generator.AddBlockWithText($"The nitrogen content of new pasture will be reduced by {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.NitrogenReduction, warnZero:true, errorString:"Not Set")} if:");
 
-        string monthSet = "";
+        string monthSet;
         if (model.AnnualYieldStartMonth == MonthsOfYear.NotSet)
-            monthSet = generator.DisplayErrorSnippet("Month not set");
+            monthSet = DescriptiveSummaryGenerator.DisplayErrorSnippet("Month not set");
         else
-            monthSet = generator.DisplaySummaryValueSnippet(model.AnnualYieldStartMonth.ToString());
+            monthSet = DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.AnnualYieldStartMonth.ToString());
 
-        generator.AddBlockWithText($"{generator.DisplayBold("(A)")} An annual nitrogen supply of {generator.DisplaySummaryValueSnippet(model.AnnualNitrogenSupply, warnZero: true, errorString: "Not Set")} kg per hectare has been used since {monthSet}");
+        generator.AddBlockWithText($"{generator.DisplayBold("(A)")} An annual nitrogen supply of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.AnnualNitrogenSupply, warnZero: true, errorString: "Not Set")} kg per hectare has been used since {monthSet}");
         if (model.AnnualNitrogenSupply > 0)
         {
             if (parentPasture.GreenNitrogenPercent > 0)
-                generator.AddBlockWithText($"This equates to {generator.DisplaySummaryValueSnippet(model.AnnualNitrogenSupply / (parentPasture.GreenNitrogenPercent / 100))} kg per hectare of pasture production given the new growth nitrogen content of {generator.DisplaySummaryValueSnippet(parentPasture.GreenNitrogenPercent, warnZero:true)}.");
+                generator.AddBlockWithText($"This equates to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.AnnualNitrogenSupply / (parentPasture.GreenNitrogenPercent / 100))} kg per hectare of pasture production given the new growth nitrogen content of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(parentPasture.GreenNitrogenPercent, warnZero:true)}.");
             else
-                generator.AddBlockWithText($"This equates to {generator.DisplayErrorSnippet("Undefined")} kg per hectare of pasture production given the green growth nitrogen content of {generator.DisplayErrorSnippet("Not Set")}.");
+                generator.AddBlockWithText($"This equates to {DescriptiveSummaryGenerator.DisplayErrorSnippet("Undefined")} kg per hectare of pasture production given the green growth nitrogen content of {DescriptiveSummaryGenerator.DisplayErrorSnippet("Not Set")}.");
         }
 
         if (timerpresent)

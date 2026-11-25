@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Initial metric values from other food sources
         /// </summary>
-        private Dictionary<string, double> otherMetricAmounts = new();
+        private readonly Dictionary<string, double> otherMetricAmounts = [];
 
         /// <summary>
         /// A method to add addition metric amount at the start of the month to represent value non food store consumption

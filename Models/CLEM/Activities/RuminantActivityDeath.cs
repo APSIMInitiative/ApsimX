@@ -6,6 +6,7 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.CLEM.Groupings;
 using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
@@ -40,18 +41,14 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantDeathGroup":
-                case "RuminantDeathGroupCondition":
-                case "RuminantDeathGroupRate":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() 
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantDeathGroup" or "RuminantDeathGroupCondition" or "RuminantDeathGroupRate" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -74,8 +71,8 @@ namespace Models.CLEM.Activities
             if (!TimingOK) return;
             Status = ActivityStatus.NotNeeded;
 
-            CurrentIndividuals = CurrentHerd().ToList();
-            List<Ruminant> died  = CurrentIndividuals.Where(a => a.Died).ToList();
+            CurrentIndividuals = [.. CurrentHerd()];
+            List<Ruminant> died  = [.. CurrentIndividuals.Where(a => a.Died)];
             CurrentIndividuals.RemoveAll(a => a.Died);
 
             foreach (var group in filterGroups)
@@ -103,7 +100,7 @@ namespace Models.CLEM.Activities
             var filterGroups = Structure.FindChildren<IRuminantDeathGroup>();
             if(!filterGroups.Any())
             {
-                yield return new ValidationResult($"At least one [RuminantDeathGroup] is required as a child of the [a=RuminantActivityDeath] component [{NameWithParent}]", new string[] { "Missing FilterGroup" });
+                yield return new ValidationResult($"At least one [RuminantDeathGroup] is required as a child of the [a=RuminantActivityDeath] component [{NameWithParent}]", ["Missing FilterGroup"]);
             }
         }
         #endregion

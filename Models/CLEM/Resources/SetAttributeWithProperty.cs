@@ -10,6 +10,7 @@ using System.IO;
 using System.Reflection;
 using Display = Models.Core.DisplayAttribute;
 using System.Linq;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Resources
 {
@@ -29,14 +30,14 @@ namespace Models.CLEM.Resources
     public class SetAttributeWithProperty : CLEMModel, ISetAttribute
     {
         [NonSerialized]
-        private PropertyInfo propertyInfo;
+        private readonly PropertyInfo propertyInfo;
 
-        private IEnumerable<string> GetParameters() => (new RuminantGroup()).GetParameterNames().OrderBy(k => k);
+        private static IEnumerable<string> GetParameters() => (new RuminantGroup()).GetParameterNames().OrderBy(k => k);
 
         /// <summary>
         /// Store of last instance of the individual attribute defined
         /// </summary>
-        private IndividualAttribute lastInstance { get; set; } = null;
+        private IndividualAttribute lastInstance = null;
 
         /// <summary>
         /// Name of attribute

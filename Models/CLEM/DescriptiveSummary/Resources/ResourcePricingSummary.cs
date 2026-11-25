@@ -2,7 +2,7 @@ using Models.CLEM.Resources;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for Resource Pricing (sub-resource)
@@ -62,11 +62,11 @@ public class ResourcePricingSummary : DescriptiveSummaryProviderBase<ResourcePri
             output += "only in whole packets ";
         else
             output += "in packets ";
-        output += $"{generator.DisplaySummaryValueSnippet(ModelTyped.PacketSize, warnZero: true)}";
+        output += $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.PacketSize, warnZero: true)}";
 
         output += $" unit {((ModelTyped.PacketSize == 1) ? "" : "s")} in size";
         generator.AddBlockWithText(output);
 
-        generator.AddBlockWithText($"Each packet is worth {generator.DisplaySummaryValueSnippet(ModelTyped.PricePerPacket, warnZero: true)}.");
+        generator.AddBlockWithText($"Each packet is worth {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.PricePerPacket, warnZero: true)}.");
     }
 }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Descriptive summary provider for Resource Activity Manage External
@@ -32,15 +32,15 @@ public class ResourceActivityManageExternalSummary : DescriptiveSummaryProviderB
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"Resources added or removed are provided by {generator.DisplaySummaryValueSnippet(ModelTyped.ResourceDataReader, "Reader not set", HTMLSummaryStyle.FileReader)}");
+        generator.AddBlockWithText($"Resources added or removed are provided by {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ResourceDataReader, "Reader not set", HTMLSummaryStyle.FileReader)}");
 
         string output = "";
         if (ModelTyped.AccountName is null || ModelTyped.AccountName == "")
-            output = $"Financial transactions will be made to {generator.DisplayErrorSnippet("FinanceType not set")}";
+            output = $"Financial transactions will be made to {DescriptiveSummaryGenerator.DisplayErrorSnippet("FinanceType not set")}";
         else if (ModelTyped.AccountName == "No financial implications")
             output = "No financial constraints relating to pricing and packet sizes associated with each resource will be included.";
         else
-            output = $"Pricing and packet sizes associated with each resource will be used with {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.AccountName)}";
+            output = $"Pricing and packet sizes associated with each resource will be used with {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(ModelTyped.AccountName)}";
         generator.AddBlockWithText( output);
 
         //generator.AddBlockWithText(output);

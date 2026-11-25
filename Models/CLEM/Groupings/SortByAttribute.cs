@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -49,29 +50,27 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public object OrderRule<T>(T t)
         {
-            if (t is IAttributable)
+            if (t is IAttributable attributable)
             {
                 if (FilterStyle == AttributeFilterStyle.Exists)
                 {
-                    bool exists = ((IAttributable)t).Attributes.Exists(AttributeTag);
+                    bool exists = attributable.Attributes.Exists(AttributeTag);
                     return Convert.ToInt32(exists);
                 }
                 else
                 {
-                    IndividualAttributeList indAttList = ((IAttributable)t).Attributes;
-                    bool exists = (indAttList.AttributesPresent) ? indAttList.Exists(AttributeTag) : false;
+                    IndividualAttributeList indAttList = attributable.Attributes;
+                    bool exists = indAttList.AttributesPresent && indAttList.Exists(AttributeTag);
                     if (exists)
                     {
                         return indAttList.GetValue(AttributeTag).StoredValue;
                     }
                     else
-                        switch (indAttList.GetValue(AttributeTag))
+                        return indAttList.GetValue(AttributeTag) switch
                         {
-                            case IndividualAttribute _:
-                                return float.Parse(MissingAttributeValue, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture);
-                            default:
-                                return null;
-                        }
+                            IndividualAttribute _ => float.Parse(MissingAttributeValue, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture),
+                            _ => null,
+                        };
                 }
             }
             return 0;

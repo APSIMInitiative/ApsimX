@@ -40,10 +40,10 @@ namespace Models.CLEM.Activities
             return type switch
             {
                 "LabourRequirement" => new LabelsForCompanionModels(
-                                        identifiers: new List<string>(),
-                                        measures: new List<string>() {
+                                        identifiers: [],
+                                        measures: [
                                             "fixed",
-                                        }
+                                        ]
                                         ),
                 _ => new LabelsForCompanionModels(),
             };
@@ -64,14 +64,11 @@ namespace Models.CLEM.Activities
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }
@@ -101,13 +98,13 @@ namespace Models.CLEM.Activities
             // get check labour required
             if (labour == null)
             {
-                yield return new ValidationResult($"[a={Name}] requires a [r=LabourRequirement] component to set the labour needed.\r\nThis activity will be ignored without this component.", new string[] { "Labour requirement" });
+                yield return new ValidationResult($"[a={Name}] requires a [r=LabourRequirement] component to set the labour needed.\r\nThis activity will be ignored without this component.", ["Labour requirement"]);
             }
 
             // check pricing
             if (!Resources.FindResourceGroup<Labour>().PricingAvailable)
             {
-                yield return new ValidationResult($"[a={Name}] requires a [r=LabourPricing] component to set the labour rates.\r\nThis activity will be ignored without this component.", new string[] { "Labour pricing" });
+                yield return new ValidationResult($"[a={Name}] requires a [r=LabourPricing] component to set the labour rates.\r\nThis activity will be ignored without this component.", ["Labour pricing"]);
             }
         }
         #endregion

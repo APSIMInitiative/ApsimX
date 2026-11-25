@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
@@ -32,7 +33,7 @@ namespace Models.CLEM.Timers
     public class ActivityTimerMonthRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
         private DateTime lastCheck = DateTime.MinValue;
         private bool lastReturn = false;
 

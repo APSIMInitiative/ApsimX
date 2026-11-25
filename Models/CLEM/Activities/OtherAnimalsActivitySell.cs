@@ -6,6 +6,7 @@ using Models.CLEM.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
@@ -28,7 +29,7 @@ namespace Models.CLEM.Activities
         private int numberSold = 0;
         private double totalValue = 0;
         private FinanceType bankAccount = null;
-        private OtherAnimals otherAnimals { get; set; }
+        private OtherAnimals otherAnimals;
 
         /// <summary>
         /// Bank account to use
@@ -94,29 +95,25 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "OtherAnimalsGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Number to sell",
-                            "Value of sales"
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head",
-                            "total"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "OtherAnimalsGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Number to sell",
+                                            "Value of sales"
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per head",
+                                            "total"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <inheritdoc/>
@@ -132,7 +129,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PrepareForTimestep()
         {
-            CohortsToBeSold = otherAnimals.GetCohorts(filterGroups, true).ToList();
+            CohortsToBeSold = [.. otherAnimals.GetCohorts(filterGroups, true)];
             // number to sell
             numberToDo = CohortsToBeSold.Sum(a => a.AdjustedNumber);
             numberSold = 0;
@@ -146,48 +143,27 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NotNeeded;
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.type)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.type switch
                 {
-                    case "OtherAnimalsGroup":
-                        valuesForCompanionModels[valueToSupply.Key] = numberToDo;
-                        break;
-                    case "LabourRequirement":
-                    case "ActivityFee":
-                        switch (valueToSupply.Key.identifier)
+                    "OtherAnimalsGroup" => numberToDo,
+                    "LabourRequirement" or "ActivityFee" => valueToSupply.Key.identifier switch
+                    {
+                        "Number to sell" => valueToSupply.Key.unit switch
                         {
-                            case "Number to sell":
-                                switch (valueToSupply.Key.unit)
-                                {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                                        break;
-                                    case "per head":
-                                        valuesForCompanionModels[valueToSupply.Key] = numberToDo;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
-                                break;
-                            case "Value of sales":
-                                switch (valueToSupply.Key.unit)
-                                {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                                        break;
-                                    case "total":
-                                        valuesForCompanionModels[valueToSupply.Key] = totalValue;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                }
+                            "fixed" => 1,
+                            "per head" => numberToDo,
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        },
+                        "Value of sales" => valueToSupply.Key.unit switch
+                        {
+                            "fixed" => 1,
+                            "total" => (double?)totalValue,
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        },
+                        _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                    },
+                    _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Groupings;
 
 /// <summary>
 /// Descriptive summary provider for AnimalPriceGroup
@@ -50,7 +50,7 @@ public class AnimalPriceGroupSummary : DescriptiveSummaryProviderBase<AnimalPric
         if (!FormatForParentControl)
         {
             //ToDo: format value for currency
-            generator.AddBlockWithText($"{PricingStyleToFullString(model.PurchaseOrSale)} {generator.DisplaySummaryValueSnippet(model.Value, warnZero:true)} {generator.DisplaySummaryValueSnippet(model.PricingStyle)} ");
+            generator.AddBlockWithText($"{PricingStyleToFullString(model.PurchaseOrSale)} {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value, warnZero:true)} {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.PricingStyle)} ");
         }
     }
 
@@ -59,19 +59,15 @@ public class AnimalPriceGroupSummary : DescriptiveSummaryProviderBase<AnimalPric
     /// </summary>
     /// <param name="pricingStyle">pricing style to use</param>
     /// <returns>Description of style</returns>
-    private string PricingStyleToFullString(PurchaseOrSalePricingStyleType pricingStyle)
+    private static string PricingStyleToFullString(PurchaseOrSalePricingStyleType pricingStyle)
     {
-        switch (pricingStyle)
+        return pricingStyle switch
         {
-            case PurchaseOrSalePricingStyleType.Both:
-                return "Buy and sell for ";
-            case PurchaseOrSalePricingStyleType.Purchase:
-                return "Buy for ";
-            case PurchaseOrSalePricingStyleType.Sale:
-                return "Sell for ";
-            default:
-                return "Unknown pricing style";
-        }
+            PurchaseOrSalePricingStyleType.Both => "Buy and sell for ",
+            PurchaseOrSalePricingStyleType.Purchase => "Buy for ",
+            PurchaseOrSalePricingStyleType.Sale => "Sell for ",
+            _ => "Unknown pricing style",
+        };
     }
 
     /// <inheritdoc/>
@@ -85,9 +81,9 @@ public class AnimalPriceGroupSummary : DescriptiveSummaryProviderBase<AnimalPric
         generator.CloseMostRecentBlock("animalPriceGroup_filters");
         if (FormatForParentControl)
         {
-            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(PricingStyleToFullString(model.PurchaseOrSale)), tag: "td");
-            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td");
-            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(model.PricingStyle), tag: "td");
+            generator.AddBlockWithText(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(PricingStyleToFullString(model.PurchaseOrSale)), tag: "td");
+            generator.AddBlockWithText(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td");
+            generator.AddBlockWithText(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.PricingStyle), tag: "td");
             generator.CloseMostRecentBlock("animalPriceGroup_row");
         }
     }

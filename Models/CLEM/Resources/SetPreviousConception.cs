@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Extras;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Models.CLEM.Resources
     [Description("Specify the conception status of a new female")]
     [HelpUri(@"Content/Features/Resources/SetPreviousConception.htm")]
     [Version(1, 0, 1, "")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGeneral)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class SetPreviousConception : CLEMModel, IValidatableObject
     {
@@ -73,26 +74,26 @@ namespace Models.CLEM.Resources
                     {
                         if (NumberDaysPregnant < ruminantType.Parameters.General.GestationLength.InDays)
                         {
-                            string[] memberNames = new string[] { "Ruminant cohort details" };
+                            string[] memberNames = ["Ruminant cohort details"];
                             yield return new ValidationResult($"The number of days pregant [{NumberDaysPregnant}] for [r=SetPreviousConception] must be less than the gestation length of the breed [{ruminantType.Parameters.General.GestationLength.InDays}]", memberNames);
                         }
                         // get the individual to check female and suitable age for conception supplied.
                         if (ruminantCohort.Age - NumberDaysPregnant >= ruminantType.Parameters.Details.EstimatedAgeAtMaturityFemale)
                         {
-                            string[] memberNames = new string[] { "Ruminant cohort details" };
+                            string[] memberNames = ["Ruminant cohort details"];
                             yield return new ValidationResult($"The individual specified must be at least [{ruminantType.EstimatedAgeAtMaturityFemale}] days old at the time of conception [r=SetPreviousConception] based on estimated age at minimum size for maturity", memberNames);
                         }
                     }
                     else
                     {
-                        string[] memberNames = new string[] { "Ruminant cohort details" };
+                        string[] memberNames = ["Ruminant cohort details"];
                         yield return new ValidationResult($"Cannot locate a [r=RuminantType] in tree structure above [r=SetPreviousConception]", memberNames);
                     }
                 }
             }
             else
             {
-                string[] memberNames = new string[] { "ActivityHolder" };
+                string[] memberNames = ["ActivityHolder"];
                 yield return new ValidationResult("Previous conception status can only be calculated for female ruminants", memberNames);
             }
         }

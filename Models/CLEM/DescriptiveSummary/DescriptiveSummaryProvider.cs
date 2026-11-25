@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -20,9 +21,9 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     /// <inheritdoc/>
     protected DescriptiveSummaryGenerator generator = null!;
     /// <inheritdoc/>
-    protected readonly List<string> openingBlocks = new List<string>();
+    protected readonly List<string> openingBlocks = [];
     /// <inheritdoc/>
-    protected readonly List<string> innerBlocks = new List<string>();
+    protected readonly List<string> innerBlocks = [];
 
     /// <summary>
     /// The model instance the provider is currently summarising. Set by the resolver or when the
@@ -42,7 +43,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     public virtual void SetModel(IModel model)
     {
         Model = model ?? throw new ArgumentNullException(nameof(model));
-        CurrentAncestorList ??= new List<string>();
+        CurrentAncestorList ??= [];
     }
 
     /// <summary>
@@ -55,7 +56,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
         this.generator = generator ?? throw new ArgumentNullException(nameof(generator));
         openingBlocks.Clear();
         innerBlocks.Clear();
-        CurrentAncestorList ??= new List<string>();
+        CurrentAncestorList ??= [];
     }
 
     /// <inheritdoc/>
@@ -71,7 +72,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     /// <inheritdoc/>
     public HTMLSummaryStyle SummaryStyle { get; set; } = HTMLSummaryStyle.Default;
     /// <inheritdoc/>
-    public List<string> CurrentAncestorList { get; set; } = new();
+    public List<string> CurrentAncestorList { get; set; } = [];
 
     /// <inheritdoc/>
     public int NestedLevel { get; set; } = 0;
@@ -88,7 +89,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     public virtual void BuildSummary()
     {
         if (Model is ResourceBaseWithTransactions)
-            generator.AddBlockWithText($"No details for {generator.DisplaySummaryResourceTypeSnippet(Model.GetType().Name)}.");
+            generator.AddBlockWithText($"No details for {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(Model.GetType().Name)}.");
         else
             generator.AddBlockWithText($"No details for {Model.GetType().Name}.");
     }
@@ -126,7 +127,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
             string units = (cm as IResourceType).Units;
             if (units != "NA")
             {
-                generator.AddBlockWithText($"This resource is measured in {generator.DisplaySummaryValueSnippet(units, errorNotSet: true)}", "entryHolder");
+                generator.AddBlockWithText($"This resource is measured in {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(units, errorNotSet: true)}", "entryHolder");
             }
 
         }

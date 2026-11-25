@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.CLEM.Extras;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,7 +11,7 @@ namespace Models.CLEM.Timers
     public class TimerRange
     {
         private readonly CLEMEvents events;
-        private bool minimalSetup;
+        private readonly bool minimalSetup;
 
         /// <summary>
         /// Start of range
@@ -31,8 +32,8 @@ namespace Models.CLEM.Timers
         /// </summary>
         public bool WholeTimeStepInRange { get; set; } = false;
 
-        private IEnumerable<ActivityTimerSequence> sequenceTimerList;
-        private AgeSpecifier repeatInterval = new int[] { 0, 0, 0 };
+        private readonly IEnumerable<ActivityTimerSequence> sequenceTimerList;
+        private readonly AgeSpecifier repeatInterval = new int[] { 0, 0, 0 };
 
         /// <summary>
         /// Constructor
@@ -42,8 +43,8 @@ namespace Models.CLEM.Timers
             if (events is null)
                 throw new Exception("CLEMEvents link not provided to timer range");
 
-            Start = new(events, startDetails, true, wholeTimeStepInRange);
-            End = new(events, endDetails, false, wholeTimeStepInRange);
+            Start = new(events, startDetails, true);
+            End = new(events, endDetails, false);
             this.sequenceTimerList = sequences;
             this.events = events;
             this.WholeTimeStepInRange = wholeTimeStepInRange;
