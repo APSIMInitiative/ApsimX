@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 222,
+  "Version": 224,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -260,7 +260,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -3474,7 +3473,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -4465,7 +4463,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": true,
+              "ShowInDocs": false,
               "Name": "Scatter-GerminationDAS",
               "ResourceName": null,
               "Children": [
@@ -4747,7 +4745,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": true,
+              "ShowInDocs": false,
               "Name": "Scatter-EmergenceDAS",
               "ResourceName": null,
               "Children": [
@@ -5029,7 +5027,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": true,
+              "ShowInDocs": false,
               "Name": "Scatter-Yield",
               "ResourceName": null,
               "Children": [
@@ -5312,7 +5310,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "Name": "Box_GerminationDAS",
+              "Name": "SoilWater Box GerminationDAS",
               "ResourceName": null,
               "Children": [
                 {
@@ -5594,7 +5592,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "Name": "Box_EmergenceDAS",
+              "Name": "SoilWater Box EmergenceDAS",
               "ResourceName": null,
               "Children": [
                 {
@@ -5876,7 +5874,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "Name": "Box_Yield",
+              "Name": "SoilWater Box Yield",
               "ResourceName": null,
               "Children": [
                 {
@@ -6158,7 +6156,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "Name": "Box_SeedTemperature",
+              "Name": "SoilWater Box SeedTemperature",
               "ResourceName": null,
               "Children": [
                 {
@@ -6440,7 +6438,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "Name": "Box_SeedWaterPotential",
+              "Name": "SoilWater Box SeedWaterPotential",
               "ResourceName": null,
               "Children": [
                 {
@@ -6722,7 +6720,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "Name": "Box_WaterFactor",
+              "Name": "SoilWater Box WaterFactor",
               "ResourceName": null,
               "Children": [
                 {
@@ -8964,7 +8962,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -9904,7 +9901,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": true,
+              "ShowInDocs": false,
               "Name": "Scatter-GerminationDAS",
               "ResourceName": null,
               "Children": [
@@ -10186,7 +10183,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": true,
+              "ShowInDocs": false,
               "Name": "Scatter-EmergenceDAS",
               "ResourceName": null,
               "Children": [
@@ -10468,7 +10465,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": true,
+              "ShowInDocs": false,
               "Name": "Scatter-Yield",
               "ResourceName": null,
               "Children": [
@@ -10751,7 +10748,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "Name": "Box_GerminationDAS",
+              "Name": "SWIM Box GerminationDAS",
               "ResourceName": null,
               "Children": [
                 {
@@ -11033,7 +11030,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "Name": "Box_EmergenceDAS",
+              "Name": "SWIM Box EmergenceDAS",
               "ResourceName": null,
               "Children": [
                 {
@@ -11315,7 +11312,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "Name": "Box_Yield",
+              "Name": "SWIM Box Yield",
               "ResourceName": null,
               "Children": [
                 {
@@ -11597,7 +11594,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "Name": "Box_SeedTemperature",
+              "Name": "SWIM Box SeedTemperature",
               "ResourceName": null,
               "Children": [
                 {
@@ -11879,7 +11876,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "Name": "Box_SeedWaterPotential",
+              "Name": "SWIM Box SeedWaterPotential",
               "ResourceName": null,
               "Children": [
                 {
@@ -12161,7 +12158,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "Name": "Box_WaterFactor",
+              "Name": "SWIM BoxWaterFactor",
               "ResourceName": null,
               "Children": [
                 {
