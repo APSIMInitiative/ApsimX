@@ -3186,7 +3186,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
                           "Children": [],
@@ -10162,7 +10161,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
                           "Children": [],
@@ -21620,7 +21618,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
                           "Children": [],
@@ -27407,7 +27404,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
                           "Children": [],
@@ -32605,7 +32601,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
                           "Children": [],
@@ -41109,7 +41104,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
                           "Children": [],
@@ -47563,7 +47557,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
                           "Children": [],
@@ -55485,7 +55478,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
                           "Children": [],
@@ -62169,7 +62161,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
                           "Children": [],
@@ -64670,7 +64661,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
                           "Children": [],
@@ -65697,7 +65687,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
                           "Children": [],
@@ -68453,7 +68442,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
                           "Children": [],
@@ -69616,7 +69604,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
                           "Children": [],
