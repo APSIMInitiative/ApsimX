@@ -155,6 +155,15 @@ public class Azure
 
         Uri outputContainerUri = CreateDatabaseUploadUri(container, DateTimeOffset.UtcNow);
 
+        //add passwords
+        envVars.Add("SOYBEAN_PASSWORD", Environment.GetEnvironmentVariable("SOYBEAN_PASSWORD"));
+        envVars.Add("CORNSOY_PASSWORD", Environment.GetEnvironmentVariable("CORNSOY_PASSWORD"));
+        envVars.Add("SWIM_PASSWORD", Environment.GetEnvironmentVariable("SWIM_PASSWORD"));
+        envVars.Add("MAIZE_PASSWORD", Environment.GetEnvironmentVariable("MAIZE_PASSWORD"));
+        envVars.Add("RICE_PASSWORD", Environment.GetEnvironmentVariable("RICE_PASSWORD"));
+        envVars.Add("THINZAR_RYEGRASS_PASSWORD", Environment.GetEnvironmentVariable("THINZAR_RYEGRASS_PASSWORD"));
+        envVars.Add("UOM_WINTER_SPRING_PASSWORD", Environment.GetEnvironmentVariable("UOM_WINTER_SPRING_PASSWORD"));
+
         // Get a time formatted like 2026.9.30-14:30
         string now = DateTime.UtcNow.ToString("yyyy.M.d-HH:mm", CultureInfo.InvariantCulture);
         envVars.Add("TIME", now );
