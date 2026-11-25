@@ -8,6 +8,7 @@ test -z "${COMMIT:-}" && echo "COMMIT is empty" && exit 1
 
 # Encode each discovered validation path as a JSON array, and reject an empty list
 # rather than asking the API to start a validation with no work.
+workflow=./bin/Release/net10.0/APSIM.Workflow.dll
 paths=$(dotnet "$workflow" locations | jq -Rsc 'split("\n") | map(select(length > 0))')
 if [[ "$paths" == "[]" ]]; then
   echo "::error::No validation paths found"
