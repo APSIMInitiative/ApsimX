@@ -1,6 +1,7 @@
 #!/bin/bash
 
-apsimng_image="apsiminitiative/apsimng:latest"
+apsimng_image=apsiminitiative/apsimng:latest
+stdout_file=local.stdout.txt
 
 function initialise {
   # Install docker on the Azure node
@@ -13,9 +14,7 @@ function initialise {
   sudo docker pull apsiminitiative/postats2-collector:latest
 }
 
-function run_00001 {
-  echo ------------------------------ >> metadata.txt
-  echo Date/time: `date +"%Y-%m-%d %T"` >> metadata.txt
+function run_setup {
   tar -xvf upload.tar.zst
 
   echo "Extracting password protected datasets..."
@@ -44,7 +43,9 @@ function run_00001 {
 
   uom_winter_spring=./ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring
   7zz x $uom_winter_spring/Observed.zip -o$uom_winter_spring -p"$UOM_WINTER_SPRING_PASSWORD"
+}
 
+function run_validation {
   sudo --preserve-env docker run --rm -v $PWD/ApsimX:/wd -w=/wd --entrypoint dotnet $apsimng_image bin/Release/net10.0/Models.dll "$Path" --verbose
 }
 
@@ -65,7 +66,7 @@ function notify_job_complete {
   --log-file "$log_file" || true
 }
 
-function run_00001_finally {
+function run_finally {
   # Function always called, regardless of any errors.
   sudo --preserve-env docker run --rm \
     -v $PWD/ApsimX:/wd \
@@ -81,41 +82,35 @@ function run_00001_finally {
 
 # ==============================================================
 # Entry point for script.
-start_time=$(date +%s.%N)
-(
-  echo ------------------------------------------------------------ &>> local.stdout.txt
-  echo Running $1 &>> local.stdout.txt
-  set -e;
-  $1 &>> local.stdout.txt
-);
+exit_code=0
 
-exit_code=$?
-
-# Return a failure exit code if the database is missing.
-if [[ "$1" == run_00001 ]]; then
-  database_path=".${Path#/wd}"
-  database_path="${database_path%.apsimx}.db"
-  if [[ "$Path" != /wd/*.apsimx || ! -f "$database_path" ]]; then
-    echo "Database not found at $database_path; custom datastore paths are not supported." &>> local.stdout.txt
-    if [[ $exit_code -eq 0 ]]; then
-      exit_code=1
-    fi
-  fi
+if [[ "$1" == initialise ]]; then
+  initialise &>> initialise.stdout.txt
+  exit_code=$?
 fi
-end_time=$(date +%s.%N)
-elapsed=$(echo "$end_time - $start_time" | bc -l)
-echo "Elapsed time: $elapsed seconds" &>> local.stdout.txt
 
-# If a finally function exists run it.
-# This is done last so the finally function can use the complete log, exit code and elapsed time.
-if [[ $(type -t $1_finally) == function ]]; then
-  $1_finally &>> local.stdout.txt
+if [[ "$1" == run_validation ]]; then
+  start_time=$(date +%s.%N)
+
+  run_setup &>> "$stdout_file"
+  exit_code=$?
+
+  if [[ $exit_code -eq 0 ]]; then
+    echo -n > "$stdout_file"
+    run_validation &>> "$stdout_file"
+    exit_code=$?
+  fi
+
+  end_time=$(date +%s.%N)
+  elapsed=$(echo "$end_time - $start_time" | bc -l)
+  echo "Elapsed time: $elapsed seconds" &>> "$stdout_file"
+
+  run_finally &>> "$stdout_file"
   finally_exit_code=$?
+
   if [[ $exit_code -eq 0 && $finally_exit_code -ne 0 ]]; then
     exit_code=$finally_exit_code
   fi
 fi
 
-if [ $exit_code -gt 0 ]; then
-  exit $exit_code
-fi
+exit $exit_code

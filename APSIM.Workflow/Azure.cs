@@ -118,7 +118,7 @@ public class Azure
         List<CloudTask> cloudTasks = [];
         string scriptName = "workflow.sh";
         string archiveName = "upload.tar.zst";
-        string commandLine = "bash workflow.sh run_00001";
+        string commandLine = "bash workflow.sh run_validation";
         CloudJob azureJob = null;
         string isoDate = DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
         string storageName = $"{uniqueJobName}-storage".ToLowerInvariant(); // used for naming the blob storage container for this run.
@@ -214,8 +214,7 @@ public class Azure
                 azureJob.JobPreparationTask = new JobPreparationTask("bash workflow.sh initialise")
                 {
                     ResourceFiles = [ResourceFile.FromAutoStorageContainer(storageName, blobPrefix: scriptName)],
-                    UserIdentity = new UserIdentity("admin"),
-                    EnvironmentSettings = [new EnvironmentSetting("PR_NUMBER", prNumber)]
+                    UserIdentity = new UserIdentity("admin")
                 };
                 azureJob.Commit();
             }
