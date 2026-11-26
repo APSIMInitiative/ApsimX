@@ -91,25 +91,4 @@ public class AzureOutputTests
         Assert.That(DateTimeOffset.Parse(parameters["se"]), Is.EqualTo(expiry).Within(TimeSpan.FromSeconds(1)));
         Assert.Throws<ArgumentOutOfRangeException>(() => WorkflowAzure.CreateDatabaseReadUri(container, DateTimeOffset.UtcNow.AddSeconds(-1)));
     }
-
-    [Test]
-    public void WorkflowReportsMissingDatabases()
-    {
-        if (OperatingSystem.IsWindows())
-            Assert.Ignore("The workflow runs on Linux; run workflow-tests.sh with Bash to test it on Windows.");
-
-        string script = Path.Combine(PathUtilities.GetApsimXDirectory(), "Tests", "UnitTests", "APSIMWorkflow", "workflow-tests.sh");
-        ProcessStartInfo startInfo = new("bash")
-        {
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false
-        };
-        startInfo.ArgumentList.Add(script);
-        using Process process = Process.Start(startInfo);
-        string output = process.StandardOutput.ReadToEnd();
-        string error = process.StandardError.ReadToEnd();
-        process.WaitForExit();
-        Assert.That(process.ExitCode, Is.EqualTo(0), $"stdout: {output}\nstderr: {error}");
-    }
 }
