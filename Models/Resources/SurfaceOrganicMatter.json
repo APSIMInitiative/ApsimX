@@ -1935,6 +1935,68 @@
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.ResidueType, Models",
+              "DerivedFrom": "Base_type",
+              "FractionC": 0.22,
+              "PO4ppm": 25.0,
+              "NH4ppm": 149.0,
+              "NO3ppm": 98.0,
+              "SpecificArea": 0.0005,
+              "CfContrib": 1,
+              "PotDecompRate": 0.02,
+              "FR_C": [
+                0.15,
+                0.35,
+                0.5
+              ],
+              "FR_N": [
+                0.15,
+                0.35,
+                0.5
+              ],
+              "FR_P": [
+                0.15,
+                0.35,
+                0.5
+              ],
+              "Name": "Compost_greenWaste",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.ResidueType, Models",
+              "DerivedFrom": "Base_type",
+              "FractionC": 0.25,
+              "PO4ppm": 100.0,
+              "NH4ppm": 966.0,
+              "NO3ppm": 129.0,
+              "SpecificArea": 0.0003,
+              "CfContrib": 1,
+              "PotDecompRate": 0.04,
+              "FR_C": [
+                0.2,
+                0.4,
+                0.4
+              ],
+              "FR_N": [
+                0.2,
+                0.4,
+                0.4
+              ],
+              "FR_P": [
+                0.2,
+                0.4,
+                0.4
+              ],
+              "Name": "Compost_manureGreenWaste",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
