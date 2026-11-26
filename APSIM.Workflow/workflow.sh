@@ -15,6 +15,8 @@ function initialise {
 }
 
 function run_setup {
+  set -e
+  
   tar -xvf upload.tar.zst
 
   echo "Extracting password protected datasets..."
