@@ -14,8 +14,14 @@ using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Tracking settings for Ruminant purchases and sales</summary>
-    /// <summary>If this model is provided within RuminantActivityBuySell, trucking costs and loading rules will occur</summary>
+    /// <summary>
+    /// This activity component undertakes rules for Tracking settings for Ruminantloading and trucking individuals
+    /// being purchased or sold
+    /// </summary>
+    /// <remarks>
+    /// Multiple instances of this component can be added as children of each <c>
+    /// RuminantActivityBuySell</c>representing purchases and sales.
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -40,7 +46,7 @@ namespace Models.CLEM.Activities
         public string Identifier { get; set; }
 
         /// <summary>
-        /// Distance to market
+        /// The distance to market
         /// </summary>
         [Category("Farm", "General")]
         [Description("Travel distance (km)")]
@@ -48,7 +54,7 @@ namespace Models.CLEM.Activities
         public double DistanceToMarket { get; set; }
 
         /// <summary>
-        /// Number animals per truck load
+        /// The number of animals per truck load
         /// </summary>
         [Category("Farm", "Load rules")]
         [Description("Number of animals per load unit (deck/pod)")]
@@ -56,7 +62,7 @@ namespace Models.CLEM.Activities
         public double NumberPerLoadUnit { get; set; }
 
         /// <summary>
-        /// Minimum load units per truck
+        /// The minimum load units per truck
         /// </summary>
         [Category("Farm", "Load rules")]
         [Description("Minimum load units (deck/pod) per truck (0 any)")]
@@ -64,7 +70,7 @@ namespace Models.CLEM.Activities
         public double MinimumLoadUnitsPerTruck { get; set; }
 
         /// <summary>
-        /// Maximum load units per truck
+        /// The maximum load units per truck
         /// </summary>
         [Category("Farm", "Load rules")]
         [Description("Maximum load units (deck/pod) per truck")]
@@ -72,7 +78,7 @@ namespace Models.CLEM.Activities
         public double MaximumLoadUnitsPerTruck { get; set; }
 
         /// <summary>
-        /// Load units per trailer
+        /// The load units per trailer
         /// </summary>
         [Category("Farm", "Load rules")]
         [Description("Load units (deck/pod) per trailer")]
@@ -80,7 +86,7 @@ namespace Models.CLEM.Activities
         public double[] LoadUnitsPerTrailer { get; set; }
 
         /// <summary>
-        /// Trailer mass + towball load units group size
+        /// The trailer mass + towball load units group size
         /// </summary>
         [Category("Vehicle mass", "")]
         [Description("Aggregate Trailer Mass (ATM)")]
@@ -88,7 +94,7 @@ namespace Models.CLEM.Activities
         public double[] AggregateTrailerMass { get; set; }
 
         /// <summary>
-        /// Truck tare mass
+        /// The truck tare mass
         /// </summary>
         [Category("Vehicle mass", "")]
         [Description("Truck Tare Mass (avg fuel)")]
@@ -96,7 +102,7 @@ namespace Models.CLEM.Activities
         public double TruckTareMass { get; set; }
 
         /// <summary>
-        /// Minimum number of load units before transporting (0 continuous)
+        /// The minimum number of load units before transporting (0 continuous)
         /// </summary>
         [Category("Farm", "Load rules")]
         [Description("Minimum load units before transporting (0 continuous)")]
@@ -104,7 +110,7 @@ namespace Models.CLEM.Activities
         public double MinimumLoadUnitsBeforeTransporting { get; set; }
 
         /// <summary>
-        /// Minimum number of load units before adding a trailer if available (0 continuous)
+        /// The minimum number of load units before adding a trailer if available (0 continuous)
         /// </summary>
         [Category("Farm", "Load rules")]
         [Description("Minimum load units before adding trailer (0 continuous)")]
@@ -115,20 +121,21 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public string Measure { get; set; }
 
-        // load unit by weight limit, floor area.
-        // relationship to calculate proportion of load per individual
-        // loading unit load limit (individuals, weight, floor area)
+        /// <summary>
+        /// The relationship to calculate proportion of load per individual loading unit load limit (individuals,
+        /// weight, floor area)
+        /// </summary>
         [JsonIgnore]
         private Relationship weightToNumberPerLoadUnit;
 
         /// <summary>
-        /// The list of individuals remaining to be trucked in the current timestep and task (buy or sell)
+        /// The list of individuals remaining to be trucked in the current time step and task (buy or sell)
         /// </summary>
         [JsonIgnore]
         public IEnumerable<Ruminant> IndividualsToBeTrucked { get { return individualsToBeTrucked; } }
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public RuminantTrucking()
         {
@@ -271,6 +278,12 @@ namespace Models.CLEM.Activities
             return ResourceRequestList;
         }
 
+        /// <summary>
+        /// A method to estimate trucking loads
+        /// </summary>
+        /// <returns>A tuple with transport details</returns>
+        /// <exception cref="ApsimXException">
+        /// An exception if unable to truck all individuals due to resource shortfalls</exception>
         private (double trucks, double loadUnits, double vehicleMass, double payload, int individualsTransported) EstimateTrucking()
         {
             // start filling trucks with individuals until any limits met.

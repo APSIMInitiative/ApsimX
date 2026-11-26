@@ -12,13 +12,35 @@ using System.Text.Json.Serialization;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant growth activity (SCA 2007 version)</summary>
-    /// <summary>This class represents the CLEM activity responsible for determining potential intake, determining the quality of all food eaten, and providing energy and protein for all needs (e.g. wool production, pregnancy, lactation and growth).</summary>
-    /// <remarks>Ruminant death activity controls mortality, while the Breed activity is responsible for conception and births.</remarks>
-    /// <authors>Animal physiology and SCA 2007 equations for this methodology, James Dougherty, CSIRO</authors>
-    /// <authors>Implementation of R script based equations, Adam Liedloff, CSIRO</authors>
-    /// <authors>Quality control, Thomas Keogh, CSIRO</authors>
-    /// <acknowledgements>This animal production is based upon the equations developed for SCA, Feeding Standards and published in 2007</acknowledgements>
+    /// <summary>
+    /// This activity manages the intake, growth, and aging of ruminants
+    /// </summary>
+    /// <remarks>
+    ///
+    /// <para>This version uses the ruminant growth equations provided by the SCA (2007)</para>
+    ///
+    /// <para>This version is not currently available for users but is used by the development team for
+    /// validation</para>
+    ///
+    /// <para>This activity determines potential intake of individuals for the feeding activities and feeding arbitrator
+    /// for all ruminants</para>
+    ///
+    /// <para>Growth will depend upon the individuals energy relations and the quality and quantity of feed provided in
+    /// the time step</para>
+    ///
+    /// <para>This activity is for actively growing juveniles and does not support breeding.</para>
+    /// </remarks>
+    /// <authors>
+    /// Animal physiology and equations for this methodology based on Oddy V.H., Dougherty, J.C.H., Evered, M., Clayton,
+    /// E.H. and Oltjen, J.W. (2024) A revised model of energy transactions and body composition in sheep. Journal of
+    /// Animal Science, Volume 102, https://doi.org/10.1093/jas/skad403
+    /// </authors>
+    /// <authors>
+    /// CLEM implementation to include R script based equations and approach, Adam Liedloff, CSIRO
+    /// </authors>
+    /// <acknowledgements>
+    /// This animal production is based upon the equations developed for SCA, Feeding Standards and published in 2007
+    /// </acknowledgements>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -80,9 +102,12 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>Function to naturally wean individuals at start of timestep.</summary>
+        /// <summary>An event handler allowing for any naturally weaning of individuals at start of time step</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMStartOfTimeStep</c> event
+        /// </remarks>
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
@@ -95,18 +120,30 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>Function to determine all individuals potential intake and suckling intake after milk consumption from mother.</summary>
+        /// <summary>
+        /// An event handler allowing for the any naturally calculation of potential intake and and suckling intake
+        /// after milk consumption from the mother needed for other activities
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMPotentialIntake</c> event
+        /// </remarks>
         [EventSubscribe("CLEMPotentialIntake")]
         private void OnCLEMPotentialIntake(object sender, EventArgs e)
         {
             RuminantActivityGrowPF.CalculateHerdPotentialIntake(CurrentHerd(false));
         }
 
-        /// <summary>Function to calculate growth of herd for the time-step</summary>
+        /// <summary>
+        /// An event handler allowing for the calculation of application of weight gain for each individual in the time
+        /// step
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalWeightGain</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalWeightGain")]
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
@@ -274,11 +311,15 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Function to calculate manure production and place in uncollected manure pools of the "manure" resource in ProductResources.
-        /// This is called at the end of CLEMAnimalWeightGain so after intake determined and before deaths and sales.
+        /// An event handler allowing for the production of manure to be placed in uncollected manure pools of the
+        /// "manure" resource in <c>ProductResources</c>
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMPostRuminantConsumption</c> event to ensure final intake dry
+        /// matter is known
+        /// </remarks>
         [EventSubscribe("CLEMPostRuminantConsumption")]
         private void OnCLEMCalculateManure(object sender, EventArgs e)
         {

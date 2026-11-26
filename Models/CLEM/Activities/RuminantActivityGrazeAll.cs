@@ -11,9 +11,13 @@ using System.Linq;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant graze activity</summary>
-    /// <summary>This activity determines how a ruminant group will graze</summary>
-    /// <summary>It is designed to request food via a food store arbitrator</summary>
+    /// <summary>This activity manages grazing of all ruminants</summary>
+    /// <remarks>
+    /// <para>This activity will manage all grazing by dynamically creating the range of <c>
+    /// RuminantActivityGrazePastureHerd</c> activities needed to represent the system</para>
+    /// <para>Individuals will graze based on their location defined by other activities such as <c>
+    /// RuminantActivityMove</c></para>
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -27,16 +31,24 @@ namespace Models.CLEM.Activities
     {
         /// <summary>
         /// Number of hours grazed
-        /// Based on 8 hour grazing days
-        /// Could be modified to account for rain/heat walking to water etc.
         /// </summary>
+        /// <remarks>
+        /// <para>Number of hours grazed based on 8 hour grazing days.</para>
+        /// <para>This could be modified to account for rain/heat walking to water etc. in future</para>
+        /// </remarks>
         [Description("Number of hours grazed")]
         [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
         public double HoursGrazed { get; set; } = 8;
 
-        /// <summary>An event handler to allow us to add dynamic components prior to simulation start</summary>
+        /// <summary>
+        /// An event handler allowing for the dynamic creation of paddock grazing activity components
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed early in the model initialisation process during the <c>Clock.Commencing</c> event to
+        /// ensure components are created beofre needing to be initialised. 
+        /// </remarks>
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {

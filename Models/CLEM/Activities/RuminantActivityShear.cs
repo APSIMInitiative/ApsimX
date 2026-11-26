@@ -14,8 +14,7 @@ using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant shear activity</summary>
-    /// <summary>This activity shears the specified ruminants and placed clip in a store</summary>
+    /// <summary>This activity shears the specified ruminants and places the clip in a store</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -36,23 +35,31 @@ namespace Models.CLEM.Activities
         private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
-        /// Name of Product store to place wool clip (with Resource Group name appended to the front [separated with a '.'])
+        /// Name of product store where to place wool
         /// </summary>
+        /// <remarks>
+        /// A required field. A list of available paddocks (<c>ProductStoreType</c>) is provided in a dropdown
+        /// list in the UI.
+        /// </remarks>
         [Description("Store to place wool clip")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(ProductStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Product store type required")]
         public string WoolProductStoreName { get; set; }
 
         /// <summary>
-        /// Name of Product store to place cashmere clip (with Resource Group name appended to the front [separated with a '.'])
+        /// Name of product store where to place cashmere
         /// </summary>
+        /// <remarks>
+        /// A required field. A list of available paddocks (<c>ProductStoreType</c>) is provided in a dropdown
+        /// list in the UI.
+        /// </remarks>
         [Description("Store to place cashmere clip")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(ProductStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Product store type required")]
         public string CashmereProductStoreName { get; set; }
 
         /// <summary>
-        /// The proportion of the fleece weight clipped and removed (i.e. fleece taken)
+        /// The proportion of the fleece weight to be clipped and removed (i.e. fleece taken)
         /// </summary>
         [Description("Proportion fleece clipped")]
         [Required, Proportion]

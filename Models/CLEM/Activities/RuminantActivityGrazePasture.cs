@@ -11,8 +11,14 @@ using System.Linq;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant graze activity</summary>
-    /// <summary>This activity determines how ruminants will graze a specified pasture</summary>
+    /// <summary>This activity manages grazing of all ruminants in a specified pasture</summary>
+    /// <remarks>
+    /// <para>This activity will manage grazing in a paddock by dynamically creating the range of <c>
+    /// RuminantActivityGrazePastureHerd</c> activities needed to represent the specified paddock</para>
+    /// <para>Individuals will graze based on their location defined by other activities such as <c>
+    /// RuminantActivityMove</c></para>
+    /// <para>Use <c>RuminantActivityGrazeAll</c> to automatically manage grazing across all paddocks</para>
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -31,16 +37,23 @@ namespace Models.CLEM.Activities
         private double[] totalRequestedTimeStep;
 
         /// <summary>
-        /// Number of hours grazed based on an 8 hour grazing days. Can be modfied later to account for rain/heat
-        /// walking to water etc.
+        /// Number of hours grazed
         /// </summary>
+        /// <remarks>
+        /// <para>Number of hours grazed based on 8 hour grazing days.</para>
+        /// <para>This could be modified to account for rain/heat walking to water etc. in future</para>
+        /// </remarks>
         [Description("Number of hours grazed (based on 8 hr grazing day)")]
         [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
         public double HoursGrazed { get; set; } = 8;
 
         /// <summary>
-        /// Paddock or pasture to graze
+        /// Name of pasture to graze
         /// </summary>
+        /// <remarks>
+        /// A required field. A list of available paddocks (<c>GrazeFoodStore</c>) is provided in a dropdown
+        /// list in the UI.
+        /// </remarks>
         [Description("GrazeFoodStore/pasture to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(GrazeFoodStore) } })]
@@ -60,7 +73,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Constructor using details from a parent GrazeAll activity
+        /// Constructor using details provided by a parent <c>RuminantActivityGrazeAll</c> activity
         /// </summary>
         public RuminantActivityGrazePasture(RuminantActivityGrazeAll grazeAll, IGrazeFoodStoreType pastureType, string transactionCategory, Guid parentProvidedUid)
         {
@@ -76,9 +89,15 @@ namespace Models.CLEM.Activities
             Resources = grazeAll.Resources;
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>
+        /// An event handler allowing for the dynamic creation of herd grazing activity components
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed early in the model initialisation process during the <c>Clock.Commencing</c> event to
+        /// ensure components are created beofre needing to be initialised. 
+        /// </remarks>
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
@@ -93,7 +112,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to dynamically create all pasture-herd children for grazing
+        /// A method to dynamically create all pasture-herd <c>RuminantActivityGrazePastureHerd</c> children for grazing
         /// </summary>
         public void SetupDynamicChildren()
         {
@@ -135,7 +154,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="pastureAvailable">Pasture available at start of time step</param>
         /// <param name="intakeRequired">Intake required by herd</param>
-        /// <returns></returns>
+        /// <returns>Shortfall multiplier</returns>
         public static double CalculateShortfallMultiplier(double pastureAvailable, double[] intakeRequired)
         {
             double competitionMultiplier = 1.0;

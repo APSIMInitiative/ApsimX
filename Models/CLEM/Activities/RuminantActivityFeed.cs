@@ -13,8 +13,10 @@ using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant feed activity</summary>
-    /// <summary>This activity provides food to specified ruminants based on a feeding style</summary>
+    /// <summary>
+    /// This activity manages the feeding of a feed type (<c>AnimalFoodStoreType</c>) to specified ruminants based on a
+    /// feeding style
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -45,30 +47,36 @@ namespace Models.CLEM.Activities
         private double excessReduction = 1;
 
         /// <summary>
-        /// Name of Feed to use (with Resource Group name appended to the front [separated with a '.'])
-        /// eg. AnimalFoodStore.RiceStraw
+        /// Name of Feed to use
         /// </summary>
+        /// <remarks>
+        /// A required field. A list of available feed types (<c>AnimalFoodStoreType</c>) is provided in a dropdown
+        /// list in the UI.
+        /// </remarks>
         [Description("Feed to use")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore), typeof(HumanFoodStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Feed type required")]
         public string FeedTypeName { get; set; }
 
         /// <summary>
-        /// Proportion wasted (e.g. trampling, 0 = feed trough present)
+        /// A property specifying the proportion of feed fed that is wasted (e.g. trampling), 0 = feed trough present)
         /// </summary>
+        /// <remarks>
+        /// A required field. A value of 0 represents no waste such as fed through a trough.
+        /// </remarks>
         [Description("Proportion wasted (e.g. trampling, 0 = feed trough present)")]
         [Required, Proportion]
         public double ProportionTramplingWastage { get; set; }
 
         /// <summary>
-        /// Feeding style to use
+        /// A property specifying the feeding style to use
         /// </summary>
         [Description("Feeding style to use")]
         [Required]
         public RuminantFeedActivityTypes FeedStyle { get; set; } = RuminantFeedActivityTypes.SpecifiedDailyAmount;
 
         /// <summary>
-        /// Stop feeding when animals are satisfied
+        /// A property specifying whether to stop feeding when animals are satisfied
         /// </summary>
         [Description("Stop feeding when all satisfied")]
         [Core.Display(VisibleCallback = "RestrictIntakeAllowed")]
@@ -76,39 +84,42 @@ namespace Models.CLEM.Activities
         public bool StopFeedingWhenSatisfied { get; set; }
 
         /// <summary>
-        /// Force feed the amount specified (do not obey potential intake limits)
+        /// A property specifying whether to force feed the amount specified (do not obey potential intake limits)
         /// </summary>
+        /// <remarks>
+        /// This will override any individual potential intake limits
+        /// </remarks>
         [Description("Force feed all provided")]
         [Core.Display(VisibleCallback = "ForceIntakeAllowed")]
         [Required]
         public bool ForceFeed { get; set; }
 
         /// <summary>
-        /// Feed resource
+        /// The feed resource being used
         /// </summary>
         [JsonIgnore]
         public IResourceType FeedResource { get; set; }
 
         /// <summary>
-        /// Feed quality
+        /// The feed quality being used
         /// </summary>
         [JsonIgnore]
         public IFeed FeedDetails { get; set; }
 
         /// <summary>
-        /// The list of individuals remaining to be fed in the current timestep
+        /// Provides the list of individuals remaining to be fed in the current time step
         /// </summary>
         [JsonIgnore]
         public IEnumerable<Ruminant> IndividualsToBeFed { get; set; }
 
         /// <summary>
-        /// Determines if style needs the restrict intake property displayed
+        /// This method reports whether the style needs the restrict intake property displayed
         /// </summary>
         /// <returns>True or false</returns>
         public bool RestrictIntakeAllowed() => FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable || FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount || FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual || FeedStyle == RuminantFeedActivityTypes.ProportionOfWeight;
 
         /// <summary>
-        /// Determines if style needs the restrict intake property displayed
+        /// This method reports whether the style needs the force intake property displayed
         /// </summary>
         /// <returns>True or false</returns>
         public bool ForceIntakeAllowed() => FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual || FeedStyle == RuminantFeedActivityTypes.ProportionOfWeight;
@@ -438,7 +449,7 @@ namespace Models.CLEM.Activities
         }
 
         #region validation
-            /// <inheritdoc/>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (filterGroups != null && filterGroups.Where(a => a.GetType() != typeof(RuminantFeedGroup) && a.GetType() != typeof(RuminantFeedGroupMonthly)).Any())

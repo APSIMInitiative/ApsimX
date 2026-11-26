@@ -10,8 +10,10 @@ using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Mark specified individual ruminants for sale.</summary>
-    /// <summary>This activity is in addition to those identified in RuminantActivityManage</summary>
+    /// <summary>This activity will mark specified individual ruminants for sale with a sale flag appled.</summary>
+    /// <remarks>
+    /// The sales considered are in addition to those identified in RuminantActivityManage
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -32,7 +34,7 @@ namespace Models.CLEM.Activities
         private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
-        /// Sale flag to use
+        /// This property provides the sale flag to apply based on <c>HerdChangeReasons</c> enumerator
         /// </summary>
         [Description("Sale reason to apply")]
         [System.ComponentModel.DefaultValueAttribute("MarkedSale")]
@@ -41,14 +43,14 @@ namespace Models.CLEM.Activities
         public HerdChangeReason SaleFlagToUse { get; set; }
 
         /// <summary>
-        /// Overwrite any currently recorded sale flag
+        /// A flag to indicate whether to overwrite any currently recorded sale flag
         /// </summary>
         [Description("Overwrite existing sale flag")]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool OverwriteFlag { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public RuminantActivityMarkForSale()
         {

@@ -13,7 +13,7 @@ using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Activity to undertake milking of specified herd</summary>
+    /// <summary>Activity to undertake milking of lactating individuals</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -36,8 +36,12 @@ namespace Models.CLEM.Activities
         private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
-        /// Resource type to store milk in
+        /// The name of the resource store where to place milk
         /// </summary>
+        /// <remarks>
+        /// This is a required field and must be specified. The values provided in the drop down list in the UI
+        /// represent the suitable resource stores available
+        /// </remarks>
         [Description("Store to place milk")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of milk store required")]
@@ -68,7 +72,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Constructor for milking activity
+        /// Default constructor
         /// </summary>
         public RuminantActivityMilking()
         {
@@ -90,9 +94,12 @@ namespace Models.CLEM.Activities
             milkStore = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
-        /// <summary>An event handler to call for all herd management activities</summary>
+        /// <summary>An event handler allowing for calculating milk production</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalMilkProduction</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalMilkProduction")]
         private void OnCLEMMilkProduction(object sender, EventArgs e)
         {

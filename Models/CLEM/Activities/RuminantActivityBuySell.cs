@@ -14,10 +14,13 @@ using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant sales activity</summary>
-    /// <summary>This activity undertakes the sale and transport of any individuals flagged for sale.</summary>
-    /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
+    /// <summary>
+    /// This activity undertakes the purchases and sales of required ruminant individuals
+    /// </summary>
+    /// <remarks>
+    /// <para>Other activities will identify individuals to be bought or sold while this activity performs the actual transactions.</para>
+    /// <para>An instance of this activity will be required for managing ruminant purchases and sales.</para>
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -46,7 +49,7 @@ namespace Models.CLEM.Activities
         private bool truckingWithImplications = false;
 
         /// <summary>
-        /// Activity style
+        /// This property defines if this is a Sell or Buy activity
         /// </summary>
         [Description("Activity style")]
         [Core.Display(Type = DisplayType.DropDown, Values = "ActivityStyleList")]
@@ -54,7 +57,7 @@ namespace Models.CLEM.Activities
         public string ActivityStyle { get; set; }
 
         /// <summary>
-        /// Get the styles available for this activity
+        /// A static method to provide the styles as labels
         /// </summary>
         /// <returns>An IEnumerable of strings</returns>
         public static IEnumerable<string> ActivityStyleList()
@@ -63,20 +66,25 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Bank account to use
+        /// The account to use
         /// </summary>
+        /// <remarks>
+        /// This is a required field and must be specified. The values provided in the drop down list in the UI
+        /// represent the <c>FinanceType</c> accounts available
+        /// </remarks>
         [Description("Bank account to use")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
         public string BankAccountName { get; set; }
 
         /// <summary>
-        /// The list of individuals remaining to be trucked in the current timestep and task (buy or sell)
+        /// This property provides a list of individuals remaining to be trucked in the current time step and task
+        /// (buy or sell)
         /// </summary>
         [JsonIgnore]
         public IEnumerable<Ruminant> IndividualsToBeTrucked { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public RuminantActivityBuySell()
         {
@@ -138,7 +146,12 @@ namespace Models.CLEM.Activities
             truckingWithImplications = truckingOptions?.Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).Any()??false;
         }
 
-        /// <inheritdoc/>
+        /// <summary>An event handler allowing for any purchases to be arranged</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalBuy</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalBuy")]
         private void OnCLEMAnimalBuyPerformActivity(object sender, EventArgs e)
         {
@@ -150,7 +163,12 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>An event handler allowing for any sales to be arranged</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalSell</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalSell")]
         private void OnCLEMAnimalSellPerformActivity(object sender, EventArgs e)
         {
@@ -435,6 +453,9 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>
+        /// A private method to process sales or purchases
+        /// </summary>
         private void ProcessAnimals()
         {
             int head = 0;
