@@ -1981,7 +1981,7 @@ namespace Models.GrazPlan
                                            timeStepState.Digestibility.Supp * timeStepState.DM_Intake.Supp +
                                            timeStepState.Digestibility.Herbage * timeStepState.DM_Intake.Herbage,
                                            timeStepState.DM_Intake.Solid);
-
+            timeStepState.Digestibility.Total = timeStepState.Digestibility.Solid;
             if (this.lactStatus == GrazType.LactType.Suckling)
             {
                 // Milk terms
