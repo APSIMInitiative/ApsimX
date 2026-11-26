@@ -14,7 +14,7 @@ dotnet ./bin/Release/net10.0/APSIM.Workflow.dll azure-jobs --pre-start-pool --pr
 #fetch 7z
 cd /home/runner/work/ApsimX/
 mkdir sevenzip
-cp ./APSIM.Workflow/applications/7zz ./sevenzip/7zz
+cp ./ApsimX/APSIM.Workflow/applications/7zz ./sevenzip/7zz
 
 #compress files needed for PR to 7z zrchive
 echo "Package files for sending to azure"
