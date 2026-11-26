@@ -13,24 +13,18 @@ namespace APSIM.Workflow
     {
         private static readonly string RELATIVE_PATH_PREFIX = "./";
 
-        /// <summary> List of R simulation files paths</summary>
-        private static string[] R_SIMS_FILEPATHS = {
-            "/Prototypes/CroptimizR/template.apsimx",
-            "/Examples/Optimisation/CroptimizRExample.apsimx",
-            "/Examples/Tutorials/Sensitivity_SobolMethod.apsimx",
-            "/Examples/Tutorials/Sensitivity_MorrisMethod.apsimx",
-            "/Examples/Tutorials/Sensitivity_FactorialANOVA.apsimx",
-            "/Examples/Sensitivity/Sobol.apsimx",
-            "/Examples/Sensitivity/Morris.apsimx"
-        };
-
         /// <summary> List of excluded simulation file paths</summary>
         private static string[] EXCLUDED_SIMS_FILEPATHS = {
-            "/Prototypes/CroptimizR/template.apsimx",
-            "/Examples/Optimisation/CroptimizRExample.apsimx",
             "/Examples/CsvWeather.apsimx", //has no output
             "/Tests/Simulation/SoilNitrogenPatch/PaddockSims/Edited_v2_BivariateNormal.apsimx", //has no output
-            "/Tests/Simulation/SoilNitrogenPatch/PaddockSims/Edited_v5_BivariateNormal.apsimx" //has no output
+            "/Tests/Simulation/SoilNitrogenPatch/PaddockSims/Edited_v5_BivariateNormal.apsimx", //has no output
+            "/Prototypes/CroptimizR/template.apsimx", //requires R
+            "/Examples/Optimisation/CroptimizRExample.apsimx", //requires R
+            "/Examples/Sensitivity/Morris.apsimx", //requires R
+            "/Examples/Sensitivity/Sobol.apsimx", //requires R
+            "/Examples/Tutorials/Sensitivity_SobolMethod.apsimx", //requires R
+            "/Examples/Tutorials/Sensitivity_MorrisMethod.apsimx", //requires R
+            "/Examples/Tutorials/Sensitivity_FactorialANOVA.apsimx" //requires R
         };
 
         /// <summary>The locations where validation directories are expected to be found.</summary>
