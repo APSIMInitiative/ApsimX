@@ -95,7 +95,7 @@ jobs:
         id: start_azure_pool
         env:
           AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
-          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
+          PULL_REQUEST: ${{ github.event.pull_request.number }}
           INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
         run: ./.github/workflows/scripts/start-azure-pool.sh
 

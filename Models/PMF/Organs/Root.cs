@@ -818,9 +818,9 @@ namespace Models.PMF.Organs
 
             double dMCE = dmConversionEfficiency.Value();
 
-            Allocated.StructuralWt = dryMatter.Structural * dMCE;
-            Allocated.StorageWt = dryMatter.Storage * dMCE;
-            Allocated.MetabolicWt = dryMatter.Metabolic * dMCE;
+            Allocated.StructuralWt = Math.Max(0, dryMatter.Structural * dMCE);
+            Allocated.StorageWt = Math.Max(0, dryMatter.Storage * dMCE);
+            Allocated.MetabolicWt = Math.Max(0, dryMatter.Metabolic * dMCE);
             // GrowthRespiration with unit CO2
             // GrowthRespiration is calculated as
             // Allocated CH2O from photosynthesis "1 / dMCE", converted
