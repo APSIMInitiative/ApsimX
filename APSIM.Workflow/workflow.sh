@@ -22,6 +22,7 @@ function run_setup {
   echo "Extracting password protected datasets..."
 
   mv sevenzip/7zz ./7zz
+  chmod +x ./7zz
 
   soybean=./ApsimX/Tests/Validation/Soybean
   7zz x $soybean/ObservedFACTS.7z -o$soybean -p"$SOYBEAN_PASSWORD"
