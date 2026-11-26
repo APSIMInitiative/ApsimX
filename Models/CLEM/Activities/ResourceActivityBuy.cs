@@ -12,7 +12,7 @@ using System.Linq;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity to buy resources
+    /// This activity manages the purchase of resources (<c>ResourceType</c>)
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -34,24 +34,36 @@ namespace Models.CLEM.Activities
         private ResourceRequest marketRequest = null;
 
         /// <summary>
-        /// Bank account to use
+        /// Name of the account to use
         /// </summary>
+        /// <remarks>
+        /// This is a required field and must be specified. The values provided in the drop down list in the UI
+        /// represent the <c>FinanceType</c> accounts available
+        /// </remarks>
         [Description("Bank account to use")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No finance required", typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
         public string AccountName { get; set; } = "No finance required";
 
         /// <summary>
-        /// Resource type to buy
+        /// Name of the resource to buy
         /// </summary>
+        /// <remarks>
+        /// This is a required field and must be specified. The values provided in the drop down list in the UI
+        /// represent the <c>ResourceType</c> resources available
+        /// </remarks>
         [Description("Resource to buy")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(HumanFoodStore), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type required")]
         public string ResourceTypeName { get; set; }
 
         /// <summary>
-        /// Units to purchase
+        /// The <c>Units</c> property specifies the number of packets to purchase
         /// </summary>
+        /// <remarks>
+        /// Packets are defined by the <c>ResourcePricing</c> associated with the <c>ResourceType</c> being purchased.
+        /// The number of packets to purchase must be greater than or equal to zero.
+        /// </remarks>
         [Description("Number of packets")]
         [Required, GreaterThanEqualValue(0)]
         public double Units { get; set; }

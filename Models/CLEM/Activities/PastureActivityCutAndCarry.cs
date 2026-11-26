@@ -13,7 +13,7 @@ using System.IO;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Activity to perform manual cut and carry from a pasture</summary>
+    /// <summary>An activity to perform manual cut and carry from a pasture</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -35,23 +35,29 @@ namespace Models.CLEM.Activities
         private double amountToSkip;
 
         /// <summary>
-        /// Name of graze food store/paddock to cut and carry from
+        /// Name of paddock (<c>GrazeFoodStoreType</c>) to cut and carry from
         /// </summary>
+        /// <remarks>
+        /// This is required. A list of available paddocks is provided in a dropdown list in the UI.
+        /// </remarks>
         [Description("Graze food store/paddock")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze food store where pasture is located required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(GrazeFoodStore) } })]
         public string PaddockName { get; set; }
 
         /// <summary>
-        /// Animal food store to receive pasture
+        /// Animal food store (<c>AnimalFoodStoreType</c>) to receive pasture
         /// </summary>
+        /// <remarks>
+        /// This is required. A list of available animal food stores is provided in a dropdown list in the UI.
+        /// </remarks>
         [Description("Animal food store to receive pasture")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Animal food store to receive pasture is required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore) } })]
         public string AnimalFoodStoreName { get; set; }
 
         /// <summary>
-        /// Cut and carry amount type
+        /// Defines the style to determine amount to cut and carry
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(RuminantFeedActivityTypes.SpecifiedDailyAmount)]
         [Description("Cut and carry amount type")]
@@ -59,26 +65,26 @@ namespace Models.CLEM.Activities
         public RuminantFeedActivityTypes CutStyle { get; set; }
 
         /// <summary>
-        /// Value to supply
+        /// Defines a amount of materilal to supply per day
         /// </summary>
         [Description("Daily value to supply")]
         [GreaterThanValue("0")]
         public double Supply { get; set; }
 
         /// <summary>
-        /// Amount harvested this time step after limiter accounted for
+        /// Tracks the amount harvested this time step after limiter accounted for
         /// </summary>
         [JsonIgnore]
         public double AmountHarvested { get; set; }
 
         /// <summary>
-        /// Amount available for harvest from crop file
+        /// Tracks the amount available for harvest from crop file
         /// </summary>
         [JsonIgnore]
         public double AmountAvailableForHarvest { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public PastureActivityCutAndCarry()
         {
@@ -130,7 +136,14 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// An event handler allowing for the actions of performing cut and carry
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMDoCutAndCarry</c> event
+        /// </remarks>
         [EventSubscribe("CLEMDoCutAndCarry")]
         protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {

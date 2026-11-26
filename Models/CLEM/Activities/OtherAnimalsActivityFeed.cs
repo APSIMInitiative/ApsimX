@@ -12,8 +12,9 @@ using Docker.DotNet.Models;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Other animals feed activity</summary>
-    /// <summary>This activity provides food to specified other animals based on a feeding style</summary>
+    /// <summary>
+    /// This activity manages feeding of other animals (<c>OtherAnimalsType</c>) based on a feeding style
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -33,6 +34,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Name of Feed to use
         /// </summary>
+        /// <remarks>
+        /// A required field. A list of available feeds is provided in a dropdown list in the UI.
+        /// </remarks>
         [Description("Feed store to use")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Feed type to use required")]
@@ -41,13 +45,16 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Feeding style to use
         /// </summary>
+        /// <remarks>
+        /// A required field. A list of available feeding styles is provided in a dropdown list in the UI.
+        /// </remarks>
         [Description("Feeding style to use")]
         [System.ComponentModel.DefaultValueAttribute(OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount)]
         [Required]
         public OtherAnimalsFeedActivityTypes FeedStyle { get; set; } = OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount;
 
         /// <summary>
-        /// Feed type
+        /// The <c>AnimalFoodStoreType</c> to be used
         /// </summary>
         [JsonIgnore]
         public IFeed FeedType { get; set; }
@@ -58,7 +65,7 @@ namespace Models.CLEM.Activities
         public string PredictedAnimalName { get; set; } = "NA";
 
         /// <summary>
-        /// The list of cohorts remaining to be fed in the current timestep
+        /// The list of cohorts remaining to be fed in the current time step
         /// </summary>
         [JsonIgnore]
         public List<OtherAnimalsTypeCohort> CohortsToBeFed { get; set; }

@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity to price and sell other animals
+    /// An activity to manage the sale of other animals (<c>OtherAnimalsType</c>)
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]

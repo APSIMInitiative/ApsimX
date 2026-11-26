@@ -10,8 +10,10 @@ using Models.CLEM.Groupings;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Other animals task activity</summary>
-    /// <summary>This activity allows labour and costs to be applied to selected other animals</summary>
+    /// <summary>
+    /// This activity manages labour and costs associated with being applied to selected other animals
+    /// (<c>OtherAnimalsType</c>)
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

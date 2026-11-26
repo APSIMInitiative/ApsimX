@@ -6,8 +6,9 @@ using System.Collections.Generic;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Other animals grow activity</summary>
-    /// <summary>This activity grows other animals and includes aging</summary>
+    /// <summary>
+    /// This activity performs the growth, aging, and mortality of other animals (<c>OtherAnimalsType</c>)
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -46,11 +47,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to age other animals
-        /// This needs to be undertaken prior to herd management
+        /// An event handler to perform the aging of <c>OtherAnimalsType</c>
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAgeResources</c> event so it happens before herd management.
+        /// </remarks>
         [EventSubscribe("CLEMAgeResources")]
         private void OnCLEMAgeResources(object sender, EventArgs e)
         {
