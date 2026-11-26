@@ -55,7 +55,6 @@ jobs:
           INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
           AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
         run: ./.github/workflows/scripts/split-large-files.sh
-        continue-on-error: true 
 
       - name: Start validation process
         env:
@@ -68,7 +67,7 @@ jobs:
         env:
           PAYLOAD_FOLDER_PATH: ${{ env.PAYLOAD_FOLDER_PATH }}
           AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
-          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
+          PULL_REQUEST: ${{ github.event.pull_request.number }}
           INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
           PR_AUTHOR: ${{ github.actor }}
           SOYBEAN_PASSWORD: ${{ secrets.SOYBEAN_PASSWORD }}

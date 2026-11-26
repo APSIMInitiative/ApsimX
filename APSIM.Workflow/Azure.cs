@@ -143,13 +143,13 @@ public class Azure
 
         string scriptPath = Path.Combine(assemblyDirectory, scriptName);
         if (!File.Exists(scriptPath))
-            throw new FileNotFoundException("The workflow.sh script file could not be found and as such was not uploaded to the storage container.");
+            throw new FileNotFoundException($"The {scriptName} file could not be found and as such was not uploaded to the storage container.");
         else
             CopyFilesToAzure(container, scriptPath);
 
         string archivePath = Path.Combine(PathUtilities.GetApsimXDirectory(), $"../{archiveName}");
         if (!File.Exists(archivePath))
-            throw new FileNotFoundException("The workflow.sh script file could not be found and as such was not uploaded to the storage container.");
+            throw new FileNotFoundException($"The {archiveName} file could not be found and as such was not uploaded to the storage container.");
         else
             CopyFilesToAzure(container,  archivePath);
 

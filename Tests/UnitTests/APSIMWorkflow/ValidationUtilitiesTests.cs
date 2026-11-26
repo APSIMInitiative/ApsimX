@@ -181,11 +181,4 @@ public class ValidationLocationUtilityTest
     {
         Directory.SetCurrentDirectory(originalDir);
     }
-
-    [Test]
-    public void TestGetDirectoryPaths_ShouldNotIncludeExcludedSims()
-    {
-        var result = ValidationLocationUtility.GetValidationFilePaths();
-       //Assert.That(result, Does.Not.Contain(EXCLUDED_SIMS_FILEPATHS));
-    }
 }
