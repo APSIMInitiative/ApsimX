@@ -37,7 +37,8 @@ public class AzureOutputTests
         OutputFile otherOutput = WorkflowAzure.CreateDatabaseOutputFile(containerUri, "13-Example", "/Examples/Example.apsimx");
         OutputFile retryOutput = WorkflowAzure.CreateDatabaseOutputFile(containerUri, "14-Example", "/Tests/Validation/A folder/Example.apsimx");
 
-        Assert.That(output.FilePattern, Is.EqualTo("Tests/Validation/A folder/Example.db"));
+        Assert.That(output.FilePattern, Is.EqualTo("ApsimX/Tests/Validation/A folder/Example.db"));
+        Assert.That(otherOutput.FilePattern, Is.EqualTo("ApsimX/Examples/Example.db"));
         Assert.That(output.UploadOptions.UploadCondition, Is.EqualTo(OutputFileUploadCondition.TaskCompletion));
         Assert.That(output.Destination.Container.ContainerUrl, Is.EqualTo(containerUri.ToString()));
         Assert.That(output.Destination.Container.Path, Is.EqualTo("databases/12-Example/Tests/Validation/A folder/Example.db"));
