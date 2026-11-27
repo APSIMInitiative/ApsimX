@@ -120,9 +120,9 @@ namespace Models.CLEM.Activities
             // calculate daily potential intake for the selected individual/cohort
             double standardReferenceWeight = ind.Weight.StandardReferenceWeight;
             double liveWeightForIntake = ind.Weight.NormalisedForAge;
-            if (MathUtilities.IsLessThan(ind.Weight.HighestAttained, ind.Weight.NormalisedForAge))
+            if (MathUtilities.IsLessThan(ind.Weight.EmptyBodyMassHighest * 1.09, ind.Weight.NormalisedForAge))
             {
-                liveWeightForIntake = ind.Weight.HighestAttained;
+                liveWeightForIntake = ind.Weight.EmptyBodyMassHighest * 1.09;
             }
 
             // Calculate potential intake based on current weight compared to SRW and previous highest weight
