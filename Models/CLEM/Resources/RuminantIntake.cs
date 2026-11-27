@@ -163,11 +163,14 @@ namespace Models.CLEM.Resources
         public void UpdateGutFill()
         {
             if (SolidsDaily.Expected == 0 || feedTypeStoreDict.Count <= 0)
+            {
+                GutFill = 0.04;
                 return;
+            }
 
             double proportionAttained = (SolidsDaily.Actual + SolidsDaily.Unneeded) / SolidsDaily.Expected;
             double shortfallModifier = proportionAttained + (1 - proportionAttained) * 0.5;
-            GutFill = feedTypeStoreDict.Sum(a => a.Value.Details.GutFill * a.Value.Details.Amount) / feedTypeStoreDict.Sum(a => a.Value.Details.Amount) * shortfallModifier;
+            GutFill = Math.Min(1.0, feedTypeStoreDict.Sum(a => a.Value.Details.GutFill * a.Value.Details.Amount) / feedTypeStoreDict.Sum(a => a.Value.Details.Amount) * shortfallModifier);
         }
 
         /// <summary>
