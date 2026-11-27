@@ -10,8 +10,13 @@ using System.IO;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Crop activity task</summary>
-    /// <summary>This activity will perform costs and labour for a crop activity</summary>
+    /// <summary>
+    /// The <c>CropActivityTask</c> activity component will manage a task associated with a <c>
+    /// CropActivityManageProduct</c>including accounting for costs and labour requirements
+    /// </summary>
+    /// <remarks>
+    /// This must be a child of a <c>CropActivityManageProduct</c>
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -48,9 +53,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {

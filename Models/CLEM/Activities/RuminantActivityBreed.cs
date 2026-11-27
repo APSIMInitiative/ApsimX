@@ -16,9 +16,10 @@ using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant breeding activity</summary>
     /// <summary>This activity provides all functionality for ruminant breeding up until natural weaning</summary>
-    /// <summary>It will be applied to the supplied herd if males and females are located together</summary>
+    /// <remarks>
+    /// This will automatically apply to herds if males and females are located together
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -48,25 +49,29 @@ namespace Models.CLEM.Activities
         private readonly ConceptionStatusChangedEventArgs conceptionArgs = new();
 
         /// <summary>
-        /// Artificial insemination in use (defined by presence of add-on component)
+        /// Provides a flag to indicate if Artificial insemination is in use (defined by presence of add-on component)
         /// </summary>
         private bool UseControlledMating { get { return (controlledMating != null && controlledMating.ActivityEnabled); } }
 
         /// <summary>
-        /// Records the number of individuals that conceived in the BreedingEvent for sub-components to work with.
+        /// This property tracks the number of individuals that conceived in the current time step for
+        /// sub-components to work with.
         /// </summary>
         public int NumberConceived { get; private set; }
 
         /// <summary>
-        /// Infer pregnancy status at startup
+        /// A flag to indicate whether to infer pregnancy status at startup
         /// </summary>
         [Description("Infer pregnancy status at startup")]
         [Required]
         public bool InferStartupPregnancy { get; set; }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -213,6 +218,9 @@ namespace Models.CLEM.Activities
         /// <summary>Function to determine naturally wean individuals at start of timestep</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalBreeding</c> event
+        /// </remarks>
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
@@ -223,9 +231,12 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>An event handler to perform herd breeding </summary>
+        /// <summary>An event handler to perform herd breeding</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalBreeding</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalBreeding")]
         private void OnCLEMAnimalBreeding(object sender, EventArgs e)
         {
@@ -473,6 +484,13 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>
+        /// A method to set female attributes
+        /// </summary>
+        /// <param name="female">The female individual ruminant</param>
+        /// <param name="femaleAttribute">The attribute from female</param>
+        /// <param name="maleAttribute">The attribute from male</param>
+        /// <exception cref="ApsimXException">Invalid attribute settings or conflict</exception>
         private void SetFemaleMateAttributes(RuminantFemale female, KeyValuePair<string, IIndividualAttribute> femaleAttribute, IIndividualAttribute maleAttribute)
         {
             if (maleAttribute != null)
@@ -516,11 +534,11 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Calculate conception rate for a female
+        /// Method to calculate conception rate for a female
         /// </summary>
-        /// <param name="female">Female to calculate conception rate for</param>
+        /// <param name="female">The individual female ruminant</param>
         /// <param name="status">Returns conception status</param>
-        /// <returns></returns>
+        /// <returns>Conception rate</returns>
         private double ConceptionRate(RuminantFemale female, out ConceptionStatus status)
         {
             status = ConceptionStatus.NotAvailable;

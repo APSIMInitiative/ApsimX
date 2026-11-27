@@ -13,8 +13,7 @@ using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Labour (Human) feed activity</summary>
-    /// <summary>This activity provides food to specified people based on a feeding style</summary>
+    /// <summary>This activity provides food to specified people (<c>Labour</c> based on a feeding style</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -38,8 +37,12 @@ namespace Models.CLEM.Activities
         private ResourceRequest resourceRequest;
 
         /// <summary>
-        /// Name of Human Food to use (with Resource Group name appended to the front [separated with a '.'])
+        /// The <c>HumanFoodStore</c> to use
         /// </summary>
+        /// <remarks>
+        /// A list of available <c>HumanFoodStore</c> resources is supplied in the UI.
+        /// Provided with Resource Group name appended to the front separated with a '.'
+        /// </remarks>
         [Description("Food to use")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(HumanFoodStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Food type required")]
@@ -54,13 +57,13 @@ namespace Models.CLEM.Activities
         public LabourFeedActivityTypes FeedStyle { get; set; }
 
         /// <summary>
-        /// Feed type
+        /// The <c>HumanFoodStore</c> type to feed
         /// </summary>
         [JsonIgnore]
         public HumanFoodStoreType FeedType { get; private set; }
 
         /// <summary>
-        /// The list of individuals remaining to be fed in the current timestep
+        /// The list of individuals remaining to be fed in the current time step
         /// </summary>
         [JsonIgnore]
         public IEnumerable<LabourType> IndividualsToBeFed { get; private set; }
@@ -93,9 +96,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {

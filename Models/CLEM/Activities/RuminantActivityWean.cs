@@ -14,8 +14,7 @@ using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant wean activity</summary>
-    /// <summary>This activity will wean the herd</summary>
+    /// <summary>An activity to manage the weaning of suckling ruminant individuals based on age and/or weight</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -42,35 +41,39 @@ namespace Models.CLEM.Activities
         private IEnumerable<RuminantGroup> filterGroups = [];
 
         /// <summary>
-        /// Style of weaning rule
+        /// Specifies the style of weaning rule to apply
         /// </summary>
         [Description("Weaning rule")]
         public WeaningStyle Style { get; set; }
 
         /// <summary>
-        /// Weaning age
+        /// The age at which weaning occurs
         /// </summary>
         [Description("Weaning age")]
         [Units("years, months, days")]
         public AgeSpecifier WeaningAge { get; set; } = new int[] { 6, 0 };
 
         /// <summary>
-        /// Weaning weight (kg)
+        /// The weight at which weaning occurs
         /// </summary>
         [Description("Weaning weight (kg)")]
         [Required, GreaterThanEqualValue(0)]
         public double WeaningWeight { get; set; }
 
         /// <summary>
-        /// Name of GrazeFoodStore (paddock) to place weaners (leave blank for general yards)
+        /// Name of pasture where to place purchased individuals
         /// </summary>
+        /// <remarks>
+        /// A required field. A list of available paddocks (<c>GrazeFoodStore</c>) is provided in a dropdown
+        /// list in the UI. General yards is also provided as an option.
+        /// </remarks>
         [Description("GrazeFoodStore (paddock) to place weaners")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", "Leave at current location", typeof(GrazeFoodStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Weaned individuals' location required")]
         public string GrazeFoodStoreName { get; set; } = "Leave at current location";
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public RuminantActivityWean()
         {
@@ -100,9 +103,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -136,7 +142,12 @@ namespace Models.CLEM.Activities
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
         }
 
-        /// <inheritdoc/>
+        /// <summary>An event handler allowing for weaning actions to occur</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalMark</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalMark")]
         protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {

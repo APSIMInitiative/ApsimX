@@ -16,10 +16,15 @@ using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant predictive stocking activity using ENSO predictions</summary>
-    /// <summary>This activity will undertake stocking and destocking based on future season predictions (La Nina or El Nino)</summary>
-    /// <summary>It is designed to consider individuals already marked for sale and add additional individuals before transport and sale.</summary>
-    /// <summary>It will check all paddocks that the specified herd are grazing</summary>
+    /// <summary>An activity to manage the ruminant herd based on predictive stocking using ENSO predictions</summary>
+    /// <remarks>
+    /// <para>
+    /// This activity will undertake stocking and destocking based on future season predictions (La Nina or El Nino)
+    /// </para>
+    /// <para>
+    /// This component is not fully checked and should be fully tested before use.
+    /// </para>
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -48,80 +53,87 @@ namespace Models.CLEM.Activities
         private Dictionary<DateTime, double> ForecastSequence;
 
         /// <summary>
-        /// File containing SOI measure from BOM http://www.bom.gov.au/climate/influences/timeline/
+        /// Name of file containing SOI measure from BOM http://www.bom.gov.au/climate/influences/timeline/
+        /// </summary>
+        /// <remarks>
+        /// The file should contain monthly SOI values with the format:
         /// Year Jan Feb Mar.....
         /// 1876 11  0.2 -3  +ve LaNina -ve El Nino
-        /// </summary>
+        /// </remarks>
         [Description("SOI monthly data file")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "SOI monthly data filename required")]
         [Core.Display(Type = DisplayType.FileName)]
         public string MonthlySOIFile { get; set; }
 
         /// <summary>
-        /// Number of previous months to consider
+        /// The number of previous months to consider
         /// </summary>
         [Description("Number of months to assess")]
         [Required, GreaterThanValue(0)]
         public int AssessMonths { get; set; }
 
         /// <summary>
-        /// Mean SOI value before considered La Niña
+        /// The mean SOI value before considered La Niña
         /// </summary>
         [Description("SOI cutoff before considered La Niña")]
         [Required, GreaterThanEqualValue(0)]
         public double SOIForLaNina { get; set; }
 
         /// <summary>
-        /// Mean  SOI value before considered El Niño
+        /// The mean SOI value before considered El Niño
         /// </summary>
         [Description("SOI cutoff (-ve) before considered El Niño")]
         [Required, GreaterThanEqualValue(0)]
         public double SOIForElNino { get; set; }
 
         /// <summary>
-        /// Minimum estimated feed (kg/ha) before restocking
+        /// The minimum estimated feed (kg/ha) before restocking
         /// </summary>
         [Description("Minimum estimated feed (kg/ha) before restocking")]
         [Required, GreaterThanEqualValue(0)]
         public double MinimumFeedBeforeRestock { get; set; }
 
         /// <summary>
-        /// AE to destock
+        /// The AE to destock
         /// </summary>
         [JsonIgnore]
         public double AeToDestock { get; private set; }
 
         /// <summary>
-        /// AE destocked
+        /// The AE destocked
         /// </summary>
         [JsonIgnore]
         public double AeDestocked { get; private set; }
 
         /// <summary>
-        /// AE destock shortfall
+        /// The AE destock shortfall
         /// </summary>
         public double AeShortfall { get { return AeToDestock - AeDestocked; } }
 
         /// <summary>
-        /// AE to restock
+        /// The AE to restock
         /// </summary>
         [JsonIgnore]
         public double AeToRestock { get; private set; }
 
         /// <summary>
-        /// AE restocked
+        /// The AE restocked
         /// </summary>
         [JsonIgnore]
         public double AeRestocked { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public RuminantActivityPredictiveStockingENSO()
         {
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
+        /// <summary>
+        /// A method to predict the ENSO measures
+        /// </summary>
+        /// <returns></returns>
         private ENSOState GetENSOMeasure()
         {
             // gets the average monthly Southern Oscillation Index from last six months
@@ -179,9 +191,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -239,7 +254,12 @@ namespace Models.CLEM.Activities
             paddockChanges = [];
         }
 
-        /// <inheritdoc/>
+        /// <summary>An event handler allowing for any stock changes</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalStock</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalStock")]
         protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {

@@ -13,10 +13,14 @@ using Models.CLEM.DataReaders;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Pasture management activity</summary>
-    /// <summary>This activity provides a pasture based on land unit, area and pasture type</summary>
-    /// <summary>Ruminant move activities place individuals in the paddock, after which they will graze pasture for the paddock stored in the Pasture Pools</summary>
-    /// <updates>First implementation of this activity using NABSA grazing processes</updates>
+    /// <summary>This activity manages a pasture on an area of land linked to a pasture type</summary>
+    /// <remarks>
+    /// <para>Ruminant move activities place individuals in the paddock, after which they will graze pasture for the
+    /// paddock stored in the Pasture Pools</para>
+    /// </remarks>
+    /// <updates>
+    /// First implementation of this activity using NABSA grazing processes
+    /// </updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -45,81 +49,90 @@ namespace Models.CLEM.Activities
         private Relationship relationshipGBA;
 
         /// <summary>
-        /// Land type where pasture is located
+        /// The name of the <c>LandType</c> where pasture is located
         /// </summary>
+        /// <remarks>
+        /// This is required. A list of available land types is provided in a dropdown list in the UI.
+        /// </remarks>
         [Description("Land type to use")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land type where pasture is located required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Land) } })]
         public string LandTypeNameToUse { get; set; }
 
         /// <summary>
-        /// Area requested
+        /// The area requested for the paddock
         /// </summary>
         [Description("Land area requested")]
         [Required, GreaterThanEqualValue(0)]
         public double AreaRequested { get; set; }
 
         /// <summary>
-        /// Use unallocated available
+        /// A switch to indicate whether this pasture should use all unallocated land of the specified type
         /// </summary>
         [Description("Use Land type's unallocated land")]
         public bool UseAreaAvailable { get; set; }
 
         /// <summary>
-        /// Pasture type to use
+        /// The name of the Pasture type (<c>GrazeFoodStoreType</c>) to track pasture
         /// </summary>
+        /// <remarks>
+        /// A list of available pasture types is provided in a dropdown list in the UI.
+        /// </remarks>
         [Description("GrazeFoodStore type managed")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(GrazeFoodStore) } })]
         public string FeedTypeName { get; set; }
 
         /// <summary>
-        /// Name of the model for the pasture input file
+        /// The name of the data reader to use
         /// </summary>
+        /// <remarks>
+        /// This is required. A list of available pasture data readers is provided in a dropdown list in the UI.
+        /// </remarks>
         [Description("Pasture data reader to use")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture production database reader required")]
         [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetNameOfModelsByType", ValuesArgs = new object[] { new Type[] { typeof(FileCrop), typeof(FileSQLitePasture) } })]
         public string PastureDataReader { get; set; }
 
         /// <summary>
-        /// Starting stocking rate (Adult Equivalents/square km)
+        /// The starting stocking rate (Adult Equivalents/square km) 
         /// </summary>
         [Description("Starting stocking rate (AEs/sqkm)")]
         [Required, GreaterThanEqualValue(0)]
         public double StartingStockingRate { get; set; }
 
         /// <summary>
-        /// Area of pasture
+        /// The current area allocated to the pasture
         /// </summary>
         [JsonIgnore]
         public double Area { get; set; }
 
         /// <summary>
-        /// Current land condition index
+        /// The current land condition index
         /// </summary>
         [JsonIgnore]
         public RelationshipRunningValue LandConditionIndex { get; set; }
 
         /// <summary>
-        /// Grass basal area
+        /// The current grass basal area
         /// </summary>
         [JsonIgnore]
         public RelationshipRunningValue GrassBasalArea { get; set; }
 
         /// <summary>
-        /// Feed type
+        /// The GrazeFoodStoreType resource being managed
         /// </summary>
         [JsonIgnore]
         public GrazeFoodStoreType LinkedNativeFoodType { get; set; }
 
         /// <summary>
-        /// Land item
+        /// The land type upon which this pasture is growing
         /// </summary>
         [JsonIgnore]
         public LandType LinkedLandItem { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public PastureActivityManage()
         {
@@ -142,9 +155,13 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to initialise this activity just once at start of simulation</summary>
+        /// <summary>An event handler allowing for the initialisation of this activity</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseResource</c> event before other activities are
+        /// initialised
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
@@ -336,10 +353,14 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Function to calculate ecological indicators.
-        /// By summing the monthly stocking rates so when you do yearly ecological calculation
-        /// you can get average monthly stocking rate for the whole year.
+        /// An event handler to allow for the calculation of ecological indicators.
         /// </summary>
+        /// <remarks>
+        ///
+        /// <para>By summing the monthly stocking rates so when you do yearly ecological calculation you can get average
+        /// monthly stocking rate for the whole year.</para>
+        /// <para>This is performed in the CLEMEvents.CLEMCalculateEcologicalState event.</para>
+        /// </remarks>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMCalculateEcologicalState")]
@@ -368,7 +389,7 @@ namespace Models.CLEM.Activities
         /// <param name="herd">Herd to consider</param>
         /// <param name="paddockName">Name of paddock with animals</param>
         /// <param name="areaSqKm">Area of paddock in Square Km</param>
-        /// <returns>Current stocking rate (AE/sq km)</returns>
+        /// <returns>Stocking rate (AE/sq km)</returns>
         public static double CalculateStockingRateRightNow(RuminantHerd herd, string paddockName, double areaSqKm)
         {
             if (herd != null)
@@ -445,7 +466,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// From Pasture File get all the Pasture Data from today to the next Ecological Calculation
+        /// A method to get all the Pasture Data from today to the next Ecological Calculation from the Pasture File
         /// </summary>
         private void GetPastureDataList_TodayToNextEcologicalCalculation()
         {
@@ -457,8 +478,15 @@ namespace Models.CLEM.Activities
                LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea, LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex, LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate, events.Clock.Today.AddDays(1), events.EcologicalIndicatorsCalculationInterval);
         }
 
-        // Method to listen for land use transactions
-        // This allows this activity to dynamically respond when use available area is selected
+        /// <summary>
+        /// An event hander to listen for changes in land area
+        /// </summary>
+        /// <remarks>
+        /// This allows this activity to dynamically respond to changes in land available when use available area is
+        /// selected
+        /// </remarks>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LinkedLandItem_TransactionOccurred(object sender, EventArgs e)
         {
             Area = LinkedLandItem.AmountAvailable;

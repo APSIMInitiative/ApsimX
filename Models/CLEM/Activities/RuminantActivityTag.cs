@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Add or remove a tag to specified individual ruminants</summary>
+    /// <summary>An activity to add or remove a tag assigned to specified individual ruminants</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -33,7 +33,7 @@ namespace Models.CLEM.Activities
         private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
-        /// Tag label
+        /// Label of the tag to be added or removed
         /// </summary>
         [Description("Label of tag")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Label for tag required")]
@@ -47,14 +47,14 @@ namespace Models.CLEM.Activities
         public TagApplicationStyle ApplicationStyle { get; set; }
 
         /// <summary>
-        /// Tag category
+        /// Special tag category to assign
         /// </summary>
         [Description("Special category of tag")]
         [Core.Display(EnabledCallback = "IsAddAttribute")]
         public RuminantAttributeCategoryTypes TagCategory { get; set; } = RuminantAttributeCategoryTypes.None;
 
         /// <summary>
-        /// constructor
+        /// Default constructor
         /// </summary>
         public RuminantActivityTag()
         {
@@ -63,7 +63,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Determines if an add tag for display of other properties.
+        /// A method to determines if an add tag for display of other properties.
         /// </summary>
         /// <returns></returns>
         public bool IsAddAttribute()
@@ -71,9 +71,12 @@ namespace Models.CLEM.Activities
             return ApplicationStyle == TagApplicationStyle.Add;
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -102,7 +105,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <inheritdoc/>
+        /// <summary>An event handler allowing for tag management to occur</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalMark</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalMark")]
         protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {

@@ -11,7 +11,7 @@ using Models.CLEM.Interfaces;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Off farm labour activities
+    /// An activity to manage labour allocation and funds received from off-farm work.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -28,8 +28,12 @@ namespace Models.CLEM.Activities
         private FinanceType bankType;
 
         /// <summary>
-        /// Bank account name to pay to
+        /// The account to pay into
         /// </summary>
+        /// <remarks>
+        /// This is a required field and must be specified. The values provided in the drop down list in the UI
+        /// represent the <c>FinanceType</c> accounts available
+        /// </remarks>
         [Description("Bank account to pay to")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
         public string BankAccountName { get; set; }
@@ -49,9 +53,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {

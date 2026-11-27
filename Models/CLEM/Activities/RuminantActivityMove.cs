@@ -12,7 +12,6 @@ using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant moving activity</summary>
     /// <summary>This activity moves specified ruminants to a given pasture</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -36,29 +35,34 @@ namespace Models.CLEM.Activities
         [Link] readonly CLEMEvents events = null;
 
         /// <summary>
-        /// Managed pasture to move to
+        /// Name of pasture where to move individuals
         /// </summary>
+        /// <remarks>
+        /// A required field. A list of available paddocks (<c>GrazeFoodStore</c>) is provided in a dropdown
+        /// list in the UI.
+        /// </remarks>
         [Description("Managed pasture to move to")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
         [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string ManagedPastureName { get; set; }
 
         /// <summary>
-        /// Determines whether this must be performed to setup herds at the start of the simulation
+        /// A flag to indicate whether this move should be performed to setup herds at the start of the
+        /// simulation
         /// </summary>
         [Description("Move at start of simulation")]
         [Required]
         public bool PerformAtStartOfSimulation { get; set; }
 
         /// <summary>
-        /// Determines whether sucklings are automatically moved with the mother or separated
+        /// A flag to indicate whether sucklings are automatically moved with the mother or separated
         /// </summary>
         [Description("Move sucklings with mother")]
         [Required]
         public bool MoveSucklings { get; set; }
 
         /// <summary>
-        /// The position within time-step to perform the move.
+        /// This property indicates the position within time-step to perform the move.
         /// </summary>
         [Description("Within time step timing of move")]
         [Required]
@@ -84,9 +88,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -109,9 +116,12 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnFinalInitialise(object sender, EventArgs e)
         {
@@ -130,7 +140,12 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>An event handler allowing for movement late in the time step</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMPreFinalise</c> event
+        /// </remarks>
         [EventSubscribe("CLEMPreFinalise")]
         protected void OnCLEMAnimalMarkLate(object sender, EventArgs e)
         {
@@ -140,7 +155,12 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>An event handler allowing movement in the middle of the time step</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMGetResourcesRequired</c> event
+        /// </remarks>
         [EventSubscribe("CLEMGetResourcesRequired")]
         protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
@@ -150,7 +170,12 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>An event handler allowing movement at the end of the time step</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMDoCutAndCarry</c> event
+        /// </remarks>
         [EventSubscribe("CLEMDoCutAndCarry")]
         protected void OnCLEMAnimalMarkEarly(object sender, EventArgs e)
         {

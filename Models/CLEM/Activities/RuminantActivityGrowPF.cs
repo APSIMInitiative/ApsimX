@@ -16,17 +16,25 @@ using System.Linq;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant growth activity (PF, Protein and Fat version)</summary>
     /// <summary>
-    /// This class represents the CLEM activity responsible for determining potential intake from the quality of all
-    /// food eaten, and providing energy and protein for all needs (e.g. wool production, pregnancy, lactation and
-    /// growth).
-    /// </summary>
-    /// <summary>
-    /// Full documentation and equations required for this component are available in Dougherty et al, 2025 (in prep).
+    /// This activity manages the intake, growth, and aging of ruminants
     /// </summary>
     /// <remarks>
-    /// Ruminant death activity controls mortality, while the Breed activity is responsible for conception and births.
+    ///
+    /// <para>This version represent the ruminant growth by independantly tracking the individual's protein and fat
+    /// stores which determine energy and protein relations and changing independently. This functionaility is provided
+    /// by the latest research and equations from Dougherty et al, 2025 (in prep) and the SCA equations (Freer et al,
+    /// 2012, AusFarm)</para>
+    ///
+    /// <para>This activity determines potential intake of individuals for the feeding activities and feeding arbitrator
+    /// for all ruminants</para>
+    ///
+    /// <para>Growth will depend upon the individuals energy relations and the quality and quantity of feed provided in
+    /// the time step</para>
+    ///
+    /// <para>This activity will consider the implications of other activities such as <c>RuminantActivityBreed</c> and
+    /// <c>RuminantActivityDeath</c> leading to conception, pregnancy, births, lactation, and death, all dependent upon
+    /// the animals condition.</para>
     /// </remarks>
     /// <authors>
     /// Summary and implementation of best methods in predicting ruminant growth based on Frier 2012 (AusFarm) and
@@ -59,7 +67,7 @@ namespace Models.CLEM.Activities
         private readonly FoodResourceStore milkProvided = new (new FoodResourcePacket() { TypeOfFeed = FeedType.Milk, RumenDegradableProteinPercent = 0, GutFill = 0.04 });
 
         /// <summary>
-        /// Switch to perform unfed test and reporting.
+        /// Provides a switch to indicate whether to perform unfed test and reporting.
         /// </summary>
         [Description("Perform unfed individuals warning")]
         public bool ReportUnfed { get; set; } = false;
@@ -82,9 +90,12 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public new OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnInitialiseActivity(object sender, EventArgs e)
         {
@@ -92,9 +103,14 @@ namespace Models.CLEM.Activities
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
         }
 
-        /// <summary>Function to handle last of pregnancy in the time step before births occur</summary>
+        /// <summary>
+        /// An event handler allowing for the last of pregnancy in the time step to be handled before births occur
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalBeforeBreeding</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalBeforeBreeding")]
         private void OnCLEMPregnancyEnergy(object sender, EventArgs e)
         {
@@ -102,7 +118,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to calculate pregnancy energy for the time step (MJ/day) to ensure done before births in
+        /// A method to calculate pregnancy energy for the time step (MJ/day) to ensure done before births in
         /// CLEMAnimalBreeding.
         /// </summary>
         /// <param name="herd">Enumerable of individuals to consider</param>
@@ -116,11 +132,14 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Function to naturally wean individuals on CLEMAnimalBreeding so will beat wean activity on
-        /// CLEMAnimalBreeding.
+        /// An event handler allowing for the natural weaning individuals on CLEMAnimalBreeding so will beat wean
+        /// activity on CLEMAnimalBreeding
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalBreeding</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalBreeding")]
         private void OnCLEMNaturallyWean(object sender, EventArgs e)
         {
@@ -151,12 +170,16 @@ namespace Models.CLEM.Activities
             }
         }
 
+
         /// <summary>
-        /// Function to determine all individuals potential intake and suckling intake after milk consumption from
-        /// mother.
+        /// An event handler allowing for the any naturally calculation of potential intake and and suckling intake
+        /// after milk consumption from the mother needed for other activities
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMPotentialIntake</c> event
+        /// </remarks>
         [EventSubscribe("CLEMPotentialIntake")]
         private void OnCLEMPotentialIntake(object sender, EventArgs e)
         {
@@ -164,7 +187,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to calculate potential intake for the entire herd for the time step.
+        /// A method to calculate potential intake for each individual in the herd for the time step.
         /// </summary>
         /// <param name="herd">Enumerable of individuals to consider</param>
         public static void CalculateHerdPotentialIntake(IEnumerable<Ruminant> herd)
@@ -286,9 +309,15 @@ namespace Models.CLEM.Activities
             ind.Intake.SolidsDaily.Expected = ind.Intake.SolidsDaily.MaximumExpected * cf * yf * tf * lf;
         }
 
-        /// <summary>Function to calculate growth of herd for the time-step</summary>
+        /// <summary>
+        /// An event handler allowing for the calculation of application of weight gain for each individual in the time
+        /// step
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalWeightGain</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalWeightGain")]
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
@@ -326,6 +355,11 @@ namespace Models.CLEM.Activities
             return status;
         }
 
+        /// <summary>
+        /// Method to calculate individual weight gain
+        /// </summary>
+        /// <param name="ind">The individual ruminant to consider</param>
+        /// <param name="lactating">A flag to indicate whether lactating</param>
         private void AnimalWeightGain(Ruminant ind, bool lactating = false)
         {
             // Adjusting potential intake for digestibility of fodder is now done in RuminantIntake along with concentrates and fodder.
@@ -335,10 +369,9 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Calculate growth efficiency based on lactation
+        /// A method to calculate growth efficiency based on lactation
         /// </summary>
-        /// <param name="ind"></param>
-        /// <returns></returns>
+        /// <param name="ind">The individual ruminant to consider</param>
         private static void CalculateGrowthEfficiency(Ruminant ind)
         {
             // eq 36
@@ -367,10 +400,10 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Function to calculate energy from intake and subsequent growth.
+        /// A methodto calculate energy from intake and subsequent growth.
         /// </summary>
         /// <remarks>
-        /// All energy calculations are per day and multiplied at end to give weight gain for time-step (e.g. monthly).
+        /// All energy calculations are per day and multiplied at end to give weight gain for time step (e.g. monthly).
         /// </remarks>
         /// <param name="ind">Individual ruminant for calculation.</param>
         public void CalculateEnergy(Ruminant ind)
@@ -606,6 +639,17 @@ namespace Models.CLEM.Activities
             ind.Output.Manure = ind.Intake.SolidsDaily.Actual * (100.0 - ind.Intake.DMD) / 100.0 * daysInTimeStep;
         }
 
+        /// <summary>
+        /// A method to adjust lactation due to protein defecits.
+        /// </summary>
+        /// <param name="ind">The individual ruminant to consider</param>
+        /// <param name="proteinAvailableForGainFromIntake">Ref to protein available for gain</param>
+        /// <param name="energyEmptyBodyGain">Energy of empty body gain</param>
+        /// <param name="proteinContentOfGain">Protein content of gain</param>
+        /// <param name="energyAvailableForGain">Energy available for gain</param>
+        /// <param name="proteinNeededForGrowthAllowableByEnergy">
+        /// The protein needed for growth allowable by energy
+        /// </param>
         private void AdjustLactationForProteinDeficit(Ruminant ind, ref double proteinAvailableForGainFromIntake, double energyEmptyBodyGain, double proteinContentOfGain, ref double energyAvailableForGain, ref double proteinNeededForGrowthAllowableByEnergy)
         {
             // ignore if protein from intake 0 or positive
@@ -686,7 +730,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Calculate maintenance energy and reduce intake based on any rumen protein deficiency
+        /// A method to calculate maintenance energy and reduce intake based on any rumen protein deficiency
         /// </summary>
         /// <param name="ind">The individual ruminant.</param>
         /// <param name="km">The maintenance efficiency to use</param>
@@ -745,6 +789,12 @@ namespace Models.CLEM.Activities
             ind.Intake.CalculateDigestibleProteinLeavingStomach(rumenDegradableProteinRequirement, ind.Parameters.GrowPF_CACRD.MilkProteinDigestibility_CA5);
         }
 
+        /// <summary>
+        /// A method to calculate rumen degradable protein of intake for an individual and feeding level
+        /// </summary>
+        /// <param name="ind">The individual ruminant</param>
+        /// <param name="feedingLevel">The feeding level</param>
+        /// <returns>Rumen degradable protein from intake</returns>
         private static double CalculateRumenDegradableProteinIntake(Ruminant ind, double feedingLevel)
         {
             // Ignored from GrassGro: timeOfYearFactor 19/9/2023 as calculation showed it has very little effect compared with the error in parameterisation and tracking of feed quality and a monthly time step
@@ -782,7 +832,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Determine the energy required for wool growth.
+        /// Method to determine the energy required for wool growth.
         /// </summary>
         /// <param name="ind">Ruminant individual.</param>
         /// <param name="daysGrowth">Number of days growth</param>
@@ -817,7 +867,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Determine the energy required for lactation.
+        /// Method to determine the energy required for lactation.
         /// </summary>
         /// <param name="ind">Female individual.</param>
         /// <param name="timestep">The number of days in current time-step</param>
@@ -943,7 +993,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Determine the energy required for pregnancy.
+        /// A method to determine the energy required for pregnancy.
         /// </summary>
         /// <param name="ind">Female individua.</param>
         /// <returns>Energy required per day for pregnancy</returns>
@@ -1172,12 +1222,15 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Function to calculate manure production and place in uncollected manure pools of the "manure" resource in
-        /// ProductResources. This is called at the end of CLEMAnimalWeightGain so after intake determined and before
-        /// deaths and sales.
+        /// An event handler allowing for the production of manure to be placed in uncollected manure pools of the
+        /// "manure" resource in <c>ProductResources</c>
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMPostRuminantConsumption</c> event to ensure final intake dry
+        /// matter is known
+        /// </remarks>
         [EventSubscribe("CLEMPostRuminantConsumption")]
         private void OnCLEMCalculateManure(object sender, EventArgs e)
         {
@@ -1185,7 +1238,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to perform manure production for herd.
+        /// A method to perform manure production for herd.
         /// </summary>
         /// <param name="manureStore">Store to place manure</param>
         /// <param name="herd">Individuals <see langword="for"/>production</param>
@@ -1205,7 +1258,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to report unfed individuals to warning log
+        /// A method to report unfed individuals to warning log
         /// </summary>
         public static void ReportUnfedIndividualsWarning(IEnumerable<Ruminant> herd, WarningLog warnings, ISummary summary, IModel sender, CLEMEvents events)
         {

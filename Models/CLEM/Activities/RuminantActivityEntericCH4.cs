@@ -10,7 +10,12 @@ using System.Linq;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant enteric methane calculator</summary>
+    /// <summary>
+    /// An activity component to add ruminant enteric methane production
+    /// </summary>
+    /// <remarks>
+    /// Must be placed below a Grow Protein and Fat (<c>RuminantActivityGrowPF</c>) activity.
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -27,22 +32,31 @@ namespace Models.CLEM.Activities
         private GreenhouseGasesType methaneEmissions;
 
         /// <summary>
-        /// Methane emission equation
+        /// A property to specify which methane emission equation is to be used for calculations.
         /// </summary>
+        /// <remarks>
+        /// A list of available equations is provided in the <c>MethaneEmissionEquations</c> enumeration.
+        /// </remarks>
         [Description("Enteric methane emissions equation")]
         public MethaneEmissionEquations EquationToUse { get; set; } = MethaneEmissionEquations.Charmleyetal2016;
 
         /// <summary>
-        /// Transaction grouping style
+        /// A property to specify the transaction grouping style
         /// </summary>
+        /// <remarks>
+        /// A list of available grouping styles is provided in the <c>RuminantEmissionsGroupingStyle</c> enumeration.
+        /// </remarks>
         [Description("Herd emissions grouping style")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Herd emissions grouping style required")]
         [System.ComponentModel.DefaultValue(RuminantEmissionsGroupingStyle.Combined)]
         public RuminantEmissionsGroupingStyle GroupingStyle { get; set; }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -51,9 +65,16 @@ namespace Models.CLEM.Activities
             InitialiseHerd(false, true);
         }
 
-        /// <summary>Function to calculate enteric methane from values saved to each individual by Grow activities</summary>
+        /// <summary>
+        /// An event handler allowing for any this activity to calculate enteric methane from values saved to each
+        /// individualactivity initialisation
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalWeightGain</c> event to ensure all intake is accounted
+        /// for
+        /// </remarks>
         [EventSubscribe("CLEMAnimalWeightGain")]
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
@@ -127,7 +148,7 @@ namespace Models.CLEM.Activities
     }
 
     /// <summary>
-    /// Methane emission equations
+    /// An enumerator to provide the available methane emission equations
     /// </summary>
     public enum MethaneEmissionEquations
     {

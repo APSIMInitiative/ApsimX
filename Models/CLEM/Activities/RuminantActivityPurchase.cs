@@ -14,7 +14,9 @@ using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Add individual ruminants to the purchase request list</summary>
+    /// <summary>
+    /// This activity specifies individual ruminants to be added to the herd as purchase requests
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -38,21 +40,25 @@ namespace Models.CLEM.Activities
         private RuminantType rumTypeToUse;
 
         /// <summary>
-        /// GrazeFoodStore (paddock) to place purchases in for grazing
+        /// Name of pasture where to place purchased individuals
         /// </summary>
+        /// <remarks>
+        /// A required field. A list of available paddocks (<c>GrazeFoodStore</c>) is provided in a dropdown
+        /// list in the UI.
+        /// </remarks>
         [Description("GrazeFoodStore (paddock) to place purchases in")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
         [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreName { get; set; }
 
         /// <summary>
-        /// Tag label
+        /// Tag label to assign to these purchases
         /// </summary>
         [Description("Label of tag to assign")]
         public string TagLabel { get; set; }
 
         /// <summary>
-        /// Number to purchase
+        /// The number of individuals to purchase
         /// </summary>
         [Description("Number to purchase")]
         [Required, GreaterThanEqualValue(0)]
@@ -63,7 +69,7 @@ namespace Models.CLEM.Activities
         // fixed number
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public RuminantActivityPurchase()
         {
@@ -94,9 +100,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -126,7 +135,12 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>An event handler allowing for arrangement of purchase requests</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalManage</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalManage")]
         protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {

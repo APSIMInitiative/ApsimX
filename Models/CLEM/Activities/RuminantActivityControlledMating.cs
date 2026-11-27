@@ -16,8 +16,11 @@ using System.Linq;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Adds artificial insemination to Ruminant breeding
+    /// An activity component to add artificial insemination functionality to ruminant breeding
     /// </summary>
+    /// <remarks>
+    /// This component is placed below the <c>RuminantActivityBreed</c> to add additional functionality
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -39,7 +42,7 @@ namespace Models.CLEM.Activities
         private int amountToDo;
 
         /// <summary>
-        /// Maximum age for mating
+        /// Specifies the maximum age for mating
         /// </summary>
         [Description("Maximum female age for mating")]
         [Category("Farm", "Breeding")]
@@ -47,7 +50,7 @@ namespace Models.CLEM.Activities
         public AgeSpecifier MaximumAgeMating { get; set; } = new int[] { 20, 0, 0 };
 
         /// <summary>
-        /// Number joinings per male before male genetics replaced
+        /// Provides the number joinings per male before male genetics replaced
         /// </summary>
         [Description("Joinings per individual male (genetics)")]
         [Category("Farm", "Genetics")]
@@ -55,13 +58,13 @@ namespace Models.CLEM.Activities
         public int JoiningsPerMale { get; set; } = 1;
 
         /// <summary>
-        /// The available attributes for the breeding sires
+        /// Provides a list of available attributes for the breeding sires
         /// </summary>
         [JsonIgnore]
         public List<ISetAttribute> SireAttributes => attributeList;
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public RuminantActivityControlledMating()
         {
@@ -91,18 +94,25 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any early activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialise</c> event and so happens before any
+        /// CLEMInitialiseActivity event repsonses.
+        /// </remarks>
         [EventSubscribe("CLEMInitialise")]
         private void OnCLEMInitialiseSetAttributes(object sender, EventArgs e)
         {
             attributeList = [.. Structure.FindChildren<ISetAttribute>(recurse: true)];
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -119,7 +129,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Provide the list of all breeders currently available
+        /// A method to provide the list of all breeders currently available
         /// </summary>
         /// <returns>A list of breeders to work with before returning to the breed activity</returns>
         private IEnumerable<RuminantFemale> GetBreeders()
@@ -278,7 +288,8 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Provide the list of breeders to mate accounting for the controlled mating failure rate, and required resources
+        /// A method to provide the list of breeders to mate accounting for the controlled mating failure rate, and
+        /// required resources
         /// </summary>
         /// <returns>A list of breeders for the breeding activity to work with</returns>
         public IEnumerable<RuminantFemale> BreedersToMate()

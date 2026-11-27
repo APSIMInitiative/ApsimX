@@ -15,13 +15,20 @@ using Models.CLEM.DataReaders;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>The child of Manage crop to manage a particular product harvested</summary>
+    /// <summary>
+    /// The <c>CropActivityManageProduct</c> activity is a child of a <c>CropActivityManageCrop</c> activity
+    /// used to manage a particular product (crop type or harvest type) harvested
+    /// </summary>
+    /// <remarks>
+    /// Multiple instances of this activity can be used to manage multiple products from a single crop, a mixed crop, or
+    /// crop rotation baesed on their arrangement in the sumulation tree
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageCrop))]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
-    [Description("Manage a crop product of the parent ManageCrop and obtain production values from the crop file")]
+    [Description("This activity manages a crop product associated with a parent ManageCrop and obtain production values from the crop file")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Mixed cropping/multiple products implemented")]
     [Version(1, 0, 3, "Added ability to model multiple harvests from crop using Harvest Tags from input file")]
@@ -47,24 +54,33 @@ namespace Models.CLEM.Activities
         private double stockingRateSummed = 0;
 
         /// <summary>
-        /// Name of the model for the crop input file
+        /// Name of the <c>DataReader</c> providing the crop input file
         /// </summary>
-        [Description("Crop file")]
+        /// <remarks>
+        /// Required field. A list of available <c>DataReader</c> models is provided in the drop down list in the UI.
+        /// </remarks>
+        [Description("Crop data reader")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of crop file required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetNameOfModelsByType", ValuesArgs = new object[] { new Type[] { typeof(FileCrop), typeof(FileSQLiteCrop) } })]
         public string ModelNameFileCrop { get; set; }
 
         /// <summary>
-        /// Name of crop in file
+        /// Name of crop to use from the crop input file
         /// </summary>
+        /// <remarks>
+        /// Required field. A list of available crop names is provided in the drop down list in the UI.
+        /// </remarks>
         [Description("Name of crop in file")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of crop in file required")]
         public string CropName { get; set; }
 
         /// <summary>
-        /// Store to put crop growth into
+        /// The resource store to put crop growth into
         /// </summary>
-        [Description("Store for crop product")]
+        /// <remarks>
+        /// Required field. A list of available resource stores is provided in the drop down list in the UI.
+        /// </remarks>
+        [Description("Store holding this crop product")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(AnimalFoodStore), typeof(GrazeFoodStore), typeof(HumanFoodStore), typeof(ProductStore) } })]
         [Required]
         public string StoreItemName { get; set; }
@@ -72,100 +88,115 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Style used to add new product to the store
         /// </summary>
+        /// <remarks>
+        /// This allows the user to specify whether the harvested crop product replaces the contents of the store or is
+        /// added to the currrent store.
+        /// </remarks>
         [Description("Add new product style")]
         public AddNewCropProductStyle AddProductStyle { get; set; } = AddNewCropProductStyle.Add;
 
         /// <summary>
-        /// Proportion of the crop harvest that is available
+        /// The <c>ProportionKept</c> property defines the proportion of the crop harvest that is places into the
+        /// store
         /// </summary>
         [Description("Harvest achieved multiplier")]
         [Required]
         public double ProportionKept { get; set; } = 1.0;
 
         /// <summary>
-        /// Proportion of the crop area (of parent ManageCrop) used
+        /// The <c>PlantedMultiplier</c> property defines the proportion of the crop area (of parent ManageCrop) used
+        /// for this crop
         /// </summary>
         [Description("Crop area multiplier")]
         [Required, Proportion]
         public double PlantedMultiplier { get; set; } = 1.0;
 
         /// <summary>
-        /// Number of Trees per Hectare
+        /// The <c>TreesPerHa</c> property defines the number of Trees per hectare
         /// </summary>
+        /// <remarks>
+        /// Required field. A value of 0 indicates that this is not a tree crop.
+        /// </remarks>
         [Description("Number of Trees (perHa) [0 if not a tree crop]")]
         [Required]
         public double TreesPerHa { get; set; }
 
         /// <summary>
-        /// Is this a tree crop.
+        /// The <c>IsTreeCrop</c> property indicates whether this is a tree crop.
         /// </summary>
         [JsonIgnore]
         public bool IsTreeCrop;
 
         /// <summary>
-        /// resource item
+        /// The <c>LinkedResourceItem</c> property defines the <c>IResourceType</c> linked to this crop product
         /// </summary>
         [JsonIgnore]
         public IResourceType LinkedResourceItem { get; set; }
 
         /// <summary>
-        /// Harvest Data retrieved from the Forage File.
+        /// A list of <c>CropDataType</c> items representing harvest data retrieved from the Data Reader
         /// </summary>
         [JsonIgnore]
         public List<CropDataType> HarvestData { get; set; }
 
         /// <summary>
-        /// Stores the start of current crop harvest sequence
-        /// Using first harvest if HarvestType provided
+        /// The <c>StartCurrentSequenceHarvest</c> property stores the start of current crop harvest sequence
         /// </summary>
+        /// <remarks>
+        /// This uses the first <c>CropDataType</c> harvest if HarvestType provided
+        /// </remarks>
         [JsonIgnore]
         public CropDataType StartCurrentSequenceHarvest { get; set; }
 
         /// <summary>
-        /// Stores the end of current crop harvest sequence
-        /// Using last harvest if HarvestType provided
+        /// The <c>EndCurrentSequenceHarvest</c> property stores the end of current crop harvest sequence
         /// </summary>
+        /// <remarks>
+        /// This uses the last <c>CropDataType</c> harvest if HarvestType provided
+        /// </remarks>
         [JsonIgnore]
         public CropDataType EndCurrentSequenceHarvest { get; set; }
 
         /// <summary>
-        /// Units to Hectares converter from Land type
+        /// The Land Units To Hectare Converter value obtained from the <c>LandType</c> used by the parent <c>
+        /// CropActivityManageCrop</c>
         /// </summary>
         [JsonIgnore]
         public double UnitsToHaConverter { get; set; }
 
         /// <summary>
-        /// Amount harvested this timestep after limiter accounted for
+        /// The amount harvested in the current time step after accounting for any limiter
         /// </summary>
         [JsonIgnore]
         public double AmountHarvested { get; set; }
 
         /// <summary>
-        /// Amount available for harvest from crop file
+        /// The amount available for harvest in the current time step from the crop Data Reader
         /// </summary>
         [JsonIgnore]
         public double AmountAvailableForHarvest { get; set; }
 
         /// <summary>
-        /// Flag for determining if flagged harvest types have been provided
+        /// The <c>HarvestTagsUsed</c> property indicates if flagged harvest types have been
+        /// provided
         /// </summary>
         [JsonIgnore]
         public bool HarvestTagsUsed { get; set; }
 
         /// <summary>
-        /// Flag for determining if flagged harvest types have been provided
+        /// The <c>InsideMultiHarvestSequence</c> property indicates if currently inside a multi-harvest sequence
         /// </summary>
         [JsonIgnore]
         public bool InsideMultiHarvestSequence { get; set; }
 
         /// <summary>
-        /// Flag for determining if this crop is currently being managed in cropping system e.g. rotation
+        /// The <c>CurrentlyManaged</c> property indicates if this crop is currently being managed in cropping system e.g. rotation
         /// </summary>
         [JsonIgnore]
         public bool CurrentlyManaged { get; set; } = true;
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public CropActivityManageProduct()
         {
@@ -192,9 +223,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -237,9 +271,15 @@ namespace Models.CLEM.Activities
             HarvestTagsUsed = HarvestData.Any(a => a.HarvestType != "");
         }
 
-        /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
+        /// <summary>
+        /// An event handler to arrange any final checks after resources and activities have been initialised.
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This method is called during the FinalInitialise event after all resources and activities have been
+        /// initialised
+        /// </remarks>
         [EventSubscribe("FinalInitialise")]
         private void OnFinalInitialiseForProduct(object sender, EventArgs e)
         {
@@ -261,8 +301,12 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// The offset from previous, current and last harvests in months
+        /// The <c>HarvestOffset</c> property provides the offset from previous, current and last harvests
         /// </summary>
+        /// <remarks>
+        /// Returns a tuple of integers representing the offset in months from the previous, first, current and last
+        /// harvests
+        /// </remarks>
         [JsonIgnore]
         public (int? previous, int? first, int? current, int? last) HarvestOffset { get { return harvestOffset; } }
 
@@ -271,14 +315,19 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public (CropDataType previous, CropDataType first, CropDataType current, CropDataType last) Harvests { get; set; }
+        // ToDo: check that this property is needed. It might have been added for reporting.
 
         /// <summary>
-        /// Method to arrange any outstanding rotation before we start time step
+        /// An event handler to arrange any outstanding rotation at the end of the current time step
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This method is called during the CLEMEndOfTimeStep event after all activities have been performed for the
+        /// time step
+        /// </remarks>
         [EventSubscribe("CLEMEndOfTimeStep")]
-        private void OnCLEMStartOfTimeStepDoRotations(object sender, EventArgs e)
+        private void OnCLEMEndOfTimeStepDoRotations(object sender, EventArgs e)
         {
             // rotate harvest if needed
             if (rotationReady)
@@ -288,10 +337,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Function to get the next harvest date from data
+        /// An event handler to get the next harvest date from the the harvest data list
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is called during the CLEMStartOfTimeStep event
+        /// </remarks>
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
@@ -396,16 +448,16 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to calculate the year month integer for this date
+        /// A method to calculate the year month integer for a specified date
         /// </summary>
         /// <param name="date">date to process</param>
-        /// <returns>year month integer</returns>
+        /// <returns>Number of months from year 0</returns>
         public static int CalculateYearMonth(DateTime date)
         {
             return date.Year * 12 + date.Month;
         }
 
-        /// <summary>An event handler to allow us to get next supply of pasture</summary>
+        /// <summary>An event handler to perform this activitty</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMUpdatePasture")]
@@ -418,9 +470,13 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>An event handler for a Cut and Carry</summary>
+        /// <summary>An event handler to undertake cut and carry for the harvest</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is called during the CLEMDoCutAndCarry event
+        /// This is not available when managing a <c>GrazeFoodStoreType</c>
+        /// </remarks>
         [EventSubscribe("CLEMDoCutAndCarry")]
         private void OnCLEMDoCutAndCarry(object sender, EventArgs e)
         {
@@ -433,12 +489,16 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Function to calculate ecological indicators.
-        /// By summing the monthly stocking rates so when you do yearly ecological calculation
-        /// you can get average monthly stocking rate for the whole year.
+        /// An event handler to calculate ecological indicators.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// <para>Used for managing pasture in <c>GrazeFoodStoreTypes</c> using crop input data</para>
+        /// <para>By summing the monthly stocking rates so when you do yearly ecological calculation you can get average
+        /// monthly stocking rate for the whole year</para>
+        /// <para>This is called during the CLEMCalculateEcologicalState event</para>
+        /// </remarks>
         [EventSubscribe("CLEMCalculateEcologicalState")]
         private void OnCLEMCalculateEcologicalState(object sender, EventArgs e)
         {

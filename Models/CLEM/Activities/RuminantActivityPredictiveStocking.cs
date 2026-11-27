@@ -14,10 +14,17 @@ using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant predictive stocking activity</summary>
-    /// <summary>This activity ensures the total herd size is acceptable to graze the dry season pasture</summary>
-    /// <summary>It is designed to consider individuals already marked for sale and add additional individuals before transport and sale.</summary>
-    /// <summary>It will check all paddocks that the specified herd are grazing</summary>
+    /// <summary>An activity to manage the ruminant herd based on predictive stocking</summary>
+    /// <remarks>
+    ///
+    /// <para>This activity ensures the total herd size is acceptable to graze the predicted, available dry season
+    /// pasture</para>
+    ///
+    /// <para>It is designed to consider individuals already marked for sale and add additional individuals before
+    /// transport and sale.</para>
+    ///
+    /// <para>It will check all paddocks that the specified herd are grazing</para>
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -46,49 +53,49 @@ namespace Models.CLEM.Activities
         private IEnumerable<GrazeFoodStoreType> paddocks;
 
         /// <summary>
-        /// Last month for assessing dry season feed requirements
+        /// This property specifies the last month for assessing dry season feed requirements
         /// </summary>
         [Description("Last month for assessing dry season feed requirements")]
         [Required, Month]
         public MonthsOfYear LastAssessmentMonth { get; set; }
 
         /// <summary>
-        /// Minimum estimated feed (kg/ha) allowed at end of period
+        /// This property specifies the minimum estimated feed (kg/ha) allowed at end of period
         /// </summary>
         [Description("Minimum estimated feed (kg/ha) allowed at end of period")]
         [Required, GreaterThanEqualValue(0)]
         public double FeedLowLimit { get; set; }
 
         /// <summary>
-        /// Predicted pasture at end of assessment period
+        /// This property specifies the predicted pasture biomass at end of assessment period
         /// </summary>
         [JsonIgnore]
         public double PasturePredicted { get; private set; }
 
         /// <summary>
-        /// Predicted pasture shortfall at end of assessment period
+        /// This property specifies the predicted pasture shortfall at end of assessment period
         /// </summary>
         public double PastureShortfall { get {return Math.Max(0, FeedLowLimit - PasturePredicted); } }
 
         /// <summary>
-        /// AE to destock
+        /// This property provides the AE to destock
         /// </summary>
         [JsonIgnore]
         public double AeToDestock { get; private set; }
 
         /// <summary>
-        /// AE destocked
+        /// This property provides the AE destocked
         /// </summary>
         [JsonIgnore]
         public double AeDestocked { get; private set; }
 
         /// <summary>
-        /// AE destock shortfall
+        /// This property providAE destock shortfall
         /// </summary>
         public double AeShortfall { get {return AeToDestock - AeDestocked; } }
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public RuminantActivityPredictiveStocking()
         {
@@ -116,9 +123,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -135,7 +145,12 @@ namespace Models.CLEM.Activities
             paddockShortfalls = [];
         }
 
-        /// <inheritdoc/>
+        /// <summary>An event handler allowing for any stock changes</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalStock</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalStock")]
         protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {

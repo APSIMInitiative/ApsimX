@@ -10,8 +10,7 @@ using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant death activity</summary>
-    /// <summary>This activity determines the death of individuals in the herd</summary>
+    /// <summary>This activity manages the death of individuals in the herd</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -26,12 +25,12 @@ namespace Models.CLEM.Activities
         private IEnumerable<IRuminantDeathGroup> filterGroups;
 
         /// <summary>
-        /// List of current individuals to consider for death
+        /// This property provides the list of current individuals to consider for death
         /// </summary>
         public List<Ruminant> CurrentIndividuals { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public RuminantActivityDeath()
         {
@@ -51,9 +50,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -62,9 +64,12 @@ namespace Models.CLEM.Activities
             filterGroups = Structure.FindChildren<IRuminantDeathGroup>();
         }
 
-        /// <summary>Function to determine which animals have died and remove from the population</summary>
+        /// <summary>An event handler allowing for the processing and reporting of any deaths</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalDeath</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalDeath")]
         private void OnCLEMAnimalDeath(object sender, EventArgs e)
         {

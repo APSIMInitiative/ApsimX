@@ -13,7 +13,7 @@ using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Activity to perform controlled burning of native pastures</summary>
+    /// <summary>An activity to perform controlled burning of pastures</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -33,52 +33,64 @@ namespace Models.CLEM.Activities
         private double areaToSkip;
 
         /// <summary>
-        /// Minimum proportion green for fire to carry
+        /// Minimum proportion green biomass to allow for fire to carry
         /// </summary>
         [Description("Minimum proportion green for fire to carry")]
         [Required(AllowEmptyStrings = false), Proportion]
         public double MinimumProportionGreen { get; set; } = 0.5;
 
         /// <summary>
-        /// Name of graze food store/paddock to burn
+        /// Name of paddock (<c>GrazeFoodStoreType</c>) to burn
         /// </summary>
+        /// <remarks>
+        /// This is required. A list of available paddocks is provided in a dropdown list in the UI.
+        /// </remarks>
         [Description("Name of graze food store/paddock to burn")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(GrazeFoodStore) } })]
         [Required(AllowEmptyStrings = false)]
         public string PaddockName { get; set; }
 
         /// <summary>
-        /// Methane store for emissions
+        /// A Methane store (<c>GreenhouseGasesType</c>) for emissions
         /// </summary>
+        /// <remarks>
+        /// A list of available methane stores is provided in a dropdown list in the UI.
+        /// </remarks>
         [Description("Greenhouse gas store for methane emissions")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named Methane if present", typeof(GreenhouseGases) } })]
         public string MethaneStoreName { get; set; } = "Use store named Methane if present";
 
         /// <summary>
-        /// Nitrous oxide store for emissions
+        /// A Nitrous oxide store (<c>GreenhouseGasesType</c>) for emissions
         /// </summary>
+        /// <remarks>
+        /// A list of available nitrous oxide stores is provided in a dropdown list in the UI.
+        /// </remarks>
         [Description("Greenhouse gas store for nitrous oxide emissions")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named N2O if present", typeof(GreenhouseGases) } })]
         public string NitrousOxideStoreName { get; set; } = "Use store named N2O if present";
 
         /// <summary>
-        /// Burning efficiency
+        /// Provides the biomass burning efficiency
         /// </summary>
         [Description("Biomass burning efficiency")]
         [Required, GreaterThanValue(0)]
         public double BurningEfficiency { get; set; } = 0.76;
 
         /// <summary>
-        /// Percent carbon of fuel (g/g DM * 100)
+        /// Provides the carbon of fuel (g/g DM * 100) as a percentage
         /// </summary>
         [Description("Carbon content of fuel")]
         [Required, GreaterThanValue(0), Percentage]
         [Units("%")]
         public double CarbonPercent { get; set; } = 46.0;
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {

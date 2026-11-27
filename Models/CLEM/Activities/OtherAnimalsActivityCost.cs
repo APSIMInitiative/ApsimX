@@ -10,8 +10,10 @@ using Models.CLEM.Groupings;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Other animals task activity</summary>
-    /// <summary>This activity allows labour and costs to be applied to selected other animals</summary>
+    /// <summary>
+    /// This activity manages labour and costs associated with being applied to selected other animals
+    /// (<c>OtherAnimalsType</c>)
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -49,9 +51,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {

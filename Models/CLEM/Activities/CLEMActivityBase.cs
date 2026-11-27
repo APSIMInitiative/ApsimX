@@ -14,7 +14,7 @@ using APSIM.Core;
 namespace Models.CLEM.Activities
 {
     ///<summary>
-    /// CLEM Activity base model
+    /// The Base class providing common functionality for all CLEM activities
     ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -24,13 +24,13 @@ namespace Models.CLEM.Activities
     public abstract class CLEMActivityBase: CLEMModel, IReportPartialResourceAction
     {
         /// <summary>
-        /// A protected link to the CLEM resource holder
+        /// Provides public access the the <c>ResourcesHolder</c>
         /// </summary>
         [Link(ByName = true, IsOptional = true)]
         public ResourcesHolder Resources = null;
 
         /// <summary>
-        /// Link to Activity holder
+        /// Provides public access the the <c>ActivitiesHolder</c>
         /// </summary>
         [Link]
         [NonSerialized]
@@ -62,7 +62,7 @@ namespace Models.CLEM.Activities
         public bool AllowsPartialResourcesAvailable { get { return OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableResources || OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications; } }
 
         /// <summary>
-        /// Current list of resources requested by this activity
+        /// Provides the current list of resources requested by the activity
         /// </summary>
         [JsonIgnore]
         public List<ResourceRequest> ResourceRequestList { get; set; } = [];
@@ -76,13 +76,17 @@ namespace Models.CLEM.Activities
         public string StatusMessage { get { return string.Join(Environment.NewLine, statusMessageList); }}
 
         /// <summary>
-        /// Resource allocation style
+        /// Defines the Resource allocation style for this activity
         /// </summary>
+        /// <remarks>
+        /// This will determine if the activity is performed automatically or manually using specific code
+        /// </remarks>
         [JsonIgnore]
         public ResourceAllocationStyle AllocationStyle { get; set; }
 
         /// <summary>
-        /// Current status of this activity
+        /// Determines if the activity is currently enabled and should be performed. This is a cascade property and is
+        /// defined by ancestors
         /// </summary>
         [JsonIgnore]
         public bool ActivityEnabled
@@ -106,7 +110,8 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Multiplier for farms in this zone
+        /// The <c>FarmMultiplier</c> property allows a multiplier to be applied to all outcomes and is determines by
+        /// the <c>ZoneCLEM</c> component
         /// </summary>
         public double FarmMultiplier
         {
@@ -126,9 +131,10 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
+        /// The <c>TimingOK</c> property performs all checks to determine if the activity should be performed in this
+        /// time step based on enabled status and child and ancestor <c>ActivityTimers</c>
         /// </summary>
-        /// <returns>T/F</returns>
+        /// <returns>A boolean of True if timing is OK, False otherwise</returns>
         public virtual new bool TimingOK
         {
             get
@@ -155,9 +161,10 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree and a specified date
+        /// The <c>TimingCheck</c> method determines if the activity is to be performed at a specified date
         /// </summary>
-        /// <returns>T/F</returns>
+        /// <param name="date">The date to check</param>
+        /// <returns>A boolean of True if timing is OK, False otherwise</returns>
         public bool TimingCheck(DateTime date)
         {
             // use timing to not perform activity based on Enabled state
@@ -180,9 +187,10 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
+        /// The <c>TimingExists</c> property determines if any timers exist in the simulation tree that affect this
+        /// activity
         /// </summary>
-        /// <returns>T/F</returns>
+        /// <returns>True if timers exist, otherwise false</returns>
         public bool TimingExists
         {
             get
@@ -203,8 +211,10 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Report error or set status to partial if shortfall found otherwise set to success if notneeded
+        /// The <c>SetStatusSuccessOrPartial</c> method handles the consequences of a resource shortfall by raising an
+        /// error or setting the activity status accordingly
         /// </summary>
+        /// <param name="shortfallOccurred">Indicates whether a resource shortfall occurred</param>
         public void SetStatusSuccessOrPartial(bool shortfallOccurred = false)
         {
             if (Status != ActivityStatus.Warning)
@@ -236,11 +246,12 @@ namespace Models.CLEM.Activities
         #region Companion child model handling
 
         /// <summary>
-        /// A method to return the list of labels provided by the parent activity for the given companion child model type
+        /// The <c>CompanionModelLabels</c> method manages the lists of identifier and measure labels provided to child
+        /// companion components and thus defines the types of companion components that can be used by this activity
         /// </summary>
         /// <param name="labelType">The type of labels to provide</param>
         /// <typeparam name="T">Companion child model type</typeparam>
-        /// <returns>List of labels for the selected style</returns>
+        /// <returns>List of labels (string) available for the selected style</returns>
         public List<string> CompanionModelLabels<T>(CompanionModelLabelType labelType) where T : IActivityCompanionModel
         {
             if (this is IHandlesActivityCompanionModels)
@@ -283,7 +294,8 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to create Transaction category based on settings in ZoneCLEM
+        /// The <c>UpdateTransactionCategory</c> method creates a Transaction category based on settings in ZoneCLEM and
+        /// <c>TransactionCategory</c> properties of this activity and ancestors
         /// </summary>
         public static string UpdateTransactionCategory(CLEMActivityBase model, IStructure structure, string relatesToValue = "")
         {
@@ -315,10 +327,13 @@ namespace Models.CLEM.Activities
             return transCat;
         }
 
-        /// <summary>An event handler to perform any start of simulation tasks</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoInitialSummary")] //StartOfSimulation")]
+        /// <summary>
+        /// An event handler to initialise transaction category and set initial status during call the <c>
+        /// Clock.DoInitialSummary</c> event
+        /// </summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
+        [EventSubscribe("DoInitialSummary")] 
         protected virtual void OnInitialSummary(object sender, EventArgs e)
         {
             // create Transaction category based on Zone settings
@@ -326,10 +341,13 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NoTask; 
         }
 
-        /// <summary>An event handler to perform companion tasks at start of simulation.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoInitialSummary")] //"StartOfSimulation")]
+        /// <summary>
+        /// An event handler to initialise identify and check all achild companion models located during the <c>
+        /// Clock.DoInitialSummary</c> event handler
+        /// </summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
+        [EventSubscribe("DoInitialSummary")]
         protected virtual void OnStartOfSimulationGetCompanionModels(object sender, EventArgs e)
         {
             // if this activity supports companion child models for controlling resource requirements
@@ -381,13 +399,19 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Get the IEnumerable &lt;T&lt; of all activity specified companion models by type and identifier
+        /// A method to provide an IEnumerable &lt;T&lt; of all activity specified companion models by type and
+        /// identifier
         /// </summary>
         /// <typeparam name="T">The companion model type</typeparam>
-        /// <param name="identifier">Identifier label.</param>
-        /// <param name="mustBeProvidedByUser">Flag determines if the parent requesting assumes the user will provide an instance of this child.</param>
-        /// <param name="addNewIfEmpty">Flag to determine is new IENumerable is created with a new() instance of T.</param>
-        /// <returns>IEnumerable of T found.</returns>
+        /// <param name="identifier">Identifier label</param>
+        /// <param name="mustBeProvidedByUser">
+        /// Flag determines if the parent requesting assumes the user will provide an instance of this child in the
+        /// simulation tree
+        /// </param>
+        /// <param name="addNewIfEmpty">
+        /// Flag to determine if a new IEnumerable is created with a new() instance of T.
+        /// </param>
+        /// <returns>IEnumerable of T found</returns>
         protected private IEnumerable<T> GetCompanionModelsByIdentifier<T>(bool mustBeProvidedByUser, bool addNewIfEmpty, string identifier = "") where T : IActivityCompanionModel, new()
         {
             if (companionModelsPresent.ContainsKey(typeof(T).Name))
@@ -433,10 +457,10 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Create a dictionary of groups of components by identifier provided by the parent model.
+        /// This method creates a dictionary of groups of components by identifier provided by the parent model.
         /// </summary>
         /// <typeparam name="T">Type of component to consider</typeparam>
-        /// <returns></returns>
+        /// <returns>Dictionary of groups of components by identifier</returns>
         public Dictionary<string, IEnumerable<T>> LocateCompanionModels<T>() where T : IActivityCompanionModel, new()
         {
             Dictionary<string, IEnumerable<T>> filters = [];
@@ -474,33 +498,33 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Return a formatted error message for an unknown companion model.
+        /// This method returns a formatted error message for an unknown companion model.
         /// </summary>
-        /// <param name="model">Model throwing the error.</param>
+        /// <param name="model">Model throwing the error</param>
         /// <param name="companionLabels">The details of labels sought based on type, identifier and unit.</param>
-        /// <returns>Formatted string for exception.</returns>
+        /// <returns>Formatted error string for exception</returns>
         public static string UnknownCompanionModelErrorText(CLEMActivityBase model, (string type, string identifier, string unit) companionLabels)
         {
             return $"Type [{companionLabels.type}] is not supported by {model.GetType().Name}: [a={model.NameWithParent}]";
         }
 
         /// <summary>
-        /// Return a formatted error message for an unknown identifier.
+        /// This method returns a formatted error message for an unknown identifier.
         /// </summary>
-        /// <param name="model">Model throwing the error.</param>
-        /// <param name="companionLabels">The details of labels sought.</param>
-        /// <returns>Formatted string for exception.</returns>
+        /// <param name="model">Model throwing the error</param>
+        /// <param name="companionLabels">The details of labels sought</param>
+        /// <returns>Formatted error string for exception</returns>
         public static string UnknownIdentifierErrorText(CLEMActivityBase model, (string type, string identifier, string unit) companionLabels)
         {
             return $"Unknown identifier [{companionLabels.identifier}] used for [{companionLabels.type}] in [{model.GetType().Name}]: [{model.NameWithParent}]";
         }
 
         /// <summary>
-        /// Return a formatted error message for unknown units.
+        /// This method returns a formatted error message for unknown units.
         /// </summary>
-        /// <param name="model">Model throwing the error.</param>
-        /// <param name="companionLabels">The details of labels sought.</param>
-        /// <returns>Formatted string for exception.</returns>
+        /// <param name="model">Model throwing the error</param>
+        /// <param name="companionLabels">The details of labels sought</param>
+        /// <returns>Formatted error string for exception</returns>
         public static string UnknownUnitsErrorText(CLEMActivityBase model, (string type, string identifier, string unit) companionLabels)
         {
             return $"Unknown or invalid units [{((companionLabels.unit == "") ? "Blank" : companionLabels.unit)}] specified by companion component [{companionLabels.type}] {(((companionLabels.identifier ?? "")!="")?$"with the identifier [{companionLabels.identifier}]":"")} in [{model.GetType().Name}]: [a={model.NameWithParent}]";
@@ -509,17 +533,20 @@ namespace Models.CLEM.Activities
         #endregion
 
         /// <summary>
-        /// Add a new message to the list of current status messages.
+        /// The <c>AddStatusMessage</c> method adds a new message to the list of current status messages
         /// </summary>
-        /// <param name="message">The message to be added.</param>
+        /// <param name="message">The message to be added</param>
         public void AddStatusMessage(string message)
         {
             statusMessageList.Add(message);
         }
 
         /// <summary>
-        /// Protected method to cascade calls for activities performed for all dynamically created activities.
+        /// The <c>ReportActivityStatus</c> undertakes cascading calls for activities performed for all dynamically
+        /// created activities
         /// </summary>
+        /// <param name="level">The current level of activity nesting</param>
+        /// <param name="fromSetup">Indicates if the call is from the setup phase</param>
         public void ReportActivityStatus(int level, bool fromSetup = false)
         {
             this.TriggerOnActivityPerformed(level, fromSetup);
@@ -552,9 +579,16 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>A method to arrange the activity to be performed on the specified clock event</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <summary>
+        /// An event handler to arrange the automatic management of resoucres required for
+        /// the activity in a time step
+        /// </summary>
+        /// <remarks>
+        /// By default this is called during the <c>CLEMGetResourcesRequired</c> event and will manage resources and
+        /// perform tasks if the <c>AllocationStyle</c> is not set to Manual.
+        /// </remarks>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
         [EventSubscribe("CLEMGetResourcesRequired")]
         protected virtual void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
@@ -565,7 +599,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method for parent to call this activity to run and manage transactions
+        /// Method for a controlling component to request this activity runs and manages transactions
         /// </summary>
         public void ManuallyGetResourcesPerformActivity()
         {
@@ -573,10 +607,10 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Return the current metric value from the parent for a specified companion model.
+        /// The <c>ValueForCompanionModel</c> method returns the current metric value from the parent for a specified companion model.
         /// </summary>
-        /// <param name="companionModel">Reference to companion model.</param>
-        /// <returns>Current metric for the child.</returns>
+        /// <param name="companionModel">Reference to companion model</param>
+        /// <returns>Current metric for the child</returns>
         public double ValueForCompanionModel(IActivityCompanionModel companionModel)
         {
             if (!valuesForCompanionModels.ContainsKey((companionModel.GetType().Name, companionModel.Identifier ?? "", companionModel.Measure ?? "")))
@@ -592,8 +626,10 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// The main method to manage an activity based on resources available.
+        /// The <c>ManageActivityResourcesAndTasks</c> is the main protected virtual method used to perform an activity
+        /// based on the availablity of required resources and interacting with companion models and other tools.
         /// </summary>
+        /// <param name="identifier">An optional identifier to filter companion models</param>
         protected virtual void ManageActivityResourcesAndTasks(string identifier = "")
         {
             if (!Enabled)
@@ -715,10 +751,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Determine the minimum proportion shortfall for the current resource requests.
-        /// Considers those coming from the companion models and this activity.
+        /// The <c>MinimumShortfallProportion</c> method determines the minimum proportion shortfall for the current
+        /// resource requests
         /// </summary>
-        /// <returns>Minimum proportion found.</returns>
+        /// <remarks>
+        /// This considers resource requests coming from any companion models and this activity
+        /// </remarks>
+        /// <returns>An IEnumerable of <c>ResourceRequest</c> representing the minimum proportion found</returns>
         public IEnumerable<ResourceRequest> MinimumShortfallProportion()
         {
             double min = 1;
@@ -742,7 +781,15 @@ namespace Models.CLEM.Activities
             return [];
         }
 
-        /// <summary>A method to arrange the activity to be performed on the specified clock event.</summary>
+        /// <summary>
+        /// An event handler to validate identifiers and units of all companion child models and report errors and warnings
+        /// to the Warnings list if any are found.
+        /// </summary>
+        /// <remarks>
+        /// <para>This is a check to ensure that the parent activity has provided the correct identifiers and units for
+        /// all companion child models. </para>
+        /// <para>Performed during the <c>CLEMInitialiseResource</c> event</para>
+        /// </remarks>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseResource")]
@@ -783,9 +830,11 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to prepare the activity for the time step
-        /// Functionality provided in derived classes
+        /// This method prepares the activity for the current time step
         /// </summary>
+        /// <remarks>
+        /// Additional functionality is provided in derived classes
+        /// </remarks>
         public virtual void PrepareForTimestep()
         {
             if (this is not IActivityTimer && this is not ActivityFolder)
@@ -796,15 +845,18 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to determine the list of resources and amounts needed.
+        /// The method used by each activity to determine the list of resources and amounts needed in the time step
         /// </summary>
+        /// <param name="argument">An optional argument to provide additional information to the activity</param>
+        /// <returns>A list of <c>ResourceRequest</c> defining resources needed</returns>
         public virtual List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             return null;
         }
 
         /// <summary>
-        /// Method to adjust activities needed based on shortfalls before they are taken from resource pools.
+        /// The method used to by activities to undertake any adjustments required to account for
+        /// shortfalls in required resources before they are taken from resource pools
         /// </summary>
         protected virtual void AdjustResourcesForTimestep()
         {
@@ -818,15 +870,16 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to perform activity tasks if expected as soon as resources are available
+        /// The method used by activities to perform all tasks after the requested resources have been provided
         /// </summary>
+        /// <param name="argument">An optional argument to provide additional information to the activity</param>
         public virtual void PerformTasksForTimestep(double argument = 0)
         {
             return;
         }
 
         /// <summary>
-        /// Method to determine if activity limited based on labour shortfall has been set.
+        /// The <c>IsLabourLimitSet</c> property identifies if activity is limited based on labour shortfall
         /// </summary>
         /// <returns>Flag indicating if Labour Limit is set</returns>
         public bool IsLabourLimitSet
@@ -838,11 +891,12 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Determine resources available and perform transmutation if needed.
+        /// The <c>CheckResources</c> method manages the required resources by obtaining available resources and
+        /// arranging transmutation if needed
         /// </summary>
         /// <param name="resourceRequests">List of resource requests</param>
-        /// <param name="uniqueActivityID">The Activity Unique id.</param>
-        /// <returns>Flag indicating if all resources are ok.</returns>
+        /// <param name="uniqueActivityID">The Activity Unique id</param>
+        /// <returns>Flag indicating if all resources were available</returns>
         public bool CheckResources(IEnumerable<ResourceRequest> resourceRequests, Guid uniqueActivityID)
         {
             if (resourceRequests is null || !resourceRequests.Any())
@@ -965,10 +1019,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Report shortfalls and provide status to undertake tasks.
+        /// The <c>ReportShortfalls</c> method reports shortfalls and determines the activity status
         /// </summary>
-        /// <param name="resourceRequests">List of resource requests.</param>
-        /// <returns>Flag indicating if shortfalls were recorded.</returns>
+        /// <param name="resourceRequests">List of resource requests</param>
+        /// <returns>
+        /// Flag indicating if the activity is skipped based on shortfalls and shortfalls were resource shortfall handling
+        /// style
+        /// </returns>
         public bool ReportShortfalls(IEnumerable<ResourceRequest> resourceRequests)
         {
             bool componentError = false;
@@ -1010,10 +1067,10 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Try to take the Resources based on Resource Request List provided.
+        /// The <c>TakeResources</c> method tries to take the Resources based on Resource Request List provided.
         /// </summary>
         /// <param name="resourceRequestList">A list of resources required</param>
-        /// <returns>Flag indicating if able to take the resources needed.</returns>
+        /// <returns>Flag indicating if able to take the resources needed</returns>
         public bool TakeResources(List<ResourceRequest> resourceRequestList)
         {
             // no resources required or this is an Activity folder.
@@ -1059,15 +1116,20 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to determine available labour based on filters and take it if requested.
+        /// The <c>TakeLabour</c> method applies the logic needed to take <c>Labour</c> based on filters and take it if
+        /// available
         /// </summary>
-        /// <param name="request">Resource request details.</param>
-        /// <param name="removeFromResource">Flag determines if only calculating available labour or labour removed.</param>
-        /// <param name="callingModel">Model calling this method.</param>
-        /// <param name="resourceHolder">Location of resource holder.</param>
-        /// <param name="allowPartialAction">Flag to determine if activity supports partial action on resource shortfall.</param>
+        /// <param name="request">Resource request details</param>
+        /// <param name="removeFromResource">
+        /// Flag determines if only calculating available labour or labour removed.
+        /// </param>
+        /// <param name="callingModel">Model calling this method</param>
+        /// <param name="resourceHolder">Location of resource holder</param>
+        /// <param name="allowPartialAction">
+        /// Flag to determine if activity supports partial action on resource shortfall
+        /// </param>
         /// <param name="structure">Structure instance</param>
-        /// <returns>The amount of labour (days) provided.</returns>
+        /// <returns>The amount of labour (days) provided</returns>
         public static double TakeLabour(ResourceRequest request, bool removeFromResource, CLEMModel callingModel, ResourcesHolder resourceHolder, bool allowPartialAction, IStructure structure)
         {
             if (request.Required == 0) return 0;
@@ -1235,9 +1297,11 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method to determine available non-labour resources and take if requested.
         /// </summary>
-        /// <param name="request">Resource request details.</param>
-        /// <param name="removeFromResource">Flag determines if only calculating available labour or labour removed.</param>
-        /// <returns>The amount of labour (days) provided.</returns>
+        /// <param name="request">Resource request details</param>
+        /// <param name="removeFromResource">
+        /// Flag determines if only calculating available resource or removing it
+        /// </param>
+        /// <returns>The amount of resource provided</returns>
         private double TakeNonLabour(ResourceRequest request, bool removeFromResource)
         {
             // get available resource

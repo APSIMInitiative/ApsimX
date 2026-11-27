@@ -14,7 +14,7 @@ using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Collect ruminant manure from specified paddock activity</summary>
+    /// <summary>This activity performs the collection of manure from a specified paddock</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -35,23 +35,31 @@ namespace Models.CLEM.Activities
         private double amountToSkip;
 
         /// <summary>
-        /// Name of paddock or pasture to collect from (blank is yards)
+        /// Name of paddock or pasture (<c>GrazeFoodStoreType</c>) to collect from
         /// </summary>
+        /// <remarks>
+        /// The values provided in the drop down
+        /// list in the UI represent the <c>GrazeFoodStoreType</c> components available as well as "Not specified - general yards".
+        /// </remarks>
         [Description("Name of paddock (GrazeFoodStoreType) to collect from (blank is yards)")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
         [Required]
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public ManureActivityCollectPaddock()
         {
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -78,6 +86,9 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to collect manure</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the CLEMCollectManure event
+        /// </remarks>
         [EventSubscribe("CLEMCollectManure")]
         private void OnCLEMCollectManure(object sender, EventArgs e)
         {

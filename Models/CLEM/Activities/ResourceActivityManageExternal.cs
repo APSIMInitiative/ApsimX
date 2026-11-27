@@ -16,7 +16,7 @@ using System.Linq;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity to manage external resources from resource reader
+    /// Activity to manage external resources from a resource reader
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -46,24 +46,35 @@ namespace Models.CLEM.Activities
         readonly Dictionary<string, (IResourceType, double)> allResources = [];
 
         /// <summary>
-        /// Name of the model for the resource input file
+        /// Name of the resource data reader to use
         /// </summary>
+        /// <remarks>
+        /// This is a required field and must be specified. The values provided in the drop down list in the UI
+        /// represent the <c>FileResource</c> data readers available
+        /// </remarks>
         [Description("Name of resource data reader")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Resource data reader required")]
         [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetNameOfModelsByType", ValuesArgs = new object[] { new Type[] { typeof(FileResource) } })]
         public string ResourceDataReader { get; set; }
 
         /// <summary>
-        /// Bank account to use
+        /// Name of the bank account to use
         /// </summary>
+        /// <remarks>
+        /// This is a required field and must be specified. The values provided in the drop down list in the UI
+        /// represent the <c>FinanceType</c> accounts available
+        /// </remarks>
         [Description("Bank account to use")]
         [System.ComponentModel.DefaultValue("No financial transactions")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No financial implications", typeof(Finance) } })]
         public string AccountName { get; set; }
 
         /// <summary>
-        /// Names of resource columns to consider, blank for all
+        /// Provides the names of resource columns to consider
         /// </summary>
+        /// <remarks>
+        /// Provided as a comma delimited list of resource names. If blank, all resources will be considered.
+        /// </remarks>
         [Description("Resource types considered")]
         [Tooltip("A comma delimited of resource type names. Blank entry will include all resources")]
         public string ResourceColumnsToUse { get; set; }
@@ -89,9 +100,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -280,9 +294,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
             if (resourcesForMonth.Count != 0)

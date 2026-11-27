@@ -11,8 +11,13 @@ using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Grow management activity</summary>
-    /// <summary>This activity sets aside land for the crop(s)</summary>
+    /// <summary>
+    /// The <c>CropActivityManageCrop</c> component manages a crop or rotation of crops in a specified area of the farm
+    /// </summary>
+    /// <remarks>
+    /// <param>This activity requests and sets aside land for the crop(s)</param> 
+    /// <param>This activity manages any rotation of crops in the field</param>
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -31,41 +36,49 @@ namespace Models.CLEM.Activities
         private int numberOfCrops = 0;
 
         /// <summary>
-        /// Land type where crop is to be grown
+        /// The <c>LandItemNameToUse</c> property specifies the land type where the crop is to be grown.
         /// </summary>
+        /// <remarks>
+        /// This will be a drop down list of all land types available in the simulation. This is a required field and
+        /// must be specified.
+        /// </remarks>
         [Description("Land type where crop is to be grown")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(Land) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land resource type required")]
         public string LandItemNameToUse { get; set; }
 
         /// <summary>
-        /// Area of land requested
+        /// The area of land requested
         /// </summary>
         [Description("Area of crop")]
         [Required, GreaterThanEqualValue(0)]
         public double AreaRequested { get; set; }
 
         /// <summary>
-        /// Use unallocated available
+        /// This flag specifies that unallocated available land should be used for this field
         /// </summary>
         [Description("Use unallocated land")]
         public bool UseAreaAvailable { get; set; }
 
         /// <summary>
-        /// Area of land actually received (maybe less than requested)
+        /// The <c>Area</c> property provides the area of land actually received and available for the crop. This may be
+        /// less than the area requested if there is insufficient land available.
         /// </summary>
         [JsonIgnore]
         public double Area { get; set; }
 
         /// <summary>
-        /// Land item
+        /// The <c>LinkedLandItem</c> property provides a reference to the land item associated with the crop.
         /// </summary>
         [JsonIgnore]
         public LandType LinkedLandItem { get; set; }
 
-        /// <summary>An event handler to allow us to initialise</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -79,12 +92,17 @@ namespace Models.CLEM.Activities
                     LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
                 }
             }
-
         }
 
-        /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
+        /// <summary>
+        /// An event handler to perform any final initialisation of the activity
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This method is called during the FinalInitialise event to ensure all resources and the initial
+        /// conditions of this activity are set up correctly.
+        /// </remarks>
         [EventSubscribe("FinalInitialise")]
         private void OnFinalInitialiseForCrop(object sender, EventArgs e)
         {
@@ -110,7 +128,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to rotate to the next crop in the list
+        /// The <c>RotateCrop</c> method rotates to the next crop in the list
         /// </summary>
         public void RotateCrop()
         {
@@ -137,7 +155,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to adjust area planted if crop has a area planted multiplier
+        /// The <c>AdjustLand</c> method adjusts the area planted if the crop has an area planted multiplier
         /// </summary>
         /// <param name="cropProduct">The crop product details to define final land area</param>
         private void AdjustLand(CropActivityManageProduct cropProduct)
@@ -194,8 +212,12 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Overrides the base class method to allow for clean up
+        /// An event handler to override the base class method to allow for clean up of event
+        /// handlers
         /// </summary>
+        /// <remarks>
+        /// This method is called by Clock.Completed event
+        /// </remarks>
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
@@ -203,9 +225,10 @@ namespace Models.CLEM.Activities
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
         }
 
-        // Method to listens for land use transactions
-        // This allows this activity to dynamically respond when use available area is selected
-        // only listens when use available is set for parent
+        /// <summary>
+        /// The <c>LinkedLandItem_TransactionOccurred</c> method listens for land use transactions and adjusts the area
+        /// of land available for this crop when <c>UseAreaAvailable</c> is set to true. 
+        /// </summary>
         private void LinkedLandItem_TransactionOccurred(object sender, EventArgs e)
         {
             Area = LinkedLandItem.AmountAvailable;

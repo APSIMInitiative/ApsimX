@@ -5,9 +5,10 @@ using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
-    ///<summary>
-    /// Defines the labour required for an Activity where details are provided by the Activity
-    ///</summary> 
+    /// <summary>
+    /// This <c>LabourRequirement</c> defines the labour required for an activity where all details are
+    /// provided by the parent activity
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -17,7 +18,7 @@ namespace Models.CLEM.Activities
     public class LabourRequirementSimple: LabourRequirement
     {
         /// <summary>
-        /// Size of unit
+        /// Size of unit for task
         /// </summary>
         [JsonIgnore]
         public new double UnitSize { get; set; }

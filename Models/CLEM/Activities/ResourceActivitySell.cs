@@ -13,7 +13,7 @@ using Models.CLEM.Extras;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity to price and sell resources
+    /// An activity to manage the sale of resources
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -36,23 +36,31 @@ namespace Models.CLEM.Activities
         private ResourcePricing price;
 
         /// <summary>
-        /// Bank account to use
+        /// The name of the account to pay into
         /// </summary>
+        /// <remarks>
+        /// This is a required field and must be specified. The values provided in the drop down list in the UI
+        /// represent the <c>FinanceType</c> accounts available
+        /// </remarks>
         [Description("Bank account to use")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No finance required", typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
         public string AccountName { get; set; } = "No finance required";
 
         /// <summary>
-        /// Resource type to sell
+        /// The name of the resource type to sell
         /// </summary>
+        /// <remarks>
+        /// This is a required field and must be specified. The values provided in the drop down list in the UI
+        /// represent the resource types available
+        /// </remarks>
         [Description("Resource to sell")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type required")]
         public string ResourceTypeName { get; set; }
 
         /// <summary>
-        /// Resource sell style to use
+        /// Specifies the style used to sell the resource
         /// </summary>
         [Description("Selling style")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Selling style required")]
@@ -82,9 +90,12 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -114,7 +125,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Gets the number of units available for sale
+        /// This property provides the number of units available for sale
         /// </summary>
         private double UnitsAvailableForSale
         {

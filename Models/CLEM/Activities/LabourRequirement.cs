@@ -14,14 +14,17 @@ using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    ///<summary>
-    /// Defines the labour required for an activity
-    ///</summary>
+    /// <summary>
+    /// This activity component defines the amount and type of labour required for an activity
+    /// </summary>
+    /// <remarks>
+    /// This activity must have at least one LabourFilterGroup as a child to specify the individuals for this activity
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(IHandlesActivityCompanionModels))]
-    [Description("Defines the amount and type of labour required for an activity. This component must have at least one LabourFilterGroup as a child")]
+    [Description("Defines the amount and type of labour required for an activity")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourRequirement.htm")]
     public class LabourRequirement: CLEMActivityBase, IValidatableObject, IActivityCompanionModel, IReportPartialResourceAction
@@ -33,15 +36,22 @@ namespace Models.CLEM.Activities
         private readonly List<ResourceRequest> resourceList = [];
 
         /// <summary>
-        /// An identifier for this Labour requirement based on parent requirements
+        /// An identifier for this <c>LabourRequirement</c> based on parent activity requirements
         /// </summary>
+        /// <remarks>
+        /// A list of available identifiers is supplied by the parent activity. If the parent does not supply any
+        /// identifiers then this property will not be visible in the UI.
+        /// </remarks>
         [Description("Labour identifier")]
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
         public string Identifier { get; set; }
 
         /// <summary>
-        /// Days labour required per unit or fixed (days)
+        /// The number of days labour required
         /// </summary>
+        /// <remarks>
+        /// This property specifies the number of days of labour required for each unit or a fixed number of days if the unit is set as fixed.
+        /// </remarks>
         [Description("Labour required (days)")]
         [Tooltip("Number of days required for the number of unit blocks specified (or fixed if set as unit)")]
         [Required, GreaterThanEqualValue(0)]
@@ -51,6 +61,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Size of unit
         /// </summary>
+        /// <remarks>
+        /// This property specifies the number of units per allocation block.
+        /// </remarks>
         [Description("Number of units per allocation block")]
         [Tooltip("The number of units per days labour required")]
         [Required, GreaterThanEqualValue(0)]
@@ -60,6 +73,10 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Labour unit type
         /// </summary>
+        /// <remarks>
+        /// A list of available measures is supplied by the parent activity. If the parent does not supply any measures
+        /// then this property will not be visible in the UI.
+        /// </remarks>
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures", VisibleCallback = "ParentSuppliedMeasuresPresent")]
         [Tooltip("The style of units to consider")]
         [Description("Measure of units")]
@@ -67,15 +84,16 @@ namespace Models.CLEM.Activities
         public string Measure { get; set; }
 
         /// <summary>
-        /// Whole unit blocks only
+        /// A switch to indicate that labour is only to be provided in whole unit blocks
         /// </summary>
         [Description("Use whole units")]
-        [Tooltip("Labour supplied in whole blocks of the number of units only")]
+        [Tooltip("Only supply labour in whole unit blocks")]
         [Category("Farm", "Units")]
         public bool WholeUnitBlocks { get; set; }
 
         /// <summary>
-        /// Labour limit style
+        /// The <c>LimitStyle</c> provides the <c>LabourLimitType</c> representing the style of providing limits to the
+        /// amount of labour provided
         /// </summary>
         [Description("Limit style")]
         [Tooltip("The style of providing limits to the amount of labour provided")]
@@ -84,7 +102,7 @@ namespace Models.CLEM.Activities
         public LabourLimitType LimitStyle { get; set; } = LabourLimitType.ProportionOfDaysRequired;
 
         /// <summary>
-        /// Maximum labour allocated per labour group
+        /// The maximum labour allocated per labour group in days
         /// </summary>
         [Description("Maximum per group for task")]
         [Required, GreaterThanValue(0)]
@@ -92,7 +110,7 @@ namespace Models.CLEM.Activities
         public double MaximumPerGroup { get; set; } = 1.0;
 
         /// <summary>
-        /// Minimum labour allocated per person for task
+        /// The minimum labour allocated per person for task in days
         /// </summary>
         [Description("Minimum per person for task")]
         [Required, GreaterThanEqualValue(0)]
@@ -100,7 +118,7 @@ namespace Models.CLEM.Activities
         public double MinimumPerPerson { get; set; }
 
         /// <summary>
-        /// Maximum labour allocated per person for task
+        /// The maximum labour allocated per person for task in days
         /// </summary>
         [Description("Maximum per person for task")]
         [Required, GreaterThanValue(0), GreaterThan("MinimumPerPerson", ErrorMessage ="Maximum per individual must be greater than minimum per individual in Labour Required")]
@@ -108,7 +126,7 @@ namespace Models.CLEM.Activities
         public double MaximumPerPerson { get; set; }
 
         /// <summary>
-        /// Apply to all matching labour (everyone performs activity)
+        /// A switch to indicate that labour is to be applied to all matching labour (everyone performs activity)
         /// </summary>
         [Description("Apply to all matching (everyone performs activity)")]
         [Required]
@@ -116,26 +134,29 @@ namespace Models.CLEM.Activities
         public bool ApplyToAll { get; set; }
 
         /// <summary>
-        /// Get the calculated maximum days per person for activity from CalculateLimits
+        /// Provides the calculated maximum days per person for the activity
         /// </summary>
         [JsonIgnore]
         public double MaximumDaysPerPerson { get { return maximumDaysPerPerson; } }
 
         /// <summary>
-        /// Get the calculated maximum days per person for activity from CalculateLimits
+        /// Provides the calculated maximum days per group for the activity
         /// </summary>
         [JsonIgnore]
         public double MaximumDaysPerGroup { get { return maximumDaysPerGroup; } }
 
         /// <summary>
-        /// Get the calculated maximum days per person for activity from CalculateLimits
+        /// Provides the calculated minimum days per person for the activity
         /// </summary>
         [JsonIgnore]
         public double MinimumDaysPerPerson { get { return minimumDaysPerPerson; } }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -143,8 +164,10 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Calculate the limits for people and groups using the style
+        /// A method to calculate the limits for people and groups using the style specified in the <c>LimitStyle</c>
+        /// property
         /// </summary>
+        /// <param name="amountRequested">The amount of labour requested.</param>
         public void CalculateLimits(double amountRequested)
         {
             switch (LimitStyle)
@@ -229,10 +252,10 @@ namespace Models.CLEM.Activities
 
         #region validation
         /// <summary>
-        /// Validate this object
+        /// Custom validation for the component
         /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <param name="validationContext">The validation context.</param>
+        /// <returns>A list of validation results.</returns>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             // ensure labour resource added

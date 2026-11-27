@@ -18,8 +18,18 @@ using System.Linq;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant herd management activity</summary>
-    /// <summary>This activity will maintain a breeding herd at the desired levels of age/breeders etc</summary>
+    /// <summary>
+    /// This activity manages the herd to specified levels using purchases and sales.
+    /// </summary>
+    /// <remarks>
+    ///
+    /// <para>This activity provides a centralised location for managing the herd. While much of the functionaility can
+    /// be achieved using individual activities, it is often difficult to set this up and ensure timing of actions is
+    /// appropriate </para>
+    ///
+    /// <para>This activity applies to a herd of ruminants and aims to maintain a set number of female breeders
+    /// through purchases and sales.</para>
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
@@ -68,42 +78,42 @@ namespace Models.CLEM.Activities
         private int excessBreeders = 0;
 
         /// <summary>
-        /// Manage female breeder numbers
+        /// A switch to indicate that female breeder numbers are to be managed
         /// </summary>
         [Category("Task:Herd size", "Breeding females:Breeding females")]
         [Description("Manage female breeder numbers")]
         public bool ManageFemaleBreederNumbers { get; set; } = true;
 
         /// <summary>
-        /// Perform female destocking (sales) tasks
+        /// A switch to indicate that female destocking (sales) tasks are to be performed
         /// </summary>
         [Category("Task:Destock", "Breeding females:Breeding females")]
         [Description("Perform female destocking (sale) tasks")]
         public bool PerformFemaleDestocking { get; set; } = true;
 
         /// <summary>
-        /// Perform breeder stocking (purchases) tasks
+        /// A switch to indicate that female stocking (purchases) tasks are to be performed
         /// </summary>
         [Category("Task:Restock", "Breeding females:Breeding females")]
         [Description("Perform female stocking (purchase) tasks")]
         public bool PerformFemaleStocking { get; set; } = true;
 
         /// <summary>
-        /// Perform male destocking (sales) tasks
+        /// A switch to indicate that male destocking (sales) tasks are to be performed
         /// </summary>
         [Description("Perform male destocking (sale) tasks")]
         [Category("Task:Destock", "Breeding males:Breeding males")]
         public bool PerformMaleDestocking { get; set; } = true;
 
         /// <summary>
-        /// Perform male stocking (purchases) tasks
+        /// A switch to indicate that male stocking (purchases) tasks are to be performed
         /// </summary>
         [Category("Task:Restock", "Breeding males:Breeding males")]
         [Description("Perform male stocking (purchase) tasks")]
         public bool PerformMaleStocking { get; set; } = true;
 
         /// <summary>
-        /// Maximum number of breeders that can be kept
+        /// The maximum number of breeders to be kept
         /// </summary>
         [Category("Herd size", "Breeding females")]
         [Description("Maximum number of female breeders to be kept")]
@@ -112,7 +122,7 @@ namespace Models.CLEM.Activities
         public int MaximumBreedersKept { get; set; }
 
         /// <summary>
-        /// Minimum number of breeders that can be kept
+        /// The minimum number of breeders to be kept
         /// </summary>
         [Category("Herd size", "Breeding females")]
         [Description("Minimum number of female breeders to be kept")]
@@ -121,7 +131,8 @@ namespace Models.CLEM.Activities
         public int MinimumBreedersKept { get; set; }
 
         /// <summary>
-        /// Stop model if breeder herd exceeds maximum breeders times this multiplier
+        /// A multiplier to determine that the model should be stopped if the breeder herd exceeds
+        /// the maximum breeders times this value
         /// </summary>
         [Category("Herd size", "Breeding females")]
         [Description("Stop model max breeders multiplier")]
@@ -129,7 +140,7 @@ namespace Models.CLEM.Activities
         public double MaxBreedersMultiplierToStop { get; set; } = 2.0;
 
         /// <summary>
-        /// Include the marking for sale of old breeders in this activity
+        /// A switch to indicate whether to include the marking for sale of old breeders
         /// </summary>
         [Category("Task:Destock", "Breeding females:Breeding females")]
         [Description("Mark old breeding females for sale")]
@@ -137,7 +148,7 @@ namespace Models.CLEM.Activities
         public bool MarkOldBreedersForSale { get; set; } = true;
 
         /// <summary>
-        /// Maximum breeder age for removal
+        /// The maximum breeder age before culling for removal
         /// </summary>
         [Category("Destock", "Breeding females")]
         [Description("Old female breeder age for removal")]
@@ -146,7 +157,7 @@ namespace Models.CLEM.Activities
         public AgeSpecifier MaximumBreederAge { get; set; } = new int[] { 20, 0 };
 
         /// <summary>
-        /// Proportion of min breeders in single purchase
+        /// The proportion of minimum breeders possible in a single purchase
         /// </summary>
         [Category("Restock", "Breeding females")]
         [Description("Proportion of min female breeders in single purchase")]
@@ -155,7 +166,7 @@ namespace Models.CLEM.Activities
         public double MaximumProportionBreedersPerPurchase { get; set; } = 1.0;
 
         /// <summary>
-        /// Proportion of min breeders in single purchase
+        /// A switch to indicate whether to retain pregnant MaxAge individuals if short of breeders
         /// </summary>
         [Category("Restock", "Breeding females")]
         [Description("Retain pregnant MaxAge individuals if short of breeders")]
@@ -163,7 +174,7 @@ namespace Models.CLEM.Activities
         public bool ReturnPregnantMaxAgeToHerd { get; set; } = false;
 
         /// <summary>
-        /// Retain female replacement breeders marked for sale
+        /// A switch to indicate whether to retain female replacement breeders marked for sale
         /// </summary>
         [Category("Restock", "Breeding females")]
         [Description("Retain female replacement breeders marked for sale")]
@@ -171,14 +182,14 @@ namespace Models.CLEM.Activities
         public bool RetainFemaleReplacementBreedersFromSaleHerd { get; set; } = true;
 
         /// <summary>
-        /// Manage male breeder numbers
+        /// A switch to indicate whether to manage male breeder numbers
         /// </summary>
         [Category("Task:Herd size", "Breeding males:Breeding males")]
         [Description("Manage male breeder numbers")]
         public bool ManageMaleBreederNumbers { get; set; } = true;
 
         /// <summary>
-        /// Maximum number of breeding sires kept
+        /// The maximum number of breeding sires kept
         /// </summary>
         [Category("Herd size", "Breeding males")]
         [Description("Maximum number of male breeders kept")]
@@ -187,13 +198,13 @@ namespace Models.CLEM.Activities
         public double MaximumSiresKept { get; set; }
 
         /// <summary>
-        /// Calculated sires kept
+        /// Provides the calculated number of sires kept
         /// </summary>
         [JsonIgnore]
         public int SiresKept { get; set; }
 
         /// <summary>
-        /// Include the marking for sale of sires in this activity
+        /// A switch to indicate whether to include the marking for sale of sires in this activity
         /// </summary>
         [Category("Task:Destock", "Breeding males:Breeding males")]
         [Description("Mark old sires for sale")]
@@ -201,7 +212,7 @@ namespace Models.CLEM.Activities
         public bool MarkOldSiresForSale { get; set; } = true;
 
         /// <summary>
-        /// Maximum sire age for removal
+        /// The maximum sire age before culling for removal
         /// </summary>
         [Category("Destock", "Breeding males")]
         [Description("Old sire age for removal")]
@@ -210,7 +221,7 @@ namespace Models.CLEM.Activities
         public AgeSpecifier MaximumSireAge { get; set; } = new int[] { 20, 0 };
 
         /// <summary>
-        /// Allow natural herd replacement of sires
+        /// A switch to indicate whether to allow natural herd replacement of sires
         /// </summary>
         [Category("Restock", "Breeding males")]
         [Description("Allow sire replacement from herd")]
@@ -219,7 +230,8 @@ namespace Models.CLEM.Activities
         public bool AllowSireReplacement { get; set; }
 
         /// <summary>
-        /// Set sire herd to purchase relative to proportion of breeder herd present
+        /// A switch to indicate whether stock sires relative to breeder herd size
+        /// present
         /// </summary>
         [Category("Restock", "Breeding males")]
         [Description("Restock sire numbers relative to proportion of breeders")]
@@ -228,7 +240,7 @@ namespace Models.CLEM.Activities
         public bool RestockSiresRelativeToBreeders { get; set; }
 
         /// <summary>
-        /// Maximum number of sires in a single purchase
+        /// The maximum number of sires in a single purchase
         /// </summary>
         [Category("Restock", "Breeding males")]
         [Description("Maximum number of male breeders in a single purchase")]
@@ -237,7 +249,7 @@ namespace Models.CLEM.Activities
         public int MaximumSiresPerPurchase { get; set; }
 
         /// <summary>
-        /// Retain male replacement breeders marked for sale
+        /// A switch to indicate whether to retain male replacement breeders marked for sale
         /// </summary>
         [Category("Restock", "Breeding males")]
         [Description("Retain male replacement breeders marked for sale")]
@@ -245,7 +257,7 @@ namespace Models.CLEM.Activities
         public bool RetainMaleReplacementBreedersFromSaleHerd { get; set; } = true;
 
         /// <summary>
-        /// Perfrom growing out of males
+        /// A switch to indicate whether to perform growing out of males
         /// </summary>
         [Category("Task:Grow out herd", "Grow out herd:Males")]
         [Description("Perform growing out of young males")]
@@ -253,7 +265,7 @@ namespace Models.CLEM.Activities
         public bool GrowOutYoungMales { get; set; }
 
         /// <summary>
-        /// Identify males for sale every time step
+        /// A switch to indicate whether to identify males for sale every time step
         /// </summary>
         [Category("Grow out herd", "General")]
         [Description("Mark those reaching age/weight for sale every time step")]
@@ -262,7 +274,7 @@ namespace Models.CLEM.Activities
         public bool ContinuousGrowOutSales { get; set; }
 
         /// <summary>
-        /// Include the marking for sale of males reaching age or weight
+        /// A switch to indicate whether to include the marking for sale of males reaching age or weight
         /// </summary>
         [Category("Task:Grow out herd", "Grow out herd:Males")]
         [Description("Mark grow out males for sale")]
@@ -270,7 +282,7 @@ namespace Models.CLEM.Activities
         public bool MarkAgeWeightMalesForSale { get; set; } = true;
 
         /// <summary>
-        /// Castrate grow out males (steers, bullocks)
+        /// A switch to indicate whether to castrate grow out males (steers, bullocks)
         /// </summary>
         [Category("Task:Grow out herd", "Grow out herd:Males")]
         [Description("Castrate young males")]
@@ -278,7 +290,7 @@ namespace Models.CLEM.Activities
         public bool CastrateMales { get; set; } = true;
 
         /// <summary>
-        /// Male selling age
+        /// The age at which to sell grow out males
         /// </summary>
         [Category("Grow out herd", "Males")]
         [Description("Grow out male selling age (months)")]
@@ -287,7 +299,7 @@ namespace Models.CLEM.Activities
         public AgeSpecifier MaleSellingAge { get; set; } = new int[] { 24, 0 };
 
         /// <summary>
-        /// Male selling weight (kg)
+        /// The weight at which to sell grow out males (kg)
         /// </summary>
         [Category("Grow out herd", "Males")]
         [Description("Grow out male selling weight (kg)")]
@@ -296,7 +308,7 @@ namespace Models.CLEM.Activities
         public double MaleSellingWeight { get; set; }
 
         /// <summary>
-        /// Perform selling of young females the same as males
+        /// A switch to indicate whether to perform selling of young females the same as males
         /// </summary>
         [Category("Task:Grow out herd", "Grow out herd:Females")]
         [Description("Perform growing out of young females")]
@@ -304,7 +316,7 @@ namespace Models.CLEM.Activities
         public bool GrowOutYoungFemales { get; set; }
 
         /// <summary>
-        /// Female selling age
+        /// The age at which to sell grow out females
         /// </summary>
         [Category("Grow out herd", "Females")]
         [Description("Grow out female selling age (months)")]
@@ -313,7 +325,7 @@ namespace Models.CLEM.Activities
         public AgeSpecifier FemaleSellingAge { get; set; } = new int[] { 24, 0 };
 
         /// <summary>
-        /// Female selling weight (kg)
+        /// The weight at which to sell grow out females (kg)
         /// </summary>
         [Category("Grow out herd", "Females")]
         [Description("Grow out female selling weight (kg)")]
@@ -322,7 +334,7 @@ namespace Models.CLEM.Activities
         public double FemaleSellingWeight { get; set; }
 
         /// <summary>
-        /// Include the marking for sale of females reaching age or weight
+        /// A switch to indicate whether to include the marking for sale of females reaching age or weight
         /// </summary>
         [Category("Task:Grow out herd", "Grow out herd:Females")]
         [Description("Mark grow out females for sale")]
@@ -330,7 +342,8 @@ namespace Models.CLEM.Activities
         public bool MarkAgeWeightFemalesForSale { get; set; } = true;
 
         /// <summary>
-        /// GrazeFoodStore (paddock) to place purchased sires when obtained from the herd (pre-breeders, marked for sale)
+        /// The paddock (<c>GrazeFoodStore</c>) to place purchased sires when obtained from the herd
+        /// (pre-breeders, marked for sale)
         /// </summary>
         [Category("Restock", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place relocated sires")]
@@ -338,7 +351,7 @@ namespace Models.CLEM.Activities
         public string GrazeFoodStoreNameSires { get; set; } = "Not specified - general yards";
 
         /// <summary>
-        /// GrazeFoodStore (paddock) to place breeders when obtained from the herd (pre-breeders, marked for sale)
+        /// The paddock (<c>GrazeFoodStore</c>) to place breeders when obtained from the herd (pre-breeders, marked for sale)
         /// </summary>
         [Category("Restock", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place relocated breeders")]
@@ -346,7 +359,7 @@ namespace Models.CLEM.Activities
         public string GrazeFoodStoreNameBreeders { get; set; } = "Not specified - general yards";
 
         /// <summary>
-        /// GrazeFoodStore (paddock) to place grow out heifers in for grazing
+        /// The paddock (<c>GrazeFoodStore</c>) to place grow out heifers in for grazing
         /// </summary>
         [Category("Grow out herd", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place grow out females in")]
@@ -354,7 +367,7 @@ namespace Models.CLEM.Activities
         public string GrazeFoodStoreNameGrowOutFemales { get; set; } = "Not specified - general yards";
 
         /// <summary>
-        /// GrazeFoodStore (paddock) to place grow out young males in for grazing
+        /// The paddock (<c>GrazeFoodStore</c>) to place grow out young males in for grazing
         /// </summary>
         [Category("Grow out herd", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place grow out males in")]
@@ -362,7 +375,7 @@ namespace Models.CLEM.Activities
         public string GrazeFoodStoreNameGrowOutMales { get; set; } = "Not specified - general yards";
 
         /// <summary>
-        /// Minimum pasture (kg/ha) before restocking if placed in paddock
+        /// The minimum pasture (kg/ha) biomass before restocking if placed in paddock
         /// </summary>
         [Category("Restock", "Pasture")]
         [Description("Minimum pasture (kg/ha) before restocking if placed in paddock")]
@@ -371,14 +384,14 @@ namespace Models.CLEM.Activities
         public double MinimumPastureBeforeRestock { get; set; }
 
         /// <summary>
-        /// Adjust breeding females up to required amount at start-up
+        /// A switch to indicate whether breeding females are adjusted to required amount at start-up
         /// </summary>
         [Category("Task:Start up", "Start up:Breeding females")]
         [Description("Adjust breeding female cohorts at start-up")]
         public bool AdjustBreedingFemalesAtStartup { get; set; }
 
         /// <summary>
-        /// Adjust all non breeding females in proportion to breeding females at start-up
+        /// A switch to indicate whether all non breeding females are adjusted in proportion to breeding females at start-up
         /// </summary>
         [Category("Task:Start up", "Start up:Breeding females")]
         [Description("Adjust all cohorts in proportion to breeding females at start-up")]
@@ -386,89 +399,89 @@ namespace Models.CLEM.Activities
         public bool AdjustOthersToFemaleBreedersPropAtStartup { get; set; }
 
         /// <summary>
-        /// Adjust breeding males up to required amount at start-up
+        /// A switch to indicate whether breeding males are adjusted to required amount at start-up
         /// </summary>
         [Category("Task:Start up", "Start up:Breeding males")]
         [Description("Adjust breeding sire cohorts at start-up")]
         public bool AdjustBreedingMalesAtStartup { get; set; }
 
         /// <summary>
-        /// Determine where Female breeder number properties should be displayed
+        /// A method to indicate whether female breeder number properties should be displayed
         /// </summary>
         public bool EnableFemaleNumberProperties() { return ManageFemaleBreederNumbers && (PerformFemaleDestocking || PerformFemaleStocking); }
 
         /// <summary>
-        /// Determine where Female breeder properties for destocking should be displayed
+        /// A method to indicate whether female breeder properties for destocking should be displayed
         /// </summary>
         public bool EnableDestockFemaleProperties() { return ManageFemaleBreederNumbers && PerformFemaleDestocking; }
 
         /// <summary>
-        /// Determine where sell old Female breeder properties should be displayed
+        /// A method to indicate whether sell old female breeder properties should be displayed
         /// </summary>
         public bool EnableOldFemaleSellProperties() { return EnableDestockFemaleProperties() & MarkOldBreedersForSale; }
 
         /// <summary>
-        /// Determine where Female breeder number properties for stocking should be displayed
+        /// A method to indicate whether female breeder number properties for stocking should be displayed
         /// </summary>
         public bool EnableStockFemaleProperties() { return ManageFemaleBreederNumbers && PerformFemaleStocking; }
 
         /// <summary>
-        /// Determine where Male breeder number properties should be displayed
+        /// A method to indicate whether male breeder number properties should be displayed
         /// </summary>
         public bool EnableMaleNumberProperties() { return ManageMaleBreederNumbers && (PerformMaleDestocking || PerformMaleStocking); }
 
         /// <summary>
-        /// Determine where Male breeder properties for destocking should be displayed
+        /// A method to indicate whether male breeder properties for destocking should be displayed
         /// </summary>
         public bool EnableDestockMaleProperties() { return ManageMaleBreederNumbers && PerformMaleDestocking; }
 
         /// <summary>
-        /// Determine where sell old Male breeder properties should be displayed
+        /// A method to indicate whether sell old male breeder properties should be displayed
         /// </summary>
         public bool EnableOldMaleSellProperties() { return EnableDestockMaleProperties() & MarkOldSiresForSale; }
 
         /// <summary>
-        /// Determine where Male breeder number properties for stocking should be displayed
+        /// A method to indicate whether male breeder number properties for stocking should be displayed
         /// </summary>
         public bool EnableStockMaleProperties() { return ManageMaleBreederNumbers && PerformMaleStocking; }
 
         /// <summary>
-        /// Determine where Male breeder number properties for stocking should be displayed
+        /// A method to indicate whether male breeder number properties for stocking should be displayed
         /// </summary>
         public bool EnableStockProperties() { return EnableStockFemaleProperties() | EnableStockMaleProperties(); }
 
         /// <summary>
-        /// Determine where Male grow out properties should be displayed
+        /// A method to indicate whether male grow out properties should be displayed
         /// </summary>
         public bool EnableGrowoutMaleProperties() { return GrowOutYoungMales; }
 
         /// <summary>
-        /// Determine where Female grow out properties should be displayed
+        /// A method to indicate whether female grow out properties should be displayed
         /// </summary>
         public bool EnableGrowoutFemaleProperties() { return GrowOutYoungFemales; }
 
         /// <summary>
-        /// Determine where Male grow out properties should be displayed
+        /// A method to indicate whether male grow out properties should be displayed
         /// </summary>
         public bool EnableGrowoutMaleSellProperties() { return MarkAgeWeightMalesForSale & GrowOutYoungMales; }
 
         /// <summary>
-        /// Determine where Female grow out properties should be displayed
+        /// A method to indicate whether female grow out properties should be displayed
         /// </summary>
         public bool EnableGrowoutFemaleSellProperties() { return MarkAgeWeightFemalesForSale & GrowOutYoungFemales; }
 
         /// <summary>
-        /// Determine where Female grow out properties should be displayed
+        /// A method to indicate whether female grow out properties should be displayed
         /// </summary>
         public bool EnableGrowoutProperties() { return GrowOutYoungFemales | GrowOutYoungMales; }
 
         /// <summary>
-        /// Determine where Female grow out properties should be displayed
+        /// A method to determine whether female grow out properties should be displayed
         /// </summary>
         public bool PerformingFemaleBreederAdjustment() { return AdjustBreedingFemalesAtStartup; }
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public RuminantActivityManage()
         {
@@ -528,6 +541,10 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to reset initial cohort sizes before creating the herd.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed in the CLEMInitialise event as it is before the herd is created and allows adjustment of
+        /// initial cohort sizes before the herd is built.
+        /// </remarks>
         [EventSubscribe("CLEMInitialise")]
         private void AdjustHerdCohorts(object sender, EventArgs e)
         {
@@ -680,9 +697,12 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void InitialiseAndCheckActivity(object sender, EventArgs e)
         {
@@ -984,6 +1004,9 @@ namespace Models.CLEM.Activities
             ManageActivityResourcesAndTasks();
         }
 
+        /// <summary>
+        /// A method to perform all grow out management for the time step
+        /// </summary>
         private void PerformGrowOutManagement()
         {
             // grow out management - extended version if NABSA
@@ -1077,6 +1100,9 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>
+        /// A method to identify old individuals for sale 
+        /// </summary>
         private void SellOldIndividuals()
         {
             // select old females for sale
@@ -1124,6 +1150,9 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>
+        /// A metod to perform male castration
+        /// </summary>
         private void PerformMaleCastration()
         {
             // time to castrate any males that have not been assigned as replacement breeders from this years young male pool
@@ -1143,6 +1172,10 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>
+        /// A method to perform the management of male breeders
+        /// </summary>
+        /// <exception cref="ApsimXException">Invalid cummulative probabilities for detemrining sires</exception>
         private void PerformMaleBreederManagement()
         {
             // adjust males sires if managing male breeders
@@ -1331,6 +1364,10 @@ namespace Models.CLEM.Activities
 
         }
 
+        /// <summary>
+        /// A method to perform the management of female breeders
+        /// </summary>
+        /// <exception cref="ApsimXException">Invalid cummulative probabilities for detemrining breeders</exception>
         private void PerformFemaleBreederManagement()
         {
             // FEMALES
@@ -1714,9 +1751,12 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>An event handler to call for all herd management activities</summary>
+        /// <summary>An event handler allowing for all management actions</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalManage</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalManage")]
         private void OnCLEMAnimalManageManageGrowOuts(object sender, EventArgs e)
         {
@@ -1770,6 +1810,9 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>
+        /// A method to identify any male replacement breeders in the individuals marked for sale.
+        /// </summary>
         private void IdentifyMaleReplacementBreedersFromSaleHerd()
         {
             if (maleBreedersRequired > 0)
@@ -1787,6 +1830,9 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>
+        /// A method to identify any female replacement breeders in the individuals marked for sale.
+        /// </summary>
         private void IdentifyFemaleReplacementBreedersFromSaleHerd()
         {
             if (femaleBreedersRequired > 0)
@@ -1807,16 +1853,22 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>An event handler to call for all herd management activities</summary>
+        /// <summary>
+        /// An event handler allowing for a check of outstanding sales and purchases all managementat the end of the
+        /// time step
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMEndOfTimeStep</c> event
+        /// </remarks>
         [EventSubscribe("CLEMEndOfTimeStep")]
         private void OnCLEMEndOfTimeStep(object sender, EventArgs e)
         {
             // check for outstanding sales and purchases not made and report error
             if (((PerformFemaleStocking | PerformMaleStocking) && HerdResource.PurchaseIndividuals.Count > 0) || ((PerformFemaleDestocking | PerformMaleDestocking) && GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.MarkedForSale).Any()))
             {
-                string warn = $"Purchases or sales were outstanding at the end of a time-step.{Environment.NewLine}Ensure you include a RuminantBuySell component and it has a suitable timer to ensure this outcome is accepted.{Environment.NewLine}Purchases and sales do not carry over between timesteps and this information is lost.";
+                string warn = $"Purchases or sales were outstanding at the end of a time step.{Environment.NewLine}Ensure you include a RuminantBuySell component and it has a suitable timer to ensure this outcome is accepted.{Environment.NewLine}Purchases and sales do not carry over between time steps and this information is lost.";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
             }
         }

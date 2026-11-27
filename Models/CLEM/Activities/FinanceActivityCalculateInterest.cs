@@ -8,7 +8,7 @@ using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Interest calculation activity</summary>
+    /// <summary>Activity used to calculate interest and arrange payments on all <c>FinanceType</c> accounts</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -23,16 +23,19 @@ namespace Models.CLEM.Activities
         private Finance finance;
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public FinanceActivityCalculateInterest()
         {
             TransactionCategory = "Interest";
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {

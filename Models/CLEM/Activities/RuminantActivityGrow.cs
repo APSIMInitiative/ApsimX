@@ -14,9 +14,23 @@ using System.Linq;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant growth activity</summary>
-    /// <summary>This activity determines potential intake for the Feeding activities and feeding arbitrator for all ruminants</summary>
-    /// <summary>See Breed activity for births, suckling mortality etc</summary>
+    /// <summary>
+    /// This activity manages the intake, growth, and aging of ruminants
+    /// </summary>
+    /// <remarks>
+    ///
+    /// <para>This version represent the ruminant growth functionaility provided in the original release of CLEM
+    /// based on the IAT and NABSA precursor models primarily using the SCA equations (Freer et al)</para>
+    ///
+    /// <para>This activity determines potential intake of individuals for the feeding activities and feeding arbitrator
+    /// for all ruminants</para>
+    ///
+    /// <para>Growth will depend upon the individuals energy relations and the quality and quantity of feed provided in
+    /// the time step</para>
+    ///
+    /// <para>This activity will consider the implications of other activities such as <c>RuminantActivityBreed</c>
+    /// leading to pregnancy and lactation</para>
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -51,6 +65,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Perform Activity with partial resources available
         /// </summary>
+        /// <remarks>
+        /// This new version is included to ensure JsonIgnore is enabled and the property is not reported in the UI
+        ///</remarks>
         [JsonIgnore]
         public new OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
@@ -59,18 +76,24 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public bool IncludeVisceralProteinMass { get => false; }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             ruminantHerd = Resources.FindResourceGroup<RuminantHerd>();
         }
 
-        /// <summary>Function to determine naturally wean individuals at start of timestep</summary>
+        /// <summary>An event handler allowing for any naturally weaning of individuals at start of time step</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMStartOfTimeStep</c> event
+        /// </remarks>
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
@@ -87,9 +110,15 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>Function to determine all individuals potential intake and suckling intake after milk consumption from mother</summary>
+        /// <summary>
+        /// An event handler allowing for the any naturally calculation of potential intake and and suckling intake
+        /// after milk consumption from the mother needed for other activities
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMPotentialIntake</c> event
+        /// </remarks>
         [EventSubscribe("CLEMPotentialIntake")]
         private void OnCLEMPotentialIntake(object sender, EventArgs e)
         {
@@ -115,6 +144,11 @@ namespace Models.CLEM.Activities
                 }
             }
         }
+
+        /// <summary>
+        /// Method to calculate poteintial intake from the size of the individual
+        /// </summary>
+        /// <param name="ind">Individual ruminant to consider</param>
         private void CalculatePotentialIntake(Ruminant ind)
         {
             // calculate daily potential intake for the selected individual/cohort
@@ -210,10 +244,10 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Set the milk production of the selected female given diet dry matter digestibility
+        /// A method to set the milk production given diet dry matter digestibility
         /// </summary>
-        /// <param name="ind">Female individual</param>
-        /// <returns>energy of milk</returns>
+        /// <param name="ind">Female individual to use</param>
+        /// <returns>Daily energy required for milk production</returns>
         private double CalculateMilkProduction(RuminantFemale ind)
         {
             ind.Milk.Milked = 0;
@@ -257,9 +291,15 @@ namespace Models.CLEM.Activities
             return ind.Milk.ProductionRate * 3.2 / kl;
         }
 
-        /// <summary>Function to calculate growth of herd for the monthly timestep</summary>
+        /// <summary>
+        /// An event handler allowing for the calculation of application of weight gain for each individual in the time
+        /// step
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalWeightGain</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalWeightGain")]
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
@@ -408,17 +448,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Function to calculate energy from intake and subsequent growth
+        /// A method to calculate energy relations from intake through to subsequent growth
         /// </summary>
-        /// <param name="ind">Ruminant individual class</param>
-        /// <returns></returns>
+        /// <param name="ind">Individual ruminant to grow</param>
         private void CalculateEnergy(Ruminant ind)
         {
             // all energy calculations are per day and multiplied at end to give monthly weight gain
-
             double intakeDaily = ind.MetabolicIntake; 
-            // now stored as daily value.
-            //double intakeDaily = ind.MetabolicIntake / events.Interval;
 
             // Sme 1 for females and castrates
             double sme = 1;
@@ -450,7 +486,6 @@ namespace Models.CLEM.Activities
                 ind.Energy.MilkDaily.Received = Math.Min(ind.Energy.MilkDaily.Expected, ind.MothersMilkProductionAvailable);
                 ind.Mother?.Milk.Take(ind.Energy.MilkDaily.Received, MilkUseReason.Suckling);
                 double milkIntakeDaily = ind.Energy.MilkDaily.Received;
-                //double milkIntakeDaily = ind.Intake.MilkDaily.Received / events.Interval;
 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
@@ -467,7 +502,6 @@ namespace Models.CLEM.Activities
 
                 energyMaintenance = (ind.Parameters.Grow.EMaintCoefficient * Math.Pow(ind.Weight.Live, 0.75) / kml) * Math.Exp(-ind.Parameters.Grow.EMaintExponent * (((ind.AgeInDays == 0) ? 0.03 : ind.AgeInDays / 30.4)));
                 double EnergyBalance = energyMilkConsumed + energyMetabolicFromIntake - energyMaintenance;
-                //ind.Energy.FromIntake = energyMilkConsumed + energyMetabolicFromIntake;
                 ind.Energy.ForFetus = 0;
                 ind.Energy.ForBasalMetabolism = energyMaintenance;
                 ind.Energy.ForLactation = 0;
@@ -507,7 +541,6 @@ namespace Models.CLEM.Activities
                 // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
                 // 0.000082 is -0.03 Age in Years/365 for days
                 energyMaintenance = ind.Parameters.Grow.Kme * sme * (ind.Parameters.Grow.EMaintCoefficient * Math.Pow(ind.Weight.Live, 0.75) / km) * Math.Exp(-ind.Parameters.Grow.EMaintExponent * maintenanceAge) + (ind.Parameters.Grow.EMaintIntercept * energyMetabolicFromIntake);
-                //ind.EnergyMaintenance = energyMaintenance;
                 double energyBalance = energyMetabolicFromIntake - energyMaintenance;
 
                 if (ind.Sex == Sex.Female)
@@ -599,17 +632,6 @@ namespace Models.CLEM.Activities
         public void SetInitialFatProtein(Ruminant individual, RuminantTypeCohort cohort, double initialWeight)
         {
             // No fat and protein is tracked in this model so this method of interface is not required.
-        }
-
-        /// <summary>
-        /// Function to age individuals and remove those that died in timestep
-        /// This needs to be undertaken prior to herd management
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAgeResources")]
-        private void OnCLEMAgeResources(object sender, EventArgs e)
-        {
         }
 
         #region validation

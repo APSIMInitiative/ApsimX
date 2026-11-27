@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity to purchase other animals
+    /// This activity manages the purchase of other animals (<c>OtherAnimalsType</c>)
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -32,9 +32,12 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public string PredictedAnimalType { get; set; } = "";
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -90,7 +93,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public OtherAnimalsActivityBuy()
         {
@@ -159,7 +162,12 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>An event handler allowing for purchases to be performed</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMAnimalBuy</c> event
+        /// </remarks>
         [EventSubscribe("CLEMAnimalBuy")]
         private void OnCLEMAnimalBuyPerformActivity(object sender, EventArgs e)
         {

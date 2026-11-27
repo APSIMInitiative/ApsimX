@@ -13,8 +13,7 @@ using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Other animals breed activity</summary>
-    /// <summary>This activity handles breeding in other animals types</summary>
+    /// <summary>This activity manages breeding in other animals (<c>OtherAnimalType</c>)</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -30,57 +29,63 @@ namespace Models.CLEM.Activities
         private int breeders = 0;
 
         /// <summary>
-        /// name of other animal type
+        /// Name of other animal type
         /// </summary>
+        /// <remarks>
+        /// This is required. A list of available <c>OtherAnimalsType</c> is provided in the drop down list.
+        /// </remarks>
         [Description("Other animal type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of other animal type required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(OtherAnimals) } })]
         public string AnimalTypeName { get; set; }
 
         /// <summary>
-        /// Offspring per female breeder
+        /// Number of offspring per female breeder
         /// </summary>
         [Description("Offspring per female breeder")]
         [Required, GreaterThanValue(0)]
         public double OffspringPerBreeder { get; set; }
 
         /// <summary>
-        /// Breeding female age
+        /// Age from which females are considered breeders
         /// </summary>
         [Description("Breeding age")]
         [Units("years, months, days")]
         public AgeSpecifier BreedingAge { get; set; } = new int[] { 18, 0 };
 
         /// <summary>
-        /// Use local males for breeding
+        /// A switch to indicate whether to only use local males for breeding
         /// </summary>
         [Description("Use local males for breeding")]
         [Required]
         public bool UseLocalMales { get; set; }
 
         /// <summary>
-        /// The Other animal type this group points to
+        /// Provides the <c>OtherAnimalsType</c> considered in this breeding
         /// </summary>
         [JsonIgnore]
         public OtherAnimalsType SelectedOtherAnimalsType;
 
         /// <summary>
-        /// Month this timer is next due.
+        /// The <c>NextDueDate</c> property indicates when the next breeding is due based on timers.
         /// </summary>
         [JsonIgnore]
         public DateTime NextDueDate { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public OtherAnimalsActivityBreed()
         {
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {

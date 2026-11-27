@@ -8,9 +8,9 @@ using System.IO;
 
 namespace Models.CLEM.Activities
 {
-    ///<summary>
-    /// Target for feed activity
-    ///</summary> 
+    /// <summary>
+    /// This human feeding activity component defines a target to be achieved when trying to feed people to set targets
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -36,7 +36,7 @@ namespace Models.CLEM.Activities
         public double TargetValue { get; set; }
 
         /// <summary>
-        /// Target max level
+        /// Target maximum level
         /// </summary>
         [Description("Target maximum level")]
         [Units("units per AE per day")]
@@ -47,36 +47,36 @@ namespace Models.CLEM.Activities
         /// Amount from other sources
         /// </summary>
         [Description("Amount from other sources")]
-        [Units("units per Ae per day")]
+        [Units("units per AE per day")]
         [GreaterThanEqualValue(0)]
         public double OtherSourcesValue { get; set; }
 
         /// <summary>
-        /// Current target
+        /// The current target value
         /// </summary>
         [JsonIgnore]
         public double Target { get; set; }
 
         /// <summary>
-        /// Current target
+        /// The current maximum target value
         /// </summary>
         [JsonIgnore]
         public double TargetMaximum { get; set; }
 
         /// <summary>
-        /// Stored level achieved
+        /// The current stored level achieved
         /// </summary>
         [JsonIgnore]
         public double CurrentAchieved { get; set; }
 
         /// <summary>
-        /// Has target been achieved
+        /// A flag to indicate if the target has been achieved
         /// </summary>
         [JsonIgnore]
         public bool TargetAchieved { get { return Math.Round(CurrentAchieved, 4) >= Math.Round(Target, 4); } }
 
         /// <summary>
-        /// Has target maximum been achieved
+        /// A flag to indicate if the target maximum has been achieved
         /// </summary>
         [JsonIgnore]
         public bool TargetMaximumAchieved { get { return Math.Round(CurrentAchieved, 4) >= Math.Round(TargetMaximum, 4); } }

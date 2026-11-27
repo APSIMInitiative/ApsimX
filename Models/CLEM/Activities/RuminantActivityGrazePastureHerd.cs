@@ -15,10 +15,15 @@ using System.Linq;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant grazing activity</summary>
-    /// <summary>
-    /// This activity determines how a specified ruminant herd will graze a specified pasture
-    /// </summary>
+    /// <summary>This activity manages grazing of a specified ruminant herd in a specified pasture</summary>
+    /// <remarks>
+    /// <para>This activity is the finest level of will manage grazing specification requiring both the paddock
+    /// (<c>GrazeFoodStoreType</c>) and herd (<c>RuminantType</c>) to be specifie</para>
+    /// <para>Individuals will graze based on their location defined by other activities such as <c>
+    /// RuminantActivityMove</c></para>
+    /// <para>An instance of this activity is require for each combination of paddock and herd or use a single instance
+    /// of <c>RuminantActivityGrazeAll</c> to automatically manage grazing across all paddocks</para>
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -46,43 +51,55 @@ namespace Models.CLEM.Activities
         private GrazeFoodStoreAPSIMLink apsimLink = null;
 
         /// <summary>
-        /// Number of hours grazed Based on 8 hour grazing days Could be modified to account for rain/heat walking to
-        /// water etc.
+        /// Number of hours grazed
         /// </summary>
+        /// <remarks>
+        /// <para>Number of hours grazed based on 8 hour grazing days.</para>
+        /// <para>This could be modified to account for rain/heat walking to water etc. in future</para>
+        /// </remarks>
         [Description("Number of hours grazed (based on 8 hr grazing day)")]
         [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
         public double HoursGrazed { get; set; }
 
         /// <summary>
-        /// Paddock or pasture to graze
+        /// Name of pasture to graze
         /// </summary>
+        /// <remarks>
+        /// A required field. A list of available paddocks (<c>GrazeFoodStore</c>) is provided in a dropdown
+        /// list in the UI.
+        /// </remarks>
         [Description("GrazeFoodStore/pasture to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(GrazeFoodStore) } })]
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
-        /// Paddock (GrazeFoodStoreType) model used
+        /// The paddock (<c>GrazeFoodStoreType</c>) model used
         /// </summary>
         [JsonIgnore]
         public IGrazeFoodStoreType GrazeFoodStoreModel { get; set; }
 
         /// <summary>
-        /// Ruminant Type to graze
+        /// Name of the herd (<c>RuminantType</c>) to graze
         /// </summary>
+        /// <remarks>
+        /// A required field. A list of available herds (<c>RuminantHerd</c>) is provided in a dropdown
+        /// list in the UI.
+        /// </remarks>
         [Description("Ruminant type to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Ruminant Type required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(RuminantHerd) } })]
         public string RuminantTypeName { get; set; }
 
         /// <summary>
-        /// RuminantType model used
+        /// The ruminant herd (<c>RuminantType</c>) model used
         /// </summary>
         [JsonIgnore]
         public RuminantType RuminantTypeModel { get; set; }
 
         /// <summary>
-        /// The proportion of required graze that is available determined from parent activity arbitration
+        /// A property providing the proportion of required graze that is available determined from parent activity
+        /// arbitration
         /// </summary>
         [JsonIgnore]
         public double GrazingCompetitionLimiter { get; set; } = 1.0;
@@ -94,7 +111,7 @@ namespace Models.CLEM.Activities
         public double BiomassPerHectare { get; set; }
 
         /// <summary>
-        /// Potential intake limiter based on the biomass of available pasture
+        /// Potential intake limiter based on the quality of pasture available
         /// </summary>
         [JsonIgnore]
         public double PotentialIntakePastureQualityLimiter { get; set; } = 1.0;
@@ -112,19 +129,19 @@ namespace Models.CLEM.Activities
         public double PotentialIntakeGrazingTimeLimiter { get; set; } = 1.0;
 
         /// <summary>
-        /// Potential intake limiter based on the proportion of 8 hours grazing allowed
+        /// Potential intake limiter based on competition with other herds
         /// </summary>
         [JsonIgnore]
         public double PotentialIntakeShortfallLimiter { get; set; } = 1.0;
 
         /// <summary>
-        /// Potential intake limiter based on the proportion of 8 hours grazing allowed
+        /// Potential intake limiter based on the proportion of green pasture available
         /// </summary>
         [JsonIgnore]
         public double PotentialIntakeProportionGreenLimit { get; set; } = 1.0;
 
         /// <summary>
-        /// Potential intake limiter based on the proportion of 8 hours grazing allowed
+        /// A combined intake limiter based on each of the potential intake limiters
         /// </summary>
         [JsonIgnore]
         public double CombinedLimiter { get { return PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter * PotentialIntakeShortfallLimiter * PotentialIntakePastureQualityLimiter; } }
@@ -148,7 +165,8 @@ namespace Models.CLEM.Activities
         public double DailyPastureTaken { get; set; }
 
         /// <summary>
-        /// Pools available grouped into classes form which individals feed in order
+        /// Provides a list of pasture pools (<c>FoodResourceStore</c>) available grouped into classes from which individuals feed in
+        /// order of quality
         /// </summary>
         [JsonIgnore]
         public List<FoodResourceStore> DigestiblePasturePoolGroups { get; set; }
@@ -161,7 +179,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Constructor using details from a GrazePasture activity
+        /// Constructor using details provided by a <c>RuminantActivityGrazePasture</c> activity
         /// </summary>
         public RuminantActivityGrazePastureHerd(RuminantActivityGrazePasture grazePasture, RuminantType herdType, string transactionCategory, Guid parentBasedUid)
         {
@@ -180,7 +198,8 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Dynamically create the filters needed to select ruminants for this pasture-herd combination created
+        /// A method to dynamically create the filters needed to select ruminants for this pasture-herd combination
+        /// created
         /// </summary>
         public void AddHerdLocationFilter()
         {
@@ -221,9 +240,12 @@ namespace Models.CLEM.Activities
             events.PublishToModelAndChildren("Commencing", [herdGroup, new EventArgs()]);
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -243,9 +265,12 @@ namespace Models.CLEM.Activities
             isStandAloneModel = Structure.FindParent<RuminantActivityGrazePasture>() is null;
         }
 
-        /// <summary>An event handler to allow us to clear requests at start of month.</summary>
+        /// <summary>An event handler allowing for any activity set up at the start of a time step</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMStartOfTimeStep</c> event
+        /// </remarks>
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnStartOfTimeStep(object sender, EventArgs e)
         {
@@ -279,7 +304,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to allow another activity to request the activity determines its resources
+        /// A method to allow another activity to request that the activity determines its resource requirements
         /// </summary>
         public List<ResourceRequest> RequestDetermineResources()
         {
@@ -287,7 +312,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Calculate total herd daily pasture required and initialise intake tracking arrays.
+        /// A method to calculate total herd daily pasture required and initialise intake tracking arrays.
         /// </summary>
         public double CalculateDailyFeedRequirement()
         {
@@ -336,8 +361,8 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Calculate relative intake as proportion of the individuals demand and current herd demand including green
-        /// pasture limitations.
+        /// A method to calculate relative intake as proportion of the individuals demand and current herd demand including
+        /// green pasture limitations.
         /// </summary>
         /// <param name="group">Pasture pool group to consume</param>
         /// <param name="groupIndex">0 based index of the PoolGroup in list</param>
@@ -359,7 +384,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to take the relative intake and consider any pastureshortfall and competition modifiers
+        /// The method to take the relative intake and consider any pasture shortfall and competition modifiers
         /// </summary>
         /// <param name="group">Pasture pool group to consume</param>
         /// <param name="groupIndex">0 based index of pasture pool in list</param>
@@ -433,7 +458,7 @@ namespace Models.CLEM.Activities
         /// Method to calculate the shortfall limiter based on the pasture required vs desired. This handles all the
         /// individual FoodResourceStore biomass limits applied
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The potential shortfall limiter value</returns>
         public double CalculatePotentialShortfallLimiter()
         {
             if (DailyPastureRequired == 0)
@@ -441,9 +466,7 @@ namespace Models.CLEM.Activities
             return (DailyPastureRequired >= DailyPastureDesired) ? 1 - ((DailyPastureRequired - DailyPastureDesired) / DailyPastureRequired) : 1;
         }
 
-        /// <summary>
-        /// Method to create the resource request for pasture required for current herd.
-        /// </summary>
+        /// <inheritdoc/>
         public void CreateResourceRequest()
         {
             double eaten = DigestiblePasturePoolGroups.Sum(a => a.Details.Amount);
@@ -475,6 +498,10 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMPostRuminantConsumption</c> event after all ruminant
+        /// consumption has been completed and diet quality determined.
+        /// </remarks>
         [EventSubscribe("CLEMPostRuminantConsumption")]
         private void OnAfterDietQualityDetermined(object sender, EventArgs e)
         {

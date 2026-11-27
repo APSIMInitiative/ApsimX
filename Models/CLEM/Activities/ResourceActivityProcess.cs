@@ -14,7 +14,7 @@ using Models.CLEM.Extras;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity to processes one resource into another resource with associated labour and costs
+    /// An activity to process one resource into another resource with associated labour requirement and costs
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -36,38 +36,49 @@ namespace Models.CLEM.Activities
         private IResourceType resourceTypeCreatedModel;
 
         /// <summary>
-        /// Resource type to process
+        /// The name of the Resource type to process
         /// </summary>
+        /// <remarks>
+        /// This is a required field and must be specified. All available resources will be provided in the
+        /// drop down list in the UI
+        /// </remarks>
         [Description("Resource to process")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type to process required")]
         public string ResourceTypeProcessedName { get; set; }
 
         /// <summary>
-        /// Resource type created
+        /// The name of the Resource type being created
         /// </summary>
+        /// <remarks>
+        /// This is a required field and must be specified. All available resources will be provided in the
+        /// drop down list in the UI
+        /// </remarks>
         [Description("Resource created")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type created required")]
         public string ResourceTypeCreatedName { get; set; }
 
         /// <summary>
-        /// Conversion rate
+        /// Defines the conversion rate from the processed resource to the created resource
         /// </summary>
         [Description("Rate to convert processed resource to created resource")]
         [Required, GreaterThanValue(0)]
         public double ConversionRate { get; set; }
 
         /// <summary>
-        /// Reserve
+        /// This specifies a reserve level below which the activity will not process any resources.
         /// </summary>
         [Description("Amount to reserve")]
         [Required, GreaterThanEqualValue(0)]
         public double Reserve { get; set; }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {

@@ -10,8 +10,8 @@ using System.Linq;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Activity to arrange payment of hired labour at start of CLEM timestep
-    /// Labour can be limited by shortfall
+    /// <summary>
+    /// This activity arranges payment for all hired labour performed during the time step
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
         private Labour labour;
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public LabourActivityPayHired()
         {
@@ -61,18 +61,24 @@ namespace Models.CLEM.Activities
             };
         }
 
-        /// <summary>An event handler to allow us to initialise</summary>
+        /// <summary>An event handler allowing for any activity initialisation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the <c>CLEMEvents.CLEMInitialiseActivity</c> event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             labour = Resources.FindResourceGroup<Labour>();
         }
 
-        /// <summary>An event handler to allow us to organise payment at start of timestep.</summary>
+        /// <summary>An event handler to initialise details at the start of the time step.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the CLEMStartOfTimeStep event
+        /// </remarks>
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
@@ -81,9 +87,14 @@ namespace Models.CLEM.Activities
             ManageActivityResourcesAndTasks("labour available");
         }
 
-        /// <summary>An event handler to allow us to organise payment at start of timestep.</summary>
+        /// <summary>
+        /// An event handler to initialise details after labour has been allocated during the time step.
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the CLEMHerdSummary event
+        /// </remarks>
         [EventSubscribe("CLEMHerdSummary")]
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
@@ -157,10 +168,10 @@ namespace Models.CLEM.Activities
 
         #region validation
         /// <summary>
-        /// Validate model
+        /// Custom validation for the component
         /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <param name="validationContext">The validation context.</param>
+        /// <returns>A list of validation results.</returns>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();

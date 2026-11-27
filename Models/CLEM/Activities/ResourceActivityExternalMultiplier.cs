@@ -11,7 +11,7 @@ using System.IO;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity to provide a multiplier for specified external resources from resource reader
+    /// Activity component to provide a multiplier for specified external resources from resource reader
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -25,13 +25,17 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Name of the resource this multiplier applies to
         /// </summary>
+        /// <remarks>
+        /// This is a required field and must be specified. The values provided in the drop down list in the UI
+        /// represent the <c>ResourceType</c> resources available
+        /// </remarks>
         [Description("Name of resource")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Resource Type required")]
         [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore), typeof(Equipment), typeof(Finance), typeof(GreenhouseGases), typeof(WaterStore) } })]
         public string ResourceTypeName { get; set; }
 
         /// <summary>
-        /// Multiplier value
+        /// Multiplier to apply
         /// </summary>
         [Description("Multiplier")]
         [GreaterThanEqualValue(0)]
