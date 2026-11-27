@@ -133,6 +133,13 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double BaseAnimalEquivalent { get; set; } = 450;
 
+        /// <summary>
+        /// Standard reference live weight to empty body mass conversion factor
+        /// </summary>
+        [Description("SRW Live to EBM conversion factor")]
+        [Category("Core", "Intake")]
+        public double SRWLiveToEBMConversionFactor { get; set; } = 0.85;
+
         #endregion
 
         #region Condition
