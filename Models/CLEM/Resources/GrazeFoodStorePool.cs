@@ -135,7 +135,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount of growth in this time step (kg)
         /// </summary>
-        public double Growth => (IsGrowthThisTimeStep) ? Amount : 0;
+        public double Growth => (IsGrowthThisTimeStep) ? AmountAdded : 0;
 
         /// <inheritdoc/>
         public string Name { get; set; }
@@ -157,6 +157,11 @@ namespace Models.CLEM.Resources
 
         private double amount = 0;
 
+        /// <summary>
+        /// Gets or sets the amount added.
+        /// </summary>
+        public double AmountAdded { get; set; }
+
         /// <inheritdoc/>
         public double Amount => amount;
 
@@ -177,6 +182,7 @@ namespace Models.CLEM.Resources
             if (store is not null)
                 grazeStore = store;
             amount = startingAmount;
+            AmountAdded = startingAmount;
         }
 
         /// <summary>
@@ -193,6 +199,7 @@ namespace Models.CLEM.Resources
                 throw new ArgumentException($"Growth date {growthDate:d} cannot be after current date {currentDate:d} during initialisation pools in [{store.NameWithParent}]");
 
             amount = startingAmount;
+            AmountAdded = startingAmount;
             grazeStore = store;
 
             UpdateAge(growthDate, currentDate);
@@ -238,6 +245,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Reset()
         {
+            AmountAdded = 0;
             Detached = 0;
             Consumed = 0;
             AmountPending = 0;
@@ -267,6 +275,7 @@ namespace Models.CLEM.Resources
                 NitrogenPercent = ((NitrogenPercent * Amount) + (pool.NitrogenPercent * pool.Amount)) / (Amount + pool.Amount);
             }
             amount += pool.Amount;
+            AmountAdded += pool.Amount;
         }
 
         /// <summary>
@@ -348,6 +357,7 @@ namespace Models.CLEM.Resources
         public void InitialBiomassSet(double amount)
         {
             this.amount = amount;
+            AmountAdded = amount;
 
         }
     }
