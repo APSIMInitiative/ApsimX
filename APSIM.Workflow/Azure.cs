@@ -274,7 +274,7 @@ public class Azure
             throw new ArgumentException($"Database path contains characters unsupported by Batch output file patterns: {databasePath}", nameof(apsimFilePath));
         string blobPath = $"databases/{taskName}/{databasePath}";
         return new OutputFile(
-            databasePath,
+            $"ApsimX/{databasePath}",
             new OutputFileDestination(new OutputFileBlobContainerDestination(containerUri.ToString(), blobPath)),
             new OutputFileUploadOptions(OutputFileUploadCondition.TaskCompletion));
     }
