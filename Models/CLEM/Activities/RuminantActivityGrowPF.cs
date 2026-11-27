@@ -463,7 +463,7 @@ namespace Models.CLEM.Activities
             // Note: the use of ZF2 in proteinContentOfGain has been changed to -ve as opposed to the incorrect +ve in documentation (J.Dougherty, CSIRO, 21/1/2025)
 
             // determine if body protein is below expected for age to adjust protein content of gain for recovery of protein
-            double propAdultProtein = (ind.Parameters.GrowPF_CG.RelativeSizeToMatureProteinProportionSlopeA * Math.Pow(ind.Weight.RelativeSizeByHighWeight, 2.0)) + (ind.Parameters.GrowPF_CG.RelativeSizeToMatureProteinProportionSlopeB * ind.Weight.RelativeSizeByHighWeight) - ind.Parameters.GrowPF_CG.RelativeSizeToMatureProteinProportionIntercept;
+            double propAdultProtein = (ind.Parameters.GrowPF_CG.RelativeSizeToMatureProteinProportionSlopeA * Math.Pow(ind.Weight.RelativeSizeByHighWeight, 2.0)) + (ind.Parameters.GrowPF_CG.RelativeSizeToMatureProteinProportionSlopeB * ind.Weight.RelativeSizeByHighWeight) + ind.Parameters.GrowPF_CG.RelativeSizeToMatureProteinProportionIntercept;
 
             //ind.Weight.Protein.Normal = ind.Weight.Protein.MassAtSRW * Math.Min(1.0, relativeSizeForWeightGainPurposes);
             ind.Weight.Protein.Normal = ind.Weight.Protein.MassAtSRW * propAdultProtein;
