@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 222,
+  "Version": 224,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -15,13 +15,13 @@
     },
     {
       "$type": "Models.Core.Folder, Models",
-      "ShowInDocs": false,
+      "ShowInDocs": true,
       "Name": "Sensibility",
       "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "CO2AndTranspirationEfficiency",
           "ResourceName": null,
           "Children": [
@@ -217,7 +217,6 @@
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                           "SurfOM": [],
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
@@ -1551,7 +1550,6 @@
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                           "SurfOM": [],
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
@@ -2405,7 +2403,7 @@
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "SensibilityReport",
-                          "XFieldName": "Weather.CO2",
+                          "XFieldName": "CO2",
                           "YFieldName": "Wheat.Grain.Wt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
@@ -2642,7 +2640,7 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "ProteinAccumulation",
           "ResourceName": null,
           "Children": [
@@ -3251,7 +3249,6 @@
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                           "SurfOM": [],
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
@@ -3511,7 +3508,7 @@
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowInDocs": false,
+                  "ShowInDocs": true,
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
@@ -4230,7 +4227,6 @@
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                           "SurfOM": [],
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
@@ -4756,7 +4752,7 @@
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowInDocs": false,
+                  "ShowInDocs": true,
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
@@ -6216,7 +6212,6 @@
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                           "SurfOM": [],
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
@@ -6599,7 +6594,7 @@
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowInDocs": false,
+                  "ShowInDocs": true,
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
@@ -8240,7 +8235,6 @@
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                           "SurfOM": [],
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
@@ -9574,7 +9568,7 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "LeafAppearance",
           "ResourceName": null,
           "Children": [
@@ -10130,7 +10124,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -10890,7 +10883,7 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "TerminalWaterStress",
           "ResourceName": null,
           "Children": [
@@ -11874,7 +11867,6 @@
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                           "SurfOM": [],
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
@@ -12133,7 +12125,7 @@
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowInDocs": false,
+                  "ShowInDocs": true,
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
@@ -12656,7 +12648,7 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "DetailedDynamics",
           "ResourceName": null,
           "Children": [
@@ -13566,7 +13558,6 @@
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                           "SurfOM": [],
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
@@ -13842,7 +13833,7 @@
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowInDocs": false,
+                  "ShowInDocs": true,
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
@@ -16696,7 +16687,7 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "SevereEarlyWaterStress",
           "ResourceName": null,
           "Children": [
@@ -17767,7 +17758,6 @@
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                           "SurfOM": [],
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
@@ -18028,7 +18018,7 @@
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowInDocs": false,
+                  "ShowInDocs": true,
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
