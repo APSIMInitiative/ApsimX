@@ -1,11 +1,9 @@
 ﻿using APSIM.Numerics;
-using Models.CLEM.Interfaces;
 using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using Topten.RichTextKit.Utils;
 
 namespace Models.CLEM.Resources
 {
@@ -89,9 +87,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Adjust intake consumed based on feed quality
         /// </summary>
-        public void AdjustIntakeBasedOnFeedQuality(bool isLactating, Ruminant ind)
+        /// <param name="isLactating">True if the individual is lactating</param>
+        /// <param name="parameters">Ruminant parameters</param>
+        public void AdjustIntakeBasedOnFeedQuality(bool isLactating, RuminantParameters parameters)
         {
-            if (ind.Parameters.GrowPF_CI.IgnoreFeedQualityIntakeAdjustment)
+            if (parameters.GrowPF_CI.IgnoreFeedQualityIntakeAdjustment)
                 return;
 
             // ========================================================================================================================
@@ -115,11 +115,11 @@ namespace Models.CLEM.Resources
                 // FS relative availability of the feed
                 double FS = 0;
                 double RS = 0;
-                double RQ = Math.Min(1.0, 1 - ind.Parameters.GrowPF_CI.DigestibilitySlope_CR3 * (ind.Parameters.GrowPF_CI.DigestibilityPeak_CR1 - (item.Value.Details.DryMatterDigestibility/100.0)));
+                double RQ = Math.Min(1.0, 1 - parameters.GrowPF_CI.DigestibilitySlope_CR3 * (parameters.GrowPF_CI.DigestibilityPeak_CR1 - (item.Value.Details.DryMatterDigestibility/100.0)));
 
                 double offered_adj = (item.Value.Details.Amount/solidIntake)/RQ;
                 double unsatisfied_adj = Math.Max(0, 1-sumFs);
-                double quality_adj = (isLactating? ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorLactating_CR20:ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
+                double quality_adj = (isLactating? parameters.GrowPF_CI.QualityIntakeSubsititutionFactorLactating_CR20:parameters.GrowPF_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
 
                 // Added to remove heavy reduction on concentrates when the only item in the intake pool. but leave the RQ quality reduction.
                 if (feedTypeStoreDict.Count == 1)

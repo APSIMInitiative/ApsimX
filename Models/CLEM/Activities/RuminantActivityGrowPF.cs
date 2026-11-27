@@ -329,7 +329,7 @@ namespace Models.CLEM.Activities
         private void AnimalWeightGain(Ruminant ind, bool lactating = false)
         {
             // Adjusting potential intake for digestibility of fodder is now done in RuminantIntake along with concentrates and fodder.
-            ind.Intake.AdjustIntakeBasedOnFeedQuality(lactating, ind);
+            ind.Intake.AdjustIntakeBasedOnFeedQuality(lactating, ind.Parameters);
             ind.Intake.UpdateGutFill();
             CalculateEnergy(ind);
         }
