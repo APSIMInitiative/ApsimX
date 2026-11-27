@@ -27,7 +27,7 @@
                 "", // provide this with line endings between env values.
                 "--pr-number",
                 "11578",
-                "--commit-sha",
+                "--commit-hash",
                 "eb8e30"
             ]
         },

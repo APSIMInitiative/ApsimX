@@ -1,8 +1,6 @@
 using CommandLine;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using System.Diagnostics;
@@ -40,15 +38,48 @@ public class Program
         });
         logger = loggerFactory.CreateLogger<Program>();
 
-        Parser.Default.ParseArguments<LocationsOptions, SimCountOptions, SplitOptions, AzureJobsOptions, JobCompleteOptions>(args)
+        Parser.Default.ParseArguments<LocationsOptions, SimCountOptions, AzureJobsOptions, JobCompleteOptions>(args)
             .WithParsed<LocationsOptions>(RunLocations)
             .WithParsed<SimCountOptions>(RunSimCount)
-            .WithParsed<SplitOptions>(RunSplit)
             .WithParsed<AzureJobsOptions>(RunAzureJobs)
             .WithParsed<JobCompleteOptions>(RunJobComplete)
             .WithNotParsed(HandleParseError);
 
         return exitCode;
+    }
+
+    /// <summary>Prints the absolute paths of the validation files.</summary>
+    /// <param name="options">The locations options.</param>
+    private static void RunLocations(LocationsOptions options)
+    {
+        try
+        {
+            if (options.Verbose)
+                logger.LogInformation("Validation locations:");
+
+            foreach (string dir in ValidationLocationUtility.GetValidationFilePaths())
+                Console.WriteLine(dir);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error: " + ex.Message);
+            exitCode = 1;
+        }
+    }
+
+    /// <summary>Prints the number of simulations/validation locations available.</summary>
+    /// <param name="options">The simulation count options.</param>
+    private static void RunSimCount(SimCountOptions options)
+    {
+        try
+        {
+            Console.WriteLine(ValidationLocationUtility.GetValidationFilePaths().Length);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error: " + ex.Message);
+            exitCode = 1;
+        }
     }
 
     /// <summary>Notifies the A.V.A server that a job has completed.</summary>
@@ -74,62 +105,21 @@ public class Program
         }
     }
 
-
-    /// <summary>Prints the absolute paths of the validation files.</summary>
-    /// <param name="options">The locations options.</param>
-    private static void RunLocations(LocationsOptions options)
-    {
-        try
-        {
-            if (options.Verbose)
-                logger.LogInformation("Validation locations:");
-
-            foreach (string dir in RemoveExcludedPaths(ValidationLocationUtility.GetValidationFilePaths()))
-                Console.WriteLine(dir);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError("Error: " + ex.Message);
-            exitCode = 1;
-        }
-    }
-
-    /// <summary>Prints the number of simulations/validation locations available.</summary>
-    /// <param name="options">The simulation count options.</param>
-    private static void RunSimCount(SimCountOptions options)
-    {
-        try
-        {
-            Console.WriteLine(ValidationLocationUtility.GetSimulationCount());
-        }
-        catch (Exception ex)
-        {
-            logger.LogError("Error: " + ex.Message);
-            exitCode = 1;
-        }
-    }
-
-    /// <summary>Splits an APSIM file. Currently disabled.</summary>
-    /// <param name="options">The split options.</param>
-    private static void RunSplit(SplitOptions options)
-    {
-        // FileSplitter.Run(options.DirectoryPath, options.SplitFile, Path.GetDirectoryName(options.DirectoryPath) + "/", logger);
-    }
-
     /// <summary>Creates the Azure pool and submits the validation jobs.</summary>
     /// <param name="options">The Azure jobs options.</param>
     private static void RunAzureJobs(AzureJobsOptions options)
     {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
+        int jobCount = 0;
         try
         {
-            string[] validationPaths = RemoveExcludedPaths(ValidationLocationUtility.GetValidationFilePaths());
+            string[] validationPaths = ValidationLocationUtility.GetValidationFilePaths();
             if (validationPaths.Length < 1)
                 throw new Exception("A list of validation paths must be provided to continue.");
 
             // Create a pool name using the PR number and commit SHA.
-            string shortCommitSha = options.CommitSHA.Length > 6 ? options.CommitSHA[..6] : options.CommitSHA;
+            string shortCommitSha = options.CommitHash.Substring(0, 6);
             string poolName = $"{options.PullRequestNumber}-{shortCommitSha}";
             string nowDateString = DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
             string jobName = $"{nowDateString}-acceptance-tests-pr-{options.PullRequestNumber}";
@@ -146,12 +136,17 @@ public class Program
                 envDict.Add(values[0], values[1]);
             }
 
+            if (options.PreStartPool)
+            {
+                Azure.CreatePool(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName, isAutoscaling: false);
+                return;
+            }
+
             // Add PO Stats specific environment variables
             envDict.Add("AUTHOR", options.GitHubAuthorID);
             envDict.Add("COMMIT_SHA", shortCommitSha);
-            envDict.Add("FULL_COMMIT_HASH", options.FullCommitHash);
+            envDict.Add("FULL_COMMIT_HASH", options.CommitHash);
 
-            Azure.CreatePool(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName, isAutoscaling: false);
             logger.LogInformation($"An Azure batch pool called {poolName} successfully created!");
             Azure.CreateJobs(
                 envDict["AZURE_PRIMARY_ACCESS_KEY"],
@@ -164,7 +159,7 @@ public class Program
             );
             logger.LogInformation($"Azure jobs successfully submitted!");
             // Wait for a few minutes before resizing.
-            Thread.Sleep(TimeSpan.FromMinutes(8));
+            Thread.Sleep(TimeSpan.FromMinutes(5));
             Azure.EnablePoolAutoReszing(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName);
             logger.LogInformation($"Azure pool successfully resized!");
             stopwatch.Stop();
@@ -176,6 +171,10 @@ public class Program
             stopwatch.Stop();
             logger.LogInformation($"Workflow failed after: {stopwatch.Elapsed.Humanize()}");
             exitCode = 1;
+        }
+        finally
+        {
+            Console.WriteLine(jobCount);
         }
     }
 
@@ -200,36 +199,4 @@ public class Program
         if (!(errors.IsHelp() || errors.IsVersion()))
             exitCode = 1;
     }
-
-    /// <summary>
-    /// Removes paths from the validation paths array if they contain any of the excluded simulation file paths.
-    /// </summary>
-    /// <param name="paths">The collection of validation paths.</param>
-    /// <returns>A filtered array of validation paths without excluded simulations.</returns>
-    public static string[] RemoveExcludedPaths(IEnumerable<string> paths)
-    {
-        return paths.Where(path => !ContainsExcludedPath(path)).ToArray();
-    }
-
-    /// <summary>
-    /// Removes paths from the validation paths list if they contain any of the excluded simulation file paths.
-    /// </summary>
-    /// <param name="paths">The list of validation paths.</param>
-    public static void RemoveExcludedPaths(List<string> paths)
-    {
-        paths.RemoveAll(ContainsExcludedPath);
-    }
-
-    /// <summary>
-    /// Determines whether a path contains any of the excluded simulation file paths.
-    /// </summary>
-    /// <param name="path">The file path to check.</param>
-    /// <returns>True if the path contains an excluded simulation path; otherwise, false.</returns>
-    public static bool ContainsExcludedPath(string path)
-    {
-        string normalizedPath = path.NormalizePath().TrimStart('/');
-        return PayloadUtilities.EXCLUDED_SIMS_FILEPATHS.Any(excluded =>
-            normalizedPath.Contains(excluded.NormalizePath().TrimStart('/'), StringComparison.OrdinalIgnoreCase));
-    }
-
 }

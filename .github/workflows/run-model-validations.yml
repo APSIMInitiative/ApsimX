@@ -45,70 +45,22 @@ jobs:
       - name: Make github workflow bash scripts executable
         run: chmod +x ./.github/workflows/scripts/*.sh
 
-      - name: Extract password protected datasets
-        id: extract_password_protected_datasets
-        env:
-          SOYBEAN_PASSWORD: ${{ secrets.SOYBEAN_PASSWORD }}
-          CORNSOY_PASSWORD: ${{ secrets.CORNSOY_PASSWORD }}
-          SWIM_PASSWORD: ${{ secrets.SWIM_PASSWORD }}
-          MAIZE_PASSWORD: ${{ secrets.MAIZE_PASSWORD }}
-          RICE_PASSWORD: ${{ secrets.RICE_PASSWORD }}
-          THINZAR_RYEGRASS_PASSWORD: ${{ secrets.THINZAR_RYEGRASS_PASSWORD }}
-          UOM_WINTER_SPRING_PASSWORD: ${{ secrets.UOM_WINTER_SPRING_PASSWORD }}
-        run: ./.github/workflows/scripts/extract-protected-datasets.sh
-
       - name: Build Models and APSIM.Workflow projects
         run: |
           cd Models && dotnet publish -f net10.0 -o ../app && cd ../APSIM.Workflow && dotnet publish -f net10.0 -o ../app
 
-      - name: Test Step
+      - name: Upload Artifacts
         env:
           PULL_REQUEST: ${{ github.event.pull_request.number }}
           INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
           AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
         run: ./.github/workflows/scripts/split-large-files.sh
-        continue-on-error: true 
 
       - name: Start validation process
         env:
           PULL_REQUEST: ${{ github.event.pull_request.number }}
           COMMIT: ${{ github.event.pull_request.head.sha }}
         run: bash ./.github/workflows/scripts/ava-scripts/start-validation.sh
-        
-      - name: Log in to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Extract metadata (tags, labels) for Docker for apsimplusr
-        id: meta_apsimplusr
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: apsiminitiative/apsimplusr
-          flavor: latest=true
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-
-      - name: Start Azure pool
-        id: start_azure_pool
-        env:
-          AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
-          PULL_REQUEST: ${{ github.event.pull_request.number }}
-          INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
-        run: ./.github/workflows/scripts/start-azure-pool.sh
-
-      - name: Build and push apsimplusr Docker image
-        id: apsimplusr_push
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-        with:
-          context: .
-          file: ./Dockerfiles/models_r_dockerfile
-          target: base
-          push: true
-          tags: ${{ steps.meta_apsimplusr.outputs.tags }}
-          labels: ${{ steps.meta_apsimplusr.outputs.labels }}       
 
       - name: Create Azure Validation Jobs
         id: submit_azure_jobs
@@ -126,7 +78,6 @@ jobs:
           THINZAR_RYEGRASS_PASSWORD: ${{ secrets.THINZAR_RYEGRASS_PASSWORD }}
           UOM_WINTER_SPRING_PASSWORD: ${{ secrets.UOM_WINTER_SPRING_PASSWORD }}
         run: ./.github/workflows/scripts/create-azure-jobs.sh 
-
 
       - name: Print workflow submit success summary markdown
         if: success()

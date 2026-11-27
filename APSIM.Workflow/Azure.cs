@@ -11,6 +11,7 @@ using Microsoft.Azure.Batch.Common;
 using System.Reflection;
 using System.Globalization;
 using Models.Core;
+using APSIM.Shared.Utilities;
 
 
 namespace APSIM.Workflow;
@@ -53,7 +54,7 @@ public class Azure
     /// <param name="nodeNumber">The number of nodes to allocate in the pool. If not provided, it will be calculated based on the number of tasks and CPUs per node.</param>
     /// <param name="isAutoscaling">Should the pool be autoscaled?</param>
     /// <param name="vmsize">The name of a Azure VM e.g. Standard_D4d_v5. More information can be found here: https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/overview?tabs=breakdownseries%2Cgeneralsizelist%2Ccomputesizelist%2Cmemorysizelist%2Cstoragesizelist%2Cgpusizelist%2Cfpgasizelist%2Chpcsizelist </param>
-    public static void CreatePool(string primaryAccessKey, string poolName, string nodeNumber = "60", bool isAutoscaling = true, string vmsize = "Standard_D4d_v5")
+    public static void CreatePool(string primaryAccessKey, string poolName, string nodeNumber = "30", bool isAutoscaling = true, string vmsize = "Standard_D4d_v5")
     {
         try
         {
@@ -116,7 +117,8 @@ public class Azure
     {
         List<CloudTask> cloudTasks = [];
         string scriptName = "workflow.sh";
-        string commandLine = "bash workflow.sh run_00001";
+        string archiveName = "upload.tar.zst";
+        string commandLine = "bash workflow.sh run_validation";
         CloudJob azureJob = null;
         string isoDate = DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
         string storageName = $"{uniqueJobName}-storage".ToLowerInvariant(); // used for naming the blob storage container for this run.
@@ -133,16 +135,34 @@ public class Azure
         string storageConnectionString = 
             $"DefaultEndpointsProtocol=https;AccountName={AZURE_STORAGE_ACCOUNT_NAME};AccountKey={keyOne};EndpointSuffix=core.windows.net";
 
-        // TODO: this should just send the workflow.sh file up rather than all the apsim validation files.
         string assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         if (string.IsNullOrEmpty(assemblyDirectory))
             throw new InvalidOperationException("Could not determine the workflow assembly directory.");
+
+        BlobContainerClient container = CreateAzureContainer(storageConnectionString, storageName);
+
         string scriptPath = Path.Combine(assemblyDirectory, scriptName);
         if (!File.Exists(scriptPath))
-            throw new FileNotFoundException("The workflow.sh script file could not be found and as such was not uploaded to the storage container.");
-        CopyFilesToAzure(scriptPath, storageConnectionString, storageName);
-        BlobContainerClient outputContainer = new(storageConnectionString, storageName);
-        Uri outputContainerUri = CreateDatabaseUploadUri(outputContainer, DateTimeOffset.UtcNow);
+            throw new FileNotFoundException($"The {scriptName} file could not be found and as such was not uploaded to the storage container.");
+        else
+            CopyFilesToAzure(container, scriptPath);
+
+        string archivePath = Path.Combine(PathUtilities.GetApsimXDirectory(), $"../{archiveName}");
+        if (!File.Exists(archivePath))
+            throw new FileNotFoundException($"The {archiveName} file could not be found and as such was not uploaded to the storage container.");
+        else
+            CopyFilesToAzure(container,  archivePath);
+
+        Uri outputContainerUri = CreateDatabaseUploadUri(container, DateTimeOffset.UtcNow);
+
+        //add passwords
+        envVars.Add("SOYBEAN_PASSWORD", Environment.GetEnvironmentVariable("SOYBEAN_PASSWORD"));
+        envVars.Add("CORNSOY_PASSWORD", Environment.GetEnvironmentVariable("CORNSOY_PASSWORD"));
+        envVars.Add("SWIM_PASSWORD", Environment.GetEnvironmentVariable("SWIM_PASSWORD"));
+        envVars.Add("MAIZE_PASSWORD", Environment.GetEnvironmentVariable("MAIZE_PASSWORD"));
+        envVars.Add("RICE_PASSWORD", Environment.GetEnvironmentVariable("RICE_PASSWORD"));
+        envVars.Add("THINZAR_RYEGRASS_PASSWORD", Environment.GetEnvironmentVariable("THINZAR_RYEGRASS_PASSWORD"));
+        envVars.Add("UOM_WINTER_SPRING_PASSWORD", Environment.GetEnvironmentVariable("UOM_WINTER_SPRING_PASSWORD"));
 
         // Get a time formatted like 2026.9.30-14:30
         string now = DateTime.UtcNow.ToString("yyyy.M.d-HH:mm", CultureInfo.InvariantCulture);
@@ -156,7 +176,8 @@ public class Azure
         int pathIndex = 0;
         foreach (string apsimFilePath in paths)
         {
-            List<ResourceFile> resourceFiles = [ResourceFile.FromAutoStorageContainer(storageName, blobPrefix: scriptName)];
+            List<ResourceFile> resourceFiles = [ResourceFile.FromAutoStorageContainer(storageName, blobPrefix: scriptName), 
+                                                ResourceFile.FromAutoStorageContainer(storageName, blobPrefix: archiveName)];
             string cloudTaskName = $"{pathIndex}-{Path.GetFileNameWithoutExtension(apsimFilePath).Replace(" ", "_")}"; // spaces are not allowed.
             string azureApsimFilePath = "/wd/" + apsimFilePath[1..]; // Azure batch nodes runs from within the /wd/ drectory.
             CloudTask cloudTask = new(cloudTaskName, commandLine)
@@ -187,19 +208,18 @@ public class Azure
                 azureJob = batchClient.JobOperations.CreateJob();
                 azureJob.Id = uniqueJobName;
                 azureJob.PoolInformation = new PoolInformation { PoolId = poolName };
-                azureJob.Metadata = CreateValidationJobMetadata(outputContainer.Uri, prNumber, envVars["FULL_COMMIT_HASH"]);
+                azureJob.Metadata = CreateValidationJobMetadata(container.Uri, prNumber, envVars["FULL_COMMIT_HASH"]);
                 azureJob.OnAllTasksComplete = OnAllTasksComplete.TerminateJob;
                 azureJob.UsesTaskDependencies = true;
                 azureJob.JobPreparationTask = new JobPreparationTask("bash workflow.sh initialise")
                 {
                     ResourceFiles = [ResourceFile.FromAutoStorageContainer(storageName, blobPrefix: scriptName)],
-                    UserIdentity = new UserIdentity("admin"),
-                    EnvironmentSettings = [new EnvironmentSetting("PR_NUMBER", prNumber)]
+                    UserIdentity = new UserIdentity("admin")
                 };
                 azureJob.Commit();
             }
             batchClient.JobOperations.AddTaskAsync(azureJob.Id, cloudTasks).Wait();
-            Console.WriteLine($"Azure job {azureJob.Id} submitted; database output container: {outputContainer.Uri}");
+            Console.WriteLine($"Azure job {azureJob.Id} submitted; database output container: {container.Uri}");
             cloudTasks.Clear();
         }    
     }
@@ -274,14 +294,11 @@ public class Azure
     /// <summary>
     /// Creates an Azure container using the given login information and name
     /// Will throw if the container already exists.
-    /// Then copies over the list of input files that are given, using the 
-    /// input directory as the relative path to find them.
     /// </summary>
-    /// <param name="scriptPath">Path to the script which needs to be copied to the azure storage container.</param>
     /// <param name="storageConnectionString">An Azure storage connection string</param>
     /// <param name="storageName">The name of the Azure storage container for this run</param>
     /// <exception cref="Exception"></exception>
-    public static void CopyFilesToAzure(string scriptPath, string storageConnectionString, string storageName)
+    public static BlobContainerClient CreateAzureContainer(string storageConnectionString, string storageName)
     {
         //Connect to Azure storage
         BlobContainerClient containerClient = new(storageConnectionString, storageName);
@@ -294,13 +311,24 @@ public class Azure
 
         //Create the container
         containerClient.Create();
+        
+        return containerClient;
+    }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="container"></param>
+    /// <param name="filePath">Path to the script which needs to be copied to the azure storage container.</param>
+    /// <exception cref="Exception"></exception>
+    public static void CopyFilesToAzure(BlobContainerClient container, string filePath)
+    {
         // Copy or append files to storage.
-        if (!File.Exists(scriptPath))
-            throw new Exception($"File {scriptPath} does not exist, but is listed as an input file");
+        if (!File.Exists(filePath))
+            throw new Exception($"File {filePath} does not exist, but is listed as an input file");
 
-        using FileStream data = File.OpenRead(scriptPath);
-        BlobClient blobClient = containerClient.GetBlobClient(Path.GetFileName(scriptPath));
+        using FileStream data = File.OpenRead(filePath);
+        BlobClient blobClient = container.GetBlobClient(Path.GetFileName(filePath));
         blobClient.Upload(data, overwrite: true);
     }
 

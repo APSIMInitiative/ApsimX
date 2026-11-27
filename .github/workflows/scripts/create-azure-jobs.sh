@@ -29,6 +29,7 @@ echo "azure pool: ${azure_pool}"
 echo "author variable: ${author}"
 # substrings the variable so we get the number only after the 'pr-' part.
 echo "PR Number: $PULL_REQUEST"
+pr_number=$PULL_REQUEST
 
 # makes the variable available in subsequent steps.
 jobcount=$(dotnet ./bin/Release/net10.0/APSIM.Workflow.dll sim-count)
@@ -37,7 +38,6 @@ if test -z "${jobcount}"; then
     echo "The job count was found to be empty. Exiting."
     exit 1
 fi
-pr_number=$PULL_REQUEST
 
 # Open the PO Stats
 url="https://postats2.apsim.info/api/open?pullrequestnumber=${pr_number}&commitid=${commitsha}&count=${jobcount}&author=${author}&pool=${azure_pool}"
@@ -46,4 +46,4 @@ response=$(curl -f "${url}" || exit 1)
 echo "POStats2 open response: ${response}"
 
 echo "Starting to sendjobs to Azure..."
-dotnet ./bin/Release/net10.0/APSIM.Workflow.dll azure-jobs --env-string "$AZURE_ENV_CONTENTS" --pr-number "$pr_number" --commit-sha "$commitsha" --full-commit-hash "$INCOMING_COMMIT_SHA" --githubauthorid "$author"
+dotnet ./bin/Release/net10.0/APSIM.Workflow.dll azure-jobs --env-string "$AZURE_ENV_CONTENTS" --pr-number "$pr_number" --commit-hash "$INCOMING_COMMIT_SHA" --githubauthorid "$author"
