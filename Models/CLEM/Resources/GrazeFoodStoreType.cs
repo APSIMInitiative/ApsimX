@@ -271,6 +271,11 @@ namespace Models.CLEM.Resources
         {
             if (GreenDMD == MinimumDMD)
                 return GutFillLowQuality;
+
+            if (dmd >= GreenDMD)
+            {
+                dmd = GreenDMD;
+            }
             return GutFillLowQuality + ((dmd - MinimumDMD) / (GreenDMD - MinimumDMD)) * (GutFillHighQuality - GutFillLowQuality);
         }
 
@@ -1175,7 +1180,6 @@ namespace Models.CLEM.Resources
                         pool.NitrogenPercent = incomingPool.NitrogenPercent;
                         pool.DryMatterDigestibility = incomingPool.DryMatterDigestibility;
                     }
-                    pool.GutFill = CalculateGutFill(pool.DryMatterDigestibility);
                     pool.InitialBiomassSet(incomingPool.Amount);
                     pool.UpdateAge(incomingPool.GrowthDate, events.TimeStepStart);
                     break;
@@ -1197,6 +1201,7 @@ namespace Models.CLEM.Resources
                 default:
                     throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
             }
+            pool.GutFill = CalculateGutFill(pool.DryMatterDigestibility);
 
             if (pool.Amount > 0)
             {

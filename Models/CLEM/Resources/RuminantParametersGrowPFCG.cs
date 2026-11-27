@@ -234,7 +234,33 @@ namespace Models.CLEM.Resources
         [Description("Body fat to proportion energy deficit from fat slope")]
         [Category("Core", "Growth")]
         [Required, Proportion]
-        public double FatPercentToProportionEDeficitTakenFromBodyFatSlope { get; set; } = 0.033; 
+        public double FatPercentToProportionEDeficitTakenFromBodyFatSlope { get; set; } = 0.033;
+
+        /// <summary>
+        /// Highest relative size to expected proportion of mature protein mass relationship intercept
+        /// </summary>
+        [Description("Relative size to proportion of mature protein mass relationship intercept")]
+        [Category("Core", "Growth")]
+        [Required]
+        public double RelativeSizeToMatureProteinProportionIntercept { get; set; } = -0.0188;
+
+        /// <summary>
+        /// Highest relative size to expected proportion of mature protein mass relationship slope A
+        /// </summary>
+        [Description("Relative size to proportion of mature protein mass relationship slope A")]
+        [Category("Core", "Growth")]
+        [Required]
+        public double RelativeSizeToMatureProteinProportionSlopeA { get; set; } = -0.5033;
+
+        /// <summary>
+        /// Highest relative size to expected proportion of mature protein mass relationship slope B
+        /// </summary>
+        [Description("Relative size to proportion of mature protein mass relationship slope B")]
+        [Category("Core", "Growth")]
+        [Required]
+        public double RelativeSizeToMatureProteinProportionSlopeB { get; set; } = 1.527;
+
+
 
         /// <summary>
         /// Create copy of this class

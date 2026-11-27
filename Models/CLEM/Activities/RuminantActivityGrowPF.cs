@@ -329,7 +329,7 @@ namespace Models.CLEM.Activities
         private void AnimalWeightGain(Ruminant ind, bool lactating = false)
         {
             // Adjusting potential intake for digestibility of fodder is now done in RuminantIntake along with concentrates and fodder.
-            ind.Intake.AdjustIntakeBasedOnFeedQuality(lactating, ind);
+            ind.Intake.AdjustIntakeBasedOnFeedQuality(lactating, ind.Parameters);
             ind.Intake.UpdateGutFill();
             CalculateEnergy(ind);
         }
@@ -463,14 +463,12 @@ namespace Models.CLEM.Activities
             // Note: the use of ZF2 in proteinContentOfGain has been changed to -ve as opposed to the incorrect +ve in documentation (J.Dougherty, CSIRO, 21/1/2025)
 
             // determine if body protein is below expected for age to adjust protein content of gain for recovery of protein
-            ind.Weight.Protein.Normal = ind.Weight.Protein.MassAtSRW * Math.Min(1.0, relativeSizeForWeightGainPurposes);
+            double propAdultProtein = (ind.Parameters.GrowPF_CG.RelativeSizeToMatureProteinProportionSlopeA * Math.Pow(ind.Weight.RelativeSizeByHighWeight, 2.0)) + (ind.Parameters.GrowPF_CG.RelativeSizeToMatureProteinProportionSlopeB * ind.Weight.RelativeSizeByHighWeight) + ind.Parameters.GrowPF_CG.RelativeSizeToMatureProteinProportionIntercept;
+
+            //ind.Weight.Protein.Normal = ind.Weight.Protein.MassAtSRW * Math.Min(1.0, relativeSizeForWeightGainPurposes);
+            ind.Weight.Protein.Normal = ind.Weight.Protein.MassAtSRW * propAdultProtein;
             ind.Weight.Protein.NormalShortfallTimeStep = Math.Max(0, ind.Weight.Protein.Normal - ind.Weight.Protein.Amount);
             ind.Weight.Protein.NormalShortfall = ind.Weight.Protein.NormalShortfallTimeStep / daysInTimeStep;
-            if (ind.IsSucklingWithMother)
-            {
-                ind.Weight.Protein.NormalShortfallTimeStep = double.PositiveInfinity;
-                ind.Weight.Protein.NormalShortfall = double.PositiveInfinity;
-            }
 
             // Equation 102, 104 & 105   =======================================
             // Equation 102 - PG1 and PG2 protein available from diet after accounting for maintenance and conceptus and milk

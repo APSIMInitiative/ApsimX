@@ -157,12 +157,6 @@ namespace Models.CLEM.Resources
         public double LiveChange { get { return Live - Previous; } }
 
         /// <summary>
-        /// Highest weight attained (kg) does not include conceptus or fleece weight, but does include gut fill of 8%
-        /// for NormalisedWeightForAge
-        /// </summary>
-        public double HighestAttained { get { return EmptyBodyMassHighest * 1.09; } }
-
-        /// <summary>
         /// Adult equivalent (live weight)
         /// </summary>
         [FilterByProperty]
@@ -253,19 +247,25 @@ namespace Models.CLEM.Resources
         public double RelativeSize { get { return NormalisedForAge / StandardReferenceWeight; } }
 
         /// <summary>
-        /// Relative size based on highest base weight achieved (highest base weight / standard reference weight)
+        /// Relative size based on highest base weight achieved relative to the empty body mass at standard reference
+        /// weight
         /// </summary>
         [FilterByProperty]
-        public double RelativeSizeByHighWeight { get { return EmptyBodyMassHighest * 1.09 / StandardReferenceWeight; } }
+        public double RelativeSizeByHighWeight { get { return EmptyBodyMassHighest / (StandardReferenceWeight * ruminant.Parameters.General.SRWLiveToEBMConversionFactor); } }
 
         /// <summary>
-        /// Relative condition (base weight (8% gutfill) / normalised weight)
+        /// Relative condition (live weight / normalised weight)
         /// </summary>
         /// <remarks>
         /// Does not include conceptus weight in pregnant females, or wool in sheep.
         /// </remarks>
+        /// <remarks>
+        /// This equation initiallty used a EMB to Live weight modifier of 1.09 based on Freer 8% gut fill assumption.
+        /// This has been updated to use the individuals current gutfill level (EBMToLiveWeight()) which is initially
+        /// assumed 4% (fasting) until consumption occurs.
+        /// </remarks>
         [FilterByProperty]
-        public double RelativeCondition { get { return EmptyBodyMass * 1.09 / NormalisedForAge; } }  // relative to Freer 8% gut fill assumption
+        public double RelativeCondition { get { return EmptyBodyMass * EBMToLiveWeight() / NormalisedForAge; } }
 
         /// <summary>
         /// Is still growing (Z less than or equal to 0.9)
@@ -378,18 +378,15 @@ namespace Models.CLEM.Resources
         /// <param name="weight">Initial base weight (kg)</param>
         public void SetInitialBaseWeight(double weight)
         {
-            Adjust(weight / EBMToLiveWeight()); // / (ruminant.Parameters.General?.EBW2LW_CG18 ?? 1.09));
+            Adjust(weight / EBMToLiveWeight());
         }
 
         /// <summary>
         /// Calculate the ratio of empty body mass to live weight from current gut fill
         /// </summary>
-        /// <returns></returns>
+        /// <returns>EBM to Live weight multiplier</returns>
         private double EBMToLiveWeight()
         {
-            if (ruminant.Intake.GutFill >= 1)
-                return 1; // avoid divide by zero or negative base weight if gut fill is at or above 100% (should not happen but just in case)
-            // todo: what should we return if gutfill is 1.
             return 1.0 / (1.0 - ruminant.Intake.GutFill);
         }
 

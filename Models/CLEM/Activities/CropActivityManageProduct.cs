@@ -582,7 +582,7 @@ namespace Models.CLEM.Activities
                                 ActivityModel = this,
                                 AdditionalDetails = this,
                                 Category = "StoreCleared",
-                                Required = 0,
+                                Required = LinkedResourceItem.AmountTotal,
                                 AllowTransmutation = false
                             });
                         }
@@ -617,9 +617,17 @@ namespace Models.CLEM.Activities
                             };
 
 
-                            if (LinkedResourceItem is GrazeFoodStoreType)
+                            if (LinkedResourceItem is GrazeFoodStoreType grazeFoodStore)
                             {
-                                packet.DryMatterDigestibility = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.NitrogenPercent);
+                                if (MathUtilities.FloatsAreEqual(harvests.current.DMDpct, 0.0))
+                                {
+                                    packet.DryMatterDigestibility = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.NitrogenPercent);
+                                }
+                                else
+                                {
+                                    packet.DryMatterDigestibility = harvests.current.DMDpct;
+                                }
+                                packet.GutFill = grazeFoodStore.CalculateGutFill(packet.DryMatterDigestibility);
                             }
 
                             LinkedResourceItem.AddToResource(packet, this, null, addReason);

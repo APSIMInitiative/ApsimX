@@ -120,9 +120,9 @@ namespace Models.CLEM.Activities
             // calculate daily potential intake for the selected individual/cohort
             double standardReferenceWeight = ind.Weight.StandardReferenceWeight;
             double liveWeightForIntake = ind.Weight.NormalisedForAge;
-            if (MathUtilities.IsLessThan(ind.Weight.HighestAttained, ind.Weight.NormalisedForAge))
+            if (MathUtilities.IsLessThan(ind.Weight.EmptyBodyMassHighest * 1.09, ind.Weight.NormalisedForAge))
             {
-                liveWeightForIntake = ind.Weight.HighestAttained;
+                liveWeightForIntake = ind.Weight.EmptyBodyMassHighest * 1.09;
             }
 
             // Calculate potential intake based on current weight compared to SRW and previous highest weight
@@ -354,7 +354,7 @@ namespace Models.CLEM.Activities
                     // This was then done in RuminantActivityGrazePasture
                     // But now is handled by Ruminant.Intake and thus needs to be called here and the two parameters are no longer required for the grazePasture activity as they aree in the ruminant parameters.
 
-                    ind.Intake.AdjustIntakeBasedOnFeedQuality(ind is RuminantFemale female && female.IsLactating, ind);
+                    ind.Intake.AdjustIntakeBasedOnFeedQuality(ind is RuminantFemale female && female.IsLactating, ind.Parameters);
                     ind.Intake.UpdateGutFill();
 
                     // calculate energy
