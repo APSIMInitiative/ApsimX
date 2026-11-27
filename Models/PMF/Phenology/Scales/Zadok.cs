@@ -172,7 +172,7 @@ namespace Models.PMF.Phen
             get {
                 // Try using Yield Prophet approach where Zadok stage during vegetative phase is based on leaf number only
                 double fracInCurrent = Phenology.FractionInCurrentPhase;
-                if ((Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9) || (Phenology.Stage < 4.3))
+                if (Structure != null && ((Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9) || (Phenology.Stage < 4.3)))
                     return 10.0f + Structure.LeafTipsAppeared;
                 else
                     return -1;

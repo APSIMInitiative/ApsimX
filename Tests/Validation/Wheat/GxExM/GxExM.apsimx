@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 216,
+  "Version": 224,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1500,7 +1500,7 @@
     },
     {
       "$type": "Models.Core.Folder, Models",
-      "ShowInDocs": false,
+      "ShowInDocs": true,
       "Name": "GXEXM",
       "ResourceName": null,
       "Children": [
@@ -2279,7 +2279,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -2294,6 +2293,7 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
@@ -5663,7 +5663,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -6256,6 +6255,7 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
@@ -9308,7 +9308,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -9323,6 +9322,7 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
@@ -12121,7 +12121,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -12136,6 +12135,7 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
@@ -17875,7 +17875,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -17890,6 +17889,7 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
@@ -24072,7 +24072,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -24087,6 +24086,7 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
@@ -26807,7 +26807,6 @@
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "SurfOM": [],
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -26822,6 +26821,7 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
@@ -29154,7 +29154,7 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "Graphs",
           "ResourceName": null,
           "Children": [
@@ -29854,17 +29854,17 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "Cv",
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 0,
+                      "Marker": 4,
                       "MarkerSize": 0,
-                      "Line": 4,
+                      "Line": 2,
                       "LineThickness": 0,
                       "TableName": "DailyObsPred",
-                      "XFieldName": "Predicted.Wheat.AboveGround.StorageWt",
-                      "YFieldName": "Predicted.Wheat.AboveGround.Storage.Wt",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.AboveGround.StorageWt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -29877,21 +29877,21 @@
                       "Children": [
                         {
                           "$type": "Models.Regression, Models",
-                          "ForEachSeries": true,
-                          "showOneToOne": true,
-                          "showEquation": true,
+                          "ForEachSeries": false,
+                          "showOneToOne": false,
+                          "showEquation": false,
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
@@ -30484,7 +30484,7 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "Canopy",
           "ResourceName": null,
           "Children": [

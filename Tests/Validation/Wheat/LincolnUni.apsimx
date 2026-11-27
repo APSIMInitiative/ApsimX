@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 222,
+  "Version": 224,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1160,7 +1160,6 @@
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                   "SurfOM": [],
-                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
@@ -1175,6 +1174,7 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [],
@@ -2384,7 +2384,7 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "Graphs",
           "ResourceName": null,
           "Children": [
@@ -2749,7 +2749,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "OrganBiomass",
               "ResourceName": null,
               "Children": [
@@ -3866,7 +3866,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Canopy",
               "ResourceName": null,
               "Children": [
@@ -4322,7 +4322,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "YieldComponents",
               "ResourceName": null,
               "Children": [
@@ -4759,7 +4759,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "OrganN",
               "ResourceName": null,
               "Children": [
@@ -5177,7 +5177,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "OrganNConc",
               "ResourceName": null,
               "Children": [
@@ -7752,7 +7752,6 @@
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                   "SurfOM": [],
-                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
@@ -7767,6 +7766,7 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [],
@@ -8678,7 +8678,7 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "Graphs",
           "ResourceName": null,
           "Children": [
@@ -9043,7 +9043,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "OrganBiomass",
               "ResourceName": null,
               "Children": [
@@ -9617,7 +9617,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Canopy",
               "ResourceName": null,
               "Children": [
@@ -10335,7 +10335,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "OrganN",
               "ResourceName": null,
               "Children": [
@@ -10753,7 +10753,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "OrganNConc",
               "ResourceName": null,
               "Children": [
@@ -11551,7 +11551,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "YieldComponents",
               "ResourceName": null,
               "Children": [
@@ -11877,7 +11877,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "BiomassProportion",
               "ResourceName": null,
               "Children": [
@@ -13166,86 +13166,6 @@
                   "CumulativeX": false,
                   "Filter": "[Wheat.SowingData.Cultivar] = 'Stockade'",
                   "Name": "ObservedGrain",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Observed Liguals",
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Predicted Liguals",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "FLN",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16777216,
-              "FactorToVaryColours": "Cultivar",
-              "FactorToVaryMarkers": "Sow",
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "TableName": "HarvestObsPred",
-              "XFieldName": "Observed.Wheat.Phenology.FinalLeafNumber",
-              "YFieldName": "Predicted.Wheat.Phenology.FinalLeafNumber",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series 0",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Regression, Models",
-                  "ForEachSeries": false,
-                  "showOneToOne": true,
-                  "showEquation": true,
-                  "Name": "Regression",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -19282,7 +19202,6 @@
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                   "SurfOM": [],
-                  "Canopies": [],
                   "InitialResidueName": "lucerne_residue",
                   "InitialResidueType": "lucerne",
                   "InitialResidueMass": 0.0,
@@ -19297,6 +19216,7 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [],
@@ -19732,78 +19652,10 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "Graphs",
           "ResourceName": null,
           "Children": [
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": "Caption can be written",
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": "",
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 0,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "NitrogenFert",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "N",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": "SD",
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "Report",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "Fertiliser.NitrogenApplied",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": true,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Predicted",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
             {
               "$type": "Models.Graph, Models",
               "Caption": null,
@@ -20194,7 +20046,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "OrganBiomass",
               "ResourceName": null,
               "Children": [
@@ -20700,7 +20552,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Canopy",
               "ResourceName": null,
               "Children": [
@@ -21857,7 +21709,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "YieldComponents",
               "ResourceName": null,
               "Children": [
@@ -22319,7 +22171,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "OrganN",
               "ResourceName": null,
               "Children": [
@@ -22969,7 +22821,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "OrganNConc",
               "ResourceName": null,
               "Children": [
@@ -23475,7 +23327,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Soil",
               "ResourceName": null,
               "Children": [
@@ -23825,7 +23677,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "BiomassProportion",
               "ResourceName": null,
               "Children": [
@@ -24223,7 +24075,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "StressFactors",
               "ResourceName": null,
               "Children": [
